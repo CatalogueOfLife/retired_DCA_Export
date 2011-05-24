@@ -1,29 +1,33 @@
 <?php
 class Bootstrap
 {
+    // Database handler
     private $_dbh;
+    // Directory in which files are saved
     private $_dir;
+    // CSV delimiter
     private $_del;
+    // CSV separator
     private $_sep;
+    // Search criteria
+    private $_sc;
+    // Collects bootstrap exceptions
+    private $_errors = array();
 
-    public function __construct (PDO $dbh, $dir, $del, $sep)
+    public function __construct (PDO $dbh, $dir, $del, $sep, $sc)
     {
         $this->_dbh = $dbh;
-        $this->_dir = $dir;
-        $this->_del = $del;
-        $this->_sep = $sep;
-        // Test writability export directory
-        if (!is_writable($this->_dir)) {
-            throw new Exception('Export directory "' . $this->_dir . '" is not writable!');
+        $this->_dir = $this->_validateDir($dir);
+        $this->_del = $this->_validateDel($del);
+        $this->_sep = $this->_validateSep($sep);
+        $this->_sc = $this->_validateSc($sc);
+        
+        if (!empty($this->_errors)) {
+            foreach ($this->_errors as $error) {
+                throw new Exception($error);
+            }
         }
-        // Test delimiter
-        if (!in_array($this->_del, array('', ';'))) {
-            throw new Exception('Delimiter "' . $this->_del . '" is not a valid CSV delimiter!');
-        }
-        // Test separator
-        if (!in_array($this->_sep, array('', '\''))) {
-            throw new Exception('Separator "' . $this->_sep . '" is not a valid CSV separator!');
-        }
+ 
         // Text files used to write to are created on the fly when the objects are created
         $this->_init(
             array(
@@ -45,6 +49,42 @@ class Bootstrap
             $$object->init();
             unset($$object);
         }
+    }
+
+    private function _validateDir ($dir)
+    {
+        if (!is_writable($dir)) {
+            $this->_errors[] = 'Export directory "' . $dir . '" is not writable!';
+        }
+        return $dir;
+    }
+
+    private function _validateDel ($del)
+    {
+        if (!in_array($del, array(
+            '', 
+            ';'
+        ))) {
+            $this->_errors[] = 'Delimiter "' . $del . '" is not a valid CSV delimiter!';
+        }
+        return $del;
+    }
+
+    private function _validateSep ($sep)
+    {
+        if (!in_array($sep, array(
+            '', 
+            '\''
+        ))) {
+            $this->_errors[] = 'Delimiter "' . $sep . '" is not a valid CSV separator!';
+        }
+        return $sep;
+    }
+
+    // @TODO: implement filter
+    private function _validateSc ($sc)
+    {
+        return $sc;
     }
 
 }

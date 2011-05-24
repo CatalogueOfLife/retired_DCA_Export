@@ -1,5 +1,5 @@
 [db]
-dbname = base_scheme
+dbname = base_scheme_2011_19
 host = localhost
 username = root
 password = root

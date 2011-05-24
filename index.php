@@ -29,15 +29,12 @@ $dbh = DbHandler::getInstance('db');
 $dir = $ini['export']['export_dir'];
 $del = $ini['export']['delimiter'];
 $sep = $ini['export']['separator'];
-
-/* Simple search criteria in array, .e.g. 'genus = larus' becomes
- * array ('genus' => 'larus');
+/* Simple search criteria in array
+   E.g. name starts with larus becomes array('name' => 'larus%');
  */
+$searchCriteria = array('name' =>'larus%');
 
-$searchCriteria();
-
-$dwaExporter = new DCAExporter($dbh, $dir, $del, $sep);
-$dwaExporter->setSearchCriteria($searchCriteria);
+$dwaExporter = new DCAExporter($dbh, $dir, $del, $sep, $searchCriteria);
 $dwaExporter->writeTaxa();
 
 ?>

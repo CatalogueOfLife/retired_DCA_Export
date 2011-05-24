@@ -9,8 +9,8 @@ abstract class DCAExporterAbstract
     public function __construct ($dbh, $dir, $del, $sep)
     {
         $this->_dbh = $dbh;
-        //var_dump($this->_dbh);
         $this->_dir = $dir;
+        //($this->_dir);
         $this->_del = $del;
         $this->_sep = $sep;
     }
@@ -52,6 +52,5 @@ abstract class DCAExporterAbstract
             $this->_sep = '"';
         }
         fputcsv($fh, $fields, $this->_del, $this->_sep);
-       
     }
 }
