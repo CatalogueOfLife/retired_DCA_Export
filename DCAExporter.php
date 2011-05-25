@@ -61,16 +61,22 @@ class DCAExporter
             $taxon = new Taxon($this->_dbh, $this->_dir, $this->_del, $this->_sep);
             // Decorate taxon with values fetched with getTaxa
             $taxon->decorate($row);
+            // Set additional properties
             $taxon->setRank();
+            $taxon->setLsid();
             $taxon->setScientificName();
             $taxon->setNameStatus();
             $taxon->setParentId();
             $taxon->setScrutiny();
-                
+            // Write to taxa.txt and destroy
+            $taxon->writeTaxon();
+            unset($taxon);
+/*                
             echo '<pre>';
             print_r($taxon);
             echo '</pre>';
-         };
+*/
+        };
     }
 
     public function zipArchive ()
