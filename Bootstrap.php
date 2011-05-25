@@ -14,7 +14,7 @@ class Bootstrap
     // Collects bootstrap exceptions
     private $_errors = array();
 
-    public function __construct (PDO $dbh, $dir, $del, $sep, $sc)
+    public function __construct ($dbh, $dir, $del, $sep, $sc)
     {
         $this->_dbh = $dbh;
         $this->_dir = $this->_validateDir($dir);

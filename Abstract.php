@@ -5,12 +5,11 @@ abstract class DCAExporterAbstract
     protected $_dir;
     protected $_del;
     protected $_sep;
-
+    
     public function __construct ($dbh, $dir, $del, $sep)
     {
         $this->_dbh = $dbh;
         $this->_dir = $dir;
-        //($this->_dir);
         $this->_del = $del;
         $this->_sep = $sep;
     }

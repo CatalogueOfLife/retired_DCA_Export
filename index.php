@@ -10,32 +10,15 @@
 Core Archive format.</p>
 
 <?php
-require_once 'DbHandler.php';
 require_once 'DCAExporter.php';
-
-$ini = parse_ini_file('config/settings.ini', true);
-$config = $ini['db'];
-$dbOptions = array();
-if (isset($config["options"])) {
-    $options = explode(",", $config["options"]);
-    foreach ($options as $option) {
-        $pts = explode("=", trim($option));
-        $dbOptions[$pts[0]] = $pts[1];
-    }
-    DbHandler::createInstance('db', $config, $dbOptions);
-}
-
-$dbh = DbHandler::getInstance('db');
-$dir = $ini['export']['export_dir'];
-$del = $ini['export']['delimiter'];
-$sep = $ini['export']['separator'];
 /* Simple search criteria in array
-   E.g. name starts with larus becomes array('name' => 'larus%');
+   E.g. genus starts with larus becomes array('genus' => 'larus%');
  */
-$searchCriteria = array('name' =>'larus%');
+$sc = array('genus' =>'larus%');
 
-$dwaExporter = new DCAExporter($dbh, $dir, $del, $sep, $searchCriteria);
+$dwaExporter = new DCAExporter($sc);
 $dwaExporter->writeTaxa();
+$dwaExporter->zipArchive();
 
 ?>
 </body>

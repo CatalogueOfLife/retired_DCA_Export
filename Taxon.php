@@ -1,39 +1,62 @@
 <?php
 class Taxon extends DCAExporterAbstract
 {
-    public $id;
+    public $taxonID;
+    public $LSID; // separate
+    public $datasetID;
+    public $datasetName;
+    public $acceptedNameUsageID;
+    public $parentNameUsageID; // separate
+    public $taxonomicStatus; // separate
+    public $taxonRank; // separate
     public $scientificName;
+    public $kingdom;
+    public $phylum;
+    public $class;
+    public $order;
+    public $family;
     public $genus;
+    public $subgenus;
     public $specificEpithet;
     public $infraspecificEpithet;
-    public $authorship;
-    public $parentId;
-    public $acceptedId;
-    public $taxonConceptId;
-    public $rank;
-    public $taxonomicStatus;
-    public $accordingTo;
-    public $dcModified;
-    public $datasetId;
-    public $datasetName;
-    public $source;
-    public $bibliographicCitation;
+    public $scientificNameAuthorship;
+    public $nameAccordingTo; // scrutiny, separate
+    public $modified; // scrutiny date, separate
     
-    // Derived properties, used to look up values
-    public $infraspecificMarker;
-    public $speciesId;
-    public $genusId;
-    public $speciesLsid;
-    public $infraspeciesLsid;
-    
-    private $_fh;
-    const FILE = 'taxon.txt';
 
-    public function __construct(PDO $dbh, $dir, $sep, $del) {
+    // Derived values
+    public $status;
+    private $_isHigherTaxon = false;
+    
+    // Export settings
+    private $_fh;
+    const FILE = 'taxa.txt';
+    
+    // Lookup tables
+    public static $higherTaxa = array(
+        'kingdom', 
+        'phylum', 
+        'class', 
+        'order', 
+        'family', 
+        'genus', 
+        'subgenus'
+    );
+    
+    public static $scientificNameStatus = array(
+        1 => 'accepted name', 
+        2 => 'ambiguous synonym', 
+        3 => 'misapplied name', 
+        4 => 'provisionally accepted name', 
+        5 => 'synonym'
+    );
+
+    public function __construct (PDO $dbh, $dir, $sep, $del)
+    {
         parent::__construct($dbh, $dir, $sep, $del);
         $this->_fh = $this->_openFileHandler(self::FILE);
     }
-    
+
     public function __destruct ()
     {
         $this->_closeFileHandler(self::FILE);
@@ -44,75 +67,102 @@ class Taxon extends DCAExporterAbstract
         $this->_createTextFile(self::FILE);
     }
 
-    public function getRank ()
+    public function decorate (array $row)
     {
-        if ($this->infraspecificEpithet == '') {
-            return 'species';
-        }
-        $stmt = $this->_dbh->prepare(
-            'SELECT t2.`rank` 
-            FROM `taxon` t1, 
-            `taxonomic_rank` t2 
-            WHERE t1.`id` = ? 
-            AND t1.`taxonomic_rank_id` = t2.`id`');
-        $stmt->execute(array(
-            $this->id
-        ));
-        $rank = $stmt->fetchColumn(0);
-        if ($rank == '') {
-            $rank = 'infraspecies';
-        }
-        return $rank;
-    }
-
-    public function getScientificName ()
-    {
-        $scientificName = trim($this->genus) . ' ' . trim($this->specificEpithet);
-        if ($this->rank != 'species') {
-            if ($this->infraspecificMarker != '') {
-                $scientificName .= ' ' . $this->infraspecificMarker;
+        foreach ($row as $p => $v) {
+            if (property_exists($this, $p)) {
+                $this->$p = $v;
             }
-            $scientificName .= ' ' . trim($this->infraspecificEpithet);
         }
-        return $scientificName;
     }
 
-    public function getParentId ()
+    public function setRank ()
     {
-        if ($this->rank != 'species') {
-            return $this->speciesId;
+        if (!empty($this->infraspecificEpithet)) {
+            $this->taxonRank = 'infraspecies';
+            return $this->taxonRank;
         }
-        return $this->genusId;
+        ;
+        if (!empty($this->specificEpithet)) {
+            $this->taxonRank = 'species';
+            return $this->taxonRank;
+        }
+        ;
+        $ranks = array_reverse(self::$higherTaxa);
+        foreach ($ranks as $rank) {
+            if (!empty($this->$rank)) {
+                $this->taxonRank = $rank;
+                $this->_isHigherTaxon = true;
+                return $this->taxonRank;
+            }
+        }
+        return false;
     }
 
-    public function getTaxonConceptId ()
+    public function setScientificName ()
     {
-        if ($this->rank != 'species') {
-            return $this->infraspeciesLsid;
+        if ($this->_isHigherTaxon) {
+            $this->scientificName = $this->{$this->taxonRank};
+            return $this->scientificName;
         }
-        return $this->speciesLsid;
+        $this->scientificName = $this->genus . ' ' . $this->specificEpithet;
+        if (!empty($this->infraspecificEpithet)) {
+            $this->scientificName .= ' ' . $this->infraspecificEpithet;
+        }
+        return $this->scientificName;
     }
-    
+
+    public function setNameStatus ()
+    {
+        if (!in_array($this->status, self::$scientificNameStatus)) {
+            // Return accepted name for higher taxa
+            $this->taxonomicStatus = self::$scientificNameStatus[1];
+            return $this->taxonomicStatus;
+        }
+        $this->taxonomicStatus = self::$scientificNameStatus[$this->status];
+        return $this->taxonomicStatus;
+    }
+
+    public function setParentId ()
+    {
+        $query = 'SELECT `parent_id` 
+                  FROM `taxon_name_element` 
+                  WHERE `taxon_id` = ?';
+        $stmt = $this->_dbh->prepare($query);
+        $stmt->execute(array(
+            $this->taxonID
+        ));
+         if ($res = $stmt->fetch(PDO::FETCH_NUM)) {
+            $this->parentNameUsageID = $res[0];
+            return $this->parentNameUsageID;
+        }
+        return false;
+    }
+
     public function writeTaxon ()
     {
         $fields = array(
-            $this->id, 
+            $this->taxonID, 
+            $this->LSID, 
+            $this->datasetID, 
+            $this->datasetName, 
+            $this->acceptedNameUsageID, 
+            $this->parentNameUsageID, 
+            $this->taxonomicStatus, 
+            $this->taxonRank, 
             $this->scientificName, 
+            $this->kingdom, 
+            $this->phylum, 
+            $this->class, 
+            $this->order, 
+            $this->family, 
             $this->genus, 
+            $this->subgenus, 
             $this->specificEpithet, 
             $this->infraspecificEpithet, 
-            $this->authorship, 
-            $this->parentId, 
-            $this->acceptedId, 
-            $this->taxonConceptId, 
-            $this->rank, 
-            $this->taxonomicStatus, 
-            $this->accordingTo, 
-            $this->dcModified, 
-            $this->datasetId, 
-            $this->datasetName, 
-            $this->source, 
-            $this->bibliographicCitation
+            $this->scientificNameAuthorship, 
+            $this->nameAccordingTo, 
+            $this->modified
         );
         $this->_writeLine($this->_fh, $fields);
     }
