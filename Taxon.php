@@ -67,15 +67,6 @@ class Taxon extends DCAExporterAbstract
         $this->_createTextFile(self::FILE);
     }
 
-    public function decorate (array $row)
-    {
-        foreach ($row as $p => $v) {
-            if (property_exists($this, $p)) {
-                $this->$p = $v;
-            }
-        }
-    }
-
     public function setRank ()
     {
         if (!empty($this->infraspecificEpithet)) {
@@ -132,11 +123,32 @@ class Taxon extends DCAExporterAbstract
         $stmt->execute(array(
             $this->taxonID
         ));
-         if ($res = $stmt->fetch(PDO::FETCH_NUM)) {
+        if ($res = $stmt->fetch(PDO::FETCH_NUM)) {
             $this->parentNameUsageID = $res[0];
             return $this->parentNameUsageID;
         }
         return false;
+    }
+
+    public function setScrutiny ()
+    {
+        if (!$this->_isHigherTaxon) {
+            $query = 'SELECT t3.`name` AS nameAccordingTo, 
+                             t2.`original_scrutiny_date` AS modified
+                      FROM `taxon_detail` AS t1 
+                      LEFT JOIN `scrutiny` AS t2 ON t1.`scrutiny_id` = t2.`id` 
+                      LEFT JOIN `specialist` AS t3 ON t2.`specialist_id` = t3.`id` 
+                      WHERE t1.`taxon_id` = ?';
+            $stmt = $this->_dbh->prepare($query);
+            $stmt->execute(array(
+                $this->taxonID
+            ));
+            if ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $this->decorate($res);
+                return true;
+            }
+            return false;
+        }
     }
 
     public function writeTaxon ()

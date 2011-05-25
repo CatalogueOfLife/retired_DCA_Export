@@ -65,6 +65,7 @@ class DCAExporter
             $taxon->setScientificName();
             $taxon->setNameStatus();
             $taxon->setParentId();
+            $taxon->setScrutiny();
                 
             echo '<pre>';
             print_r($taxon);

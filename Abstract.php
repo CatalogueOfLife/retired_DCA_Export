@@ -5,13 +5,22 @@ abstract class DCAExporterAbstract
     protected $_dir;
     protected $_del;
     protected $_sep;
-    
+
     public function __construct ($dbh, $dir, $del, $sep)
     {
         $this->_dbh = $dbh;
         $this->_dir = $dir;
         $this->_del = $del;
         $this->_sep = $sep;
+    }
+
+    public function decorate (array $row)
+    {
+        foreach ($row as $p => $v) {
+            if (property_exists($this, $p)) {
+                $this->$p = $v;
+            }
+        }
     }
 
     protected function _createTextFile ($fileName)
@@ -26,7 +35,7 @@ abstract class DCAExporterAbstract
         }
         fclose($fh);
     }
-    
+
     protected function _openFileHandler ($fileName)
     {
         // Append to existing file
@@ -36,11 +45,12 @@ abstract class DCAExporterAbstract
         }
         return $fh;
     }
-    
-    protected function _closeFileHandler($fh) {
+
+    protected function _closeFileHandler ($fh)
+    {
         @fclose($fh);
     }
-    
+
     protected function _writeLine ($fh, array $fields)
     {
         // Reset delimiter and separator to defaults if necessary
