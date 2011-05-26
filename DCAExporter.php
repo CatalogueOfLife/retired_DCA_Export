@@ -73,7 +73,7 @@ class DCAExporter
         }
     }
 
-    public function writeTaxa ()
+    public function writeData ()
     {
         $taxa = $this->_getTaxa();
         foreach ($taxa as $iTx => $rowTx) {
