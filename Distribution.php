@@ -1,6 +1,6 @@
 <?php
 require_once 'Interface.php';
-class Distribution extends DCAExporterAbstract implements DWA_Interface
+class Distribution extends DCAExporterAbstract implements DCA_Interface
 {
     public $id;
     public $locality;
@@ -23,5 +23,11 @@ class Distribution extends DCAExporterAbstract implements DWA_Interface
         $this->_createTextFile(self::FILE);
     }
     
+
+    public function writeHeader ()
+    {
+        $fields = array();
+        $this->_writeLine($this->_fh, $fields);
+    }
     
 }

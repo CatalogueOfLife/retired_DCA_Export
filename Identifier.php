@@ -23,4 +23,10 @@ class Identifier extends DCAExporterAbstract implements DCA_Interface
     {
         $this->_createTextFile(self::FILE);
     }
+
+    public function writeHeader ()
+    {
+        $fields = array();
+        $this->_writeLine($this->_fh, $fields);
+    }
 }
