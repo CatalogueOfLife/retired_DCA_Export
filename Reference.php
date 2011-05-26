@@ -1,6 +1,6 @@
 <?php
 require_once 'Interface.php';
-class Reference extends DCAExporterAbstract implements DWA_Interface
+class Reference extends DCAExporterAbstract implements DCA_Interface
 {
     public $id;
     public $creator;
