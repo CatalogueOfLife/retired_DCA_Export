@@ -1,5 +1,6 @@
 <?php
-class Vernacular extends DCAExporterAbstract
+require_once 'Interface.php';
+class Vernacular extends DCAExporterAbstract implements DWA_Interface
 {
     public $taxonId;
     public $vernacular;

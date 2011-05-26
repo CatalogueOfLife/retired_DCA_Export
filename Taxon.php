@@ -1,5 +1,6 @@
 <?php
-class Taxon extends DCAExporterAbstract
+require_once 'Interface.php';
+class Taxon extends DCAExporterAbstract implements DWA_Interface
 {
     public $taxonID;
     public $LSID; // separate
@@ -22,7 +23,6 @@ class Taxon extends DCAExporterAbstract
     public $scientificNameAuthorship;
     public $nameAccordingTo; // scrutiny, separate
     public $modified; // scrutiny date, separate
-    
 
     // Derived values
     public $status;

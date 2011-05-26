@@ -1,5 +1,6 @@
 <?php
-class Distribution extends DCAExporterAbstract
+require_once 'Interface.php';
+class Distribution extends DCAExporterAbstract implements DWA_Interface
 {
     public $id;
     public $locality;
@@ -21,4 +22,6 @@ class Distribution extends DCAExporterAbstract
     {
         $this->_createTextFile(self::FILE);
     }
+    
+    
 }

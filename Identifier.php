@@ -1,5 +1,6 @@
 <?php
-class Identifier extends DCAExporterAbstract
+require_once 'Interface.php';
+class Identifier extends DCAExporterAbstract implements DWA_Interface
 {
     public $id;
     public $identifier;
@@ -22,5 +23,4 @@ class Identifier extends DCAExporterAbstract
     {
         $this->_createTextFile(self::FILE);
     }
-            
 }

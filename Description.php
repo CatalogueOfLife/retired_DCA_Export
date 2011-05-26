@@ -1,5 +1,6 @@
 <?php
-class Description extends DCAExporterAbstract
+require_once 'Interface.php';
+class Description extends DCAExporterAbstract implements DWA_Interface
 {
     public $id;
     public $type;
