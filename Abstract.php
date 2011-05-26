@@ -53,13 +53,6 @@ abstract class DCAExporterAbstract
 
     protected function _writeLine ($fh, array $fields)
     {
-        // Reset delimiter and separator to defaults if necessary
-        if ($this->_del == '') {
-            $this->_del = ',';
-        }
-        if ($this->_sep == '') {
-            $this->_sep = '"';
-        }
         fputcsv($fh, $fields, $this->_del, $this->_sep);
     }
 }

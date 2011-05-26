@@ -10,6 +10,7 @@ require_once 'Identifier.php';
 require_once 'Reference.php';
 require_once 'Indicator.php';
 require_once 'Zip.php';
+require_once 'Template.php';
 
 class DCAExporter
 {
@@ -31,6 +32,8 @@ class DCAExporter
         $this->_sep = $this->_ini['export']['separator'];
         $this->_sc = $sc;
         
+        $this->_setDefaultDelAndSep();
+        
         $bootstrap = new Bootstrap($this->_dbh, $this->_dir, $this->_del, $this->_sep, $this->_sc);
         unset($bootstrap);
     }
@@ -38,6 +41,37 @@ class DCAExporter
     private function _setIni ()
     {
         $this->_ini = parse_ini_file('config/settings.ini', true);
+    }
+
+    private function _setDel ($del)
+    {
+        if (empty($del)) {
+            return ',';
+        }
+        return $del;
+    }
+
+    private function _setSep ($sep)
+    {
+        if (empty($sep)) {
+            return '"';
+        }
+        return $sep;
+    }
+    
+    private function _setDefaultDelAndSep() {
+        if (empty($this->_del)) {
+            $this->_del = ',';
+        }
+        if (empty($this->_sep)) {
+            $this->_sep = '"';
+        }
+        // Tab delimited is a special case
+        // fputcsv only accepts single character del and sep
+        if ($this->_del == '\t') {
+            $this->_del = chr(9);
+            $this->_sep = chr(0);
+        }
     }
 
     private function _setDbInst ()
@@ -60,7 +94,8 @@ class DCAExporter
         foreach ($result as $row) {
             $taxon = new Taxon($this->_dbh, $this->_dir, $this->_del, $this->_sep);
             // Decorate taxon with values fetched with getTaxa
-            $taxon->decorate($row);
+            $taxon->decorate(
+                $row);
             // Set additional properties
             $taxon->setRank();
             $taxon->setLsid();
@@ -71,12 +106,24 @@ class DCAExporter
             // Write to taxa.txt and destroy
             $taxon->writeTaxon();
             unset($taxon);
-/*                
+            /*                
             echo '<pre>';
             print_r($taxon);
             echo '</pre>';
 */
-        };
+        }
+    }
+
+    public function createMetaXml ()
+    {
+        $src = dirname(__FILE__) . '/template/meta.tpl';
+        $dest = dirname(__FILE__) . '/' . $this->_dir;
+        
+        $template = new Template($src, $dest);
+        $template->setDelimiter($this->_del);
+        $template->setSeparator($this->_sep);
+        $template->writeFile('meta.xml');
+        unset($template);
     }
 
     public function zipArchive ()
@@ -86,6 +133,7 @@ class DCAExporter
         
         $zip = new Zip();
         $zip->createArchive($src, $dest);
+        unset($zip);
     }
 
     private function _getTaxa ()

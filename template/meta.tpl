@@ -2,7 +2,7 @@
    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
    xsi:schemaLocation='http://rs.tdwg.org/dwc/text/ http://rs.tdwg.org/dwc/text/tdwg_dwc_text.xsd'>
    
-  <core encoding='UTF-8' fieldsEnclosedBy='' fieldsTerminatedBy='\t' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.tdwg.org/dwc/terms/Taxon'>    
+  <core encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.tdwg.org/dwc/terms/Taxon'>    
     <files>
       <location>taxa.txt</location>
     </files>
@@ -30,7 +30,7 @@
     <field index='21' term='http://purl.org/dc/terms/modified'/>
   </core>
   
-  <extension encoding='UTF-8' fieldsEnclosedBy='' fieldsTerminatedBy='\t' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Identifier'>
+  <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Identifier'>
 		<files>
 			<location>taxa.txt</location>
 		</files>
@@ -38,7 +38,7 @@
     <field default="LSID" term="http://purl.org/dc/terms/type"/>
 	</extension>
 	
-  <extension encoding='UTF-8' fieldsEnclosedBy='' fieldsTerminatedBy='\t' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Distribution'>
+  <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Distribution'>
     <files>
       <location>distribution.txt</location>
     </files>
@@ -49,7 +49,7 @@
     <field index='4' term='http://rs.tdwg.org/dwc/terms/establishmentMeans'/>                                            
   </extension>
   
-  <extension encoding='UTF-8' fieldsEnclosedBy='' fieldsTerminatedBy='\t' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Description'>
+  <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Description'>
     <files>
       <location>description.txt</location>
     </files>
@@ -58,7 +58,7 @@
     <field index='2' term='http://purl.org/dc/terms/description'/>
   </extension>
   
-  <extension encoding='UTF-8' fieldsEnclosedBy='' fieldsTerminatedBy='\t' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Reference'>
+  <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Reference'>
     <files>
       <location>references.txt</location>
     </files>
@@ -70,7 +70,7 @@
     <field index='5' term='http://purl.org/dc/terms/identifier'/>
   </extension>
   
-   <extension encoding='UTF-8' fieldsEnclosedBy='' fieldsTerminatedBy='\t' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/SpeciesProfile'>
+   <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/SpeciesProfile'>
      <files>
        <location>speciesprofile.txt</location>
      </files>
@@ -78,7 +78,7 @@
      <field index='1' term='http://rs.tdwg.org/dwc/terms/habitat'/>
    </extension>  
    
-   <extension encoding='UTF-8' fieldsEnclosedBy='' fieldsTerminatedBy='\t' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/VernacularName'>
+   <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/VernacularName'>
      <files>
        <location>vernacular.txt</location>
      </files>

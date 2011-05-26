@@ -27,7 +27,7 @@ class Bootstrap
                 throw new Exception($error);
             }
         }
- 
+        
         // Text files used to write to are created on the fly when the objects are created
         $this->_init(
             array(
@@ -62,8 +62,9 @@ class Bootstrap
     private function _validateDel ($del)
     {
         if (!in_array($del, array(
-            '', 
-            ';'
+            ',', 
+            ';', 
+            chr(9)
         ))) {
             $this->_errors[] = 'Delimiter "' . $del . '" is not a valid CSV delimiter!';
         }
@@ -73,8 +74,9 @@ class Bootstrap
     private function _validateSep ($sep)
     {
         if (!in_array($sep, array(
-            '', 
-            '\''
+            '"', 
+            '\'',
+            chr(0)
         ))) {
             $this->_errors[] = 'Delimiter "' . $sep . '" is not a valid CSV separator!';
         }

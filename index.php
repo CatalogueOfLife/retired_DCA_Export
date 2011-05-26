@@ -17,9 +17,9 @@ require_once 'DCAExporter.php';
 $sc = array('genus' =>'larus%');
 
 $dwaExporter = new DCAExporter($sc);
+$dwaExporter->createMetaXml();
 $dwaExporter->writeTaxa();
 $dwaExporter->zipArchive();
-
 ?>
 </body>
 </html>
