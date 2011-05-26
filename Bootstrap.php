@@ -32,11 +32,11 @@ class Bootstrap
         $this->_init(
             array(
                 'taxon', 
-                'vernacular', 
+                'vernacular' /*, 
                 'description', 
                 'distribution', 
                 'identifier', 
-                'reference'
+                'reference'*/
             ));
     }
 
@@ -45,8 +45,9 @@ class Bootstrap
     {
         foreach ($objects as $object) {
             $objectName = ucfirst($object);
-            $$object = new $objectName($this->_dbh, $this->_dir, $this->_sep, $this->_del);
+            $$object = new $objectName($this->_dbh, $this->_dir, $this->_del, $this->_sep);
             $$object->init();
+            $$object->writeHeader();
             unset($$object);
         }
     }

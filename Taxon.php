@@ -29,7 +29,6 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
     public $isHigherTaxon = false;
     
     // Export settings
-    private $_fh;
     const FILE = 'taxa.txt';
     
     // Lookup tables

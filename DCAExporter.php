@@ -43,7 +43,8 @@ class DCAExporter
         $this->_ini = parse_ini_file('config/settings.ini', true);
     }
 
-    private function _setDefaultDelAndSep() {
+    private function _setDefaultDelAndSep ()
+    {
         if (empty($this->_del)) {
             $this->_del = ',';
         }
@@ -74,15 +75,11 @@ class DCAExporter
 
     public function writeTaxa ()
     {
-        $result = $this->_getTaxa();
-        foreach ($result as $i => $row) {
+        $taxa = $this->_getTaxa();
+        foreach ($taxa as $iTx => $rowTx) {
             $taxon = new Taxon($this->_dbh, $this->_dir, $this->_del, $this->_sep);
-            if ($i == 0) {
-                $taxon->writeHeader();
-            }
             // Decorate taxon with values fetched with getTaxa
-            $taxon->decorate(
-                $row);
+            $taxon->decorate($rowTx);
             // Set additional properties
             $taxon->setRank();
             $taxon->setLsid();
@@ -94,11 +91,17 @@ class DCAExporter
             
             // Remaing data is exported only for (infra)species
             if (!$taxon->isHigherTaxon) {
-                
+                $vernaculars = $this->_getVernaculars($taxon->taxonID);
+                foreach ($vernaculars as $iVn => $rowVn) {
+                    $vernacular = new Vernacular($this->_dbh, 
+                        $this->_dir, 
+                        $this->_del, 
+                        $this->_sep);
+                    $vernacular->decorate($rowVn);
+                }
             }
             
-            
-/*                
+            /*                
             echo '<pre>';
             print_r($taxon);
             echo '</pre>';
@@ -163,6 +166,30 @@ class DCAExporter
         $stmt = $this->_dbh->prepare($query);
         $stmt->execute($params);
         $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $res ? $res : false;
+        return $res ? $res : array();
     }
+
+    private function _getVernaculars ($taxon_id)
+    {
+        $query = 'SELECT t3.`name` as vernacularName, 
+                          t2.`name` as language, 
+                          t1.`country_iso` as countryCode, 
+                          t5.`authors`, 
+                          t5.`year`, 
+                          t5.`title`, 
+                          t5.`text` 
+                   FROM `common_name` t1 
+                   LEFT JOIN `language` AS t2 ON t2.`iso` = t1.`language_iso` 
+                   LEFT JOIN `common_name_element` AS t3 ON t3.`id` = t1.`common_name_element_id` 
+                   RIGHT JOIN `reference_to_common_name` AS t4 ON t4.`common_name_id` = t1.`id` 
+                   RIGHT JOIN `reference` AS t5 ON t5.`id` = t4.`reference_id` 
+                   WHERE t1.`taxon_id` = ?';
+        $stmt = $this->_dbh->prepare($query);
+        $stmt->execute(array(
+            $taxon_id
+        ));
+        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $res ? $res : array();
+    }
+
 }
