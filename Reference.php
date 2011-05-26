@@ -34,4 +34,10 @@ class Reference extends DCAExporterAbstract implements DCA_Interface
         $fields = array();
         $this->_writeLine($this->_fh, $fields);
     }
+
+    public function writeObject ()
+    {
+        $fields = array();
+        $this->_writeLine($this->_fh, $fields);
+    }
 }

@@ -107,7 +107,12 @@ class DCAExporter
             $taxon->setParentId();
             $taxon->setScrutiny();
             // Write to taxa.txt and destroy
-            $taxon->writeTaxon();
+            $taxon->writeObject();
+            
+            // Remaing data is exported only for (infra)species
+            if (!$taxon->isHigherTaxon) {
+                
+            }
             
             
 /*                

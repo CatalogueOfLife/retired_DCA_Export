@@ -29,4 +29,10 @@ class Description extends DCAExporterAbstract implements DCA_Interface
         $this->_writeLine($this->_fh, $fields);
     }
 
+    public function writeObject ()
+    {
+        $fields = array();
+        $this->_writeLine($this->_fh, $fields);
+    }
+    
 }

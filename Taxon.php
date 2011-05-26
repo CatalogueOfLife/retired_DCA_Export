@@ -26,7 +26,7 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
 
     // Derived values
     public $status;
-    private $_isHigherTaxon = false;
+    public $isHigherTaxon = false;
     
     // Export settings
     private $_fh;
@@ -83,7 +83,7 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
         foreach ($ranks as $rank) {
             if (!empty($this->$rank)) {
                 $this->taxonRank = $rank;
-                $this->_isHigherTaxon = true;
+                $this->isHigherTaxon = true;
                 return $this->taxonRank;
             }
         }
@@ -92,7 +92,7 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
 
     public function setScientificName ()
     {
-        if ($this->_isHigherTaxon) {
+        if ($this->isHigherTaxon) {
             $this->scientificName = $this->{$this->taxonRank};
             return $this->scientificName;
         }
@@ -105,7 +105,7 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
 
     public function setLsid ()
     {
-        if (!$this->_isHigherTaxon) {
+        if (!$this->isHigherTaxon) {
             $query = 'SELECT t1.`resource_identifier` AS LSID 
                       FROM `uri` AS t1  
                       LEFT JOIN `uri_to_taxon` AS t2 ON t1.`id` = t2.`uri_id` 
@@ -200,7 +200,7 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
         $this->_writeLine($this->_fh, $fields);
     }
 
-    public function writeTaxon ()
+    public function writeObject ()
     {
         $fields = array(
             $this->taxonID, 
