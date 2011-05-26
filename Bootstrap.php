@@ -1,17 +1,11 @@
 <?php
 class Bootstrap
 {
-    // Database handler
     private $_dbh;
-    // Directory in which files are saved
     private $_dir;
-    // CSV delimiter
     private $_del;
-    // CSV separator
     private $_sep;
-    // Search criteria
     private $_sc;
-    // Collects bootstrap exceptions
     private $_errors = array();
 
     public function __construct ($dbh, $dir, $del, $sep, $sc)
@@ -34,9 +28,9 @@ class Bootstrap
                 'taxon', 
                 'vernacular',
                 'reference' /*, 
+                @TODO when standard has settled
                 'description', 
-                'distribution', 
-                'identifier' 
+                'distribution'
                 */
             ));
     }

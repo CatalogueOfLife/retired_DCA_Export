@@ -4,9 +4,7 @@ require_once 'Bootstrap.php';
 require_once 'Abstract.php';
 require_once 'Taxon.php';
 require_once 'Vernacular.php';
-require_once 'Description.php';
 require_once 'Distribution.php';
-require_once 'Identifier.php';
 require_once 'Reference.php';
 require_once 'Indicator.php';
 require_once 'Zip.php';
@@ -20,6 +18,8 @@ class DCAExporter
     private $_del;
     private $_sep;
     private $_sc;
+    
+    private $_referenceSearchType = 'taxon';
 
     public function __construct ($sc)
     {
@@ -79,7 +79,8 @@ class DCAExporter
         foreach ($taxa as $iTx => $rowTx) {
             $taxon = new Taxon($this->_dbh, $this->_dir, $this->_del, $this->_sep);
             // Decorate taxon with values fetched with getTaxa
-            $taxon->decorate($rowTx);
+            $taxon->decorate(
+                $rowTx);
             // Set additional properties
             $taxon->setRank();
             $taxon->setLsid();
@@ -102,6 +103,18 @@ class DCAExporter
                     $vernacular->setSource();
                     $vernacular->writeObject();
                     unset($vernacular);
+                }
+                
+                $references = $this->_getReferences($taxon->taxonID, 
+                    $taxon->isSynonym);
+                foreach ($references as $iRf => $rowRf) {
+                    $reference = new Reference($this->_dbh, 
+                        $this->_dir, 
+                        $this->_del, 
+                        $this->_sep);
+                    $reference->taxonID = $taxon->taxonID;
+                    $reference->decorate($rowRf);
+                    $reference->writeObject();
                 }
             }
             
@@ -197,9 +210,27 @@ class DCAExporter
         $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $res ? $res : array();
     }
-    
-    private function _getReferences ($taxon_id, $table) {
-        $query = 'SELECT ';
-    }
 
+    private function _getReferences ($taxon_id, $isSynonym = false)
+    {
+        $type = 'taxon';
+        if ($isSynonym) {
+            $type = 'synonym';
+        }
+        $query = 'SELECT t1.`title`,
+                         t1.`authors` AS creator,
+                         t1.`year` AS date,
+                         t1.`text` AS description,
+                         t2.`resource_identifier` AS identifier
+                  FROM `reference` t1 
+                  LEFT JOIN `uri` AS t2 ON t1.`uri_id` = t2.`id`
+                  LEFT JOIN `reference_to_' . $type . '` AS t3 ON t1.`id` = t3.`reference_id` 
+                  WHERE t3.`' . $type . '_id` = ?';
+        $stmt = $this->_dbh->prepare($query);
+        $stmt->execute(array(
+            $taxon_id
+        ));
+        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $res ? $res : array();
+    }
 }

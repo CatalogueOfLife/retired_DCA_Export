@@ -23,7 +23,6 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
     public $scientificNameAuthorship;
     public $nameAccordingTo; // scrutiny, separate
     public $modified; // scrutiny date, separate
-    
 
     // Derived values
     public $status;
