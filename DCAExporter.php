@@ -91,8 +91,11 @@ class DCAExporter
     public function writeTaxa ()
     {
         $result = $this->_getTaxa();
-        foreach ($result as $row) {
+        foreach ($result as $i => $row) {
             $taxon = new Taxon($this->_dbh, $this->_dir, $this->_del, $this->_sep);
+            if ($i == 0) {
+                $taxon->writeHeader();
+            }
             // Decorate taxon with values fetched with getTaxa
             $taxon->decorate(
                 $row);
@@ -105,12 +108,14 @@ class DCAExporter
             $taxon->setScrutiny();
             // Write to taxa.txt and destroy
             $taxon->writeTaxon();
-            unset($taxon);
-            /*                
+            
+            
+/*                
             echo '<pre>';
             print_r($taxon);
             echo '</pre>';
 */
+            unset($taxon);
         }
     }
 

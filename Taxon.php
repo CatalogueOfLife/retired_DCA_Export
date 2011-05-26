@@ -172,6 +172,34 @@ class Taxon extends DCAExporterAbstract
         }
     }
 
+    public function writeHeader ()
+    {
+        $fields = array(
+            'taxonID', 
+            'LSID', 
+            'datasetID', 
+            'datasetName', 
+            'acceptedNameUsageID', 
+            'parentNameUsageID', 
+            'taxonomicStatus', 
+            'taxonRank', 
+            'scientificName', 
+            'kingdom', 
+            'phylum', 
+            'class', 
+            'order', 
+            'family', 
+            'genus', 
+            'subgenus', 
+            'specificEpithet', 
+            'infraspecificEpithet', 
+            'scientificNameAuthorship', 
+            'nameAccordingTo', 
+            'modified'
+        );
+        $this->_writeLine($this->_fh, $fields);
+    }
+
     public function writeTaxon ()
     {
         $fields = array(
