@@ -8,6 +8,7 @@
     </files>
     <id index='0' />
     <field index="0" term="http://rs.tdwg.org/dwc/terms/taxonID"/>
+    <!-- identifier contains the LSID -->
     <field index="1" term="http://purl.org/dc/terms/identifier"/>
     <field index="2" term="http://rs.tdwg.org/dwc/terms/datasetID"/>
 		<field index="3" term="http://rs.tdwg.org/dwc/terms/datasetName"/>
@@ -29,15 +30,7 @@
     <field index='20' term='http://rs.tdwg.org/dwc/terms/nameAccordingTo'/>    
     <field index='21' term='http://purl.org/dc/terms/modified'/>
   </core>
-  
-  <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Identifier'>
-		<files>
-			<location>taxa.txt</location>
-		</files>
-		<field index="1" term="http://purl.org/dc/terms/identifier"/>
-    <field default="LSID" term="http://purl.org/dc/terms/type"/>
-	</extension>
-	
+
   <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Distribution'>
     <files>
       <location>distribution.txt</location>
@@ -46,7 +39,7 @@
     <field index='1' term='http://rs.tdwg.org/dwc/terms/occurrenceStatus'/>
     <field index='2' term='http://rs.tdwg.org/dwc/terms/locationID'/>
     <field index='3' term='http://rs.tdwg.org/dwc/terms/locality'/>             
-    <field index='4' term='http://rs.tdwg.org/dwc/terms/establishmentMeans'/>                                            
+    <field index='4' term='http://rs.tdwg.org/dwc/terms/establishmentMeans'/>
   </extension>
   
   <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Description'>

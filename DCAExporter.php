@@ -43,22 +43,6 @@ class DCAExporter
         $this->_ini = parse_ini_file('config/settings.ini', true);
     }
 
-    private function _setDel ($del)
-    {
-        if (empty($del)) {
-            return ',';
-        }
-        return $del;
-    }
-
-    private function _setSep ($sep)
-    {
-        if (empty($sep)) {
-            return '"';
-        }
-        return $sep;
-    }
-    
     private function _setDefaultDelAndSep() {
         if (empty($this->_del)) {
             $this->_del = ',';
@@ -106,7 +90,6 @@ class DCAExporter
             $taxon->setNameStatus();
             $taxon->setParentId();
             $taxon->setScrutiny();
-            // Write to taxa.txt and destroy
             $taxon->writeObject();
             
             // Remaing data is exported only for (infra)species

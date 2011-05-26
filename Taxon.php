@@ -3,7 +3,7 @@ require_once 'Interface.php';
 class Taxon extends DCAExporterAbstract implements DCA_Interface
 {
     public $taxonID;
-    public $LSID; // separate
+    public $identifier; // LSID; separate
     public $datasetID;
     public $datasetName;
     public $acceptedNameUsageID;
@@ -117,7 +117,7 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
                 $this->taxonID
             ));
             if ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $this->LSID = $res['LSID'];
+                $this->identifier = $res['LSID'];
                 return true;
             }
             return false;
@@ -153,7 +153,7 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
 
     public function setScrutiny ()
     {
-        if (!$this->_isHigherTaxon) {
+        if (!$this->isHigherTaxon) {
             $query = 'SELECT t3.`name` AS nameAccordingTo, 
                              t2.`original_scrutiny_date` AS modified
                       FROM `taxon_detail` AS t1 
@@ -176,7 +176,7 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
     {
         $fields = array(
             'taxonID', 
-            'LSID', 
+            'identifier', 
             'datasetID', 
             'datasetName', 
             'acceptedNameUsageID', 
@@ -204,7 +204,7 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
     {
         $fields = array(
             $this->taxonID, 
-            $this->LSID, 
+            $this->identifier, 
             $this->datasetID, 
             $this->datasetName, 
             $this->acceptedNameUsageID, 
