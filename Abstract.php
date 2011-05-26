@@ -33,6 +33,8 @@ abstract class DCAExporterAbstract
         if (!$fh) {
             throw new Exception('Cannot create file ' . $fileName . '"');
         }
+        // Required to set file to UTF-8
+        fwrite($fh, pack("CCC", 0xef, 0xbb, 0xbf));
         fclose($fh);
     }
 

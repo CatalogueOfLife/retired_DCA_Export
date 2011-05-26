@@ -2,14 +2,12 @@
 require_once 'Interface.php';
 class Reference extends DCAExporterAbstract implements DCA_Interface
 {
-    public $id;
+    public $taxonID;
+    public $title;
     public $creator;
     public $date;
-    public $title;
-    public $source;
-    public $type;
-    public $taxonRemarks;
-    public $subject;
+    public $description;
+    public $identifier;
     
     const FILE = 'reference.txt';
 
@@ -31,13 +29,27 @@ class Reference extends DCAExporterAbstract implements DCA_Interface
 
     public function writeHeader ()
     {
-        $fields = array();
+        $fields = array(
+            'taxonID', 
+            'title', 
+            'creator', 
+            'date', 
+            'description', 
+            'identifier'
+        );
         $this->_writeLine($this->_fh, $fields);
     }
 
     public function writeObject ()
     {
-        $fields = array();
+        $fields = array(
+            $this->taxonID, 
+            $this->title, 
+            $this->creator, 
+            $this->date, 
+            $this->description, 
+            $this->identifier
+        );
         $this->_writeLine($this->_fh, $fields);
     }
 }

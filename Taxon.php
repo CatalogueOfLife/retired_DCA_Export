@@ -23,10 +23,12 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
     public $scientificNameAuthorship;
     public $nameAccordingTo; // scrutiny, separate
     public $modified; // scrutiny date, separate
+    
 
     // Derived values
     public $status;
     public $isHigherTaxon = false;
+    public $isSynonym = false;
     
     // Export settings
     const FILE = 'taxa.txt';
@@ -131,6 +133,12 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
             return $this->taxonomicStatus;
         }
         $this->taxonomicStatus = self::$scientificNameStatus[$this->status];
+        if (!in_array($this->status, array(
+            1, 
+            4
+        ))) {
+            $this->isSynonym = true;
+        }
         return $this->taxonomicStatus;
     }
 

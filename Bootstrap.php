@@ -32,11 +32,12 @@ class Bootstrap
         $this->_init(
             array(
                 'taxon', 
-                'vernacular' /*, 
+                'vernacular',
+                'reference' /*, 
                 'description', 
                 'distribution', 
-                'identifier', 
-                'reference'*/
+                'identifier' 
+                */
             ));
     }
 

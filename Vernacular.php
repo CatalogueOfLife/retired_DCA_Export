@@ -2,7 +2,7 @@
 require_once 'Interface.php';
 class Vernacular extends DCAExporterAbstract implements DCA_Interface
 {
-    public $taxonId;
+    public $taxonID;
     public $vernacularName;
     public $language;
     public $countryCode;
@@ -15,7 +15,6 @@ class Vernacular extends DCAExporterAbstract implements DCA_Interface
     public $title;
     public $text;
     
-    private $_vernaculars = array();
     const FILE = 'vernacular.txt';
 
     public function __construct (PDO $dbh, $dir, $del, $sep)
@@ -41,7 +40,7 @@ class Vernacular extends DCAExporterAbstract implements DCA_Interface
             $this->authors, 
             $this->year, 
             $this->title, 
-            $this->$text
+            $this->text
         );
         foreach ($elements as $element) {
             if ($element != '') {
@@ -55,7 +54,7 @@ class Vernacular extends DCAExporterAbstract implements DCA_Interface
     public function writeHeader ()
     {
         $fields = array(
-            'taxonId', 
+            'taxonID', 
             'vernacularName', 
             'language', 
             'countryCode', 
@@ -68,7 +67,7 @@ class Vernacular extends DCAExporterAbstract implements DCA_Interface
     public function writeObject ()
     {
         $fields = array(
-            $this->taxonId, 
+            $this->taxonID, 
             $this->vernacularName, 
             $this->language, 
             $this->countryCode, 

@@ -97,7 +97,11 @@ class DCAExporter
                         $this->_dir, 
                         $this->_del, 
                         $this->_sep);
+                    $vernacular->taxonID = $taxon->taxonID;
                     $vernacular->decorate($rowVn);
+                    $vernacular->setSource();
+                    $vernacular->writeObject();
+                    unset($vernacular);
                 }
             }
             
@@ -174,6 +178,7 @@ class DCAExporter
         $query = 'SELECT t3.`name` as vernacularName, 
                           t2.`name` as language, 
                           t1.`country_iso` as countryCode, 
+                          t6.`name` AS locality, 
                           t5.`authors`, 
                           t5.`year`, 
                           t5.`title`, 
@@ -183,6 +188,7 @@ class DCAExporter
                    LEFT JOIN `common_name_element` AS t3 ON t3.`id` = t1.`common_name_element_id` 
                    RIGHT JOIN `reference_to_common_name` AS t4 ON t4.`common_name_id` = t1.`id` 
                    RIGHT JOIN `reference` AS t5 ON t5.`id` = t4.`reference_id` 
+                   LEFT JOIN `country` AS t6 ON t1.`country_iso` = t6.`iso` 
                    WHERE t1.`taxon_id` = ?';
         $stmt = $this->_dbh->prepare($query);
         $stmt->execute(array(
@@ -190,6 +196,10 @@ class DCAExporter
         ));
         $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $res ? $res : array();
+    }
+    
+    private function _getReferences ($taxon_id, $table) {
+        $query = 'SELECT ';
     }
 
 }
