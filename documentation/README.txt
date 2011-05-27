@@ -42,7 +42,7 @@ IMPROVEMENTS
 
 Several potential improvements spring to mind that would make the software easier to use and/or more robust. In no particular order:
 
-1. Add an event listener on the DCA_Export class that will return exceptions, iterator, etc.
+1. Add an event listener on the DCA_Export class that will return exceptions, iterator, etc. Currently the application does not yet provide feedback when no results are found.
 2. Extend the way search criteria can be passed on to DCA_Export; currently only a single query on rank = 'taxon name' is possible.
 3. Less Spartan interface if visitors are allowed to create archives on-the-fly.
 4. Skip export if archive file already exists and is up-to-date.
