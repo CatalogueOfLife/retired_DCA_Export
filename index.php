@@ -20,8 +20,7 @@ if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !e
     require_once 'DCAExporter.php';
     $dcaExporter = new DCAExporter($searchCriteria);
     $ini = $dcaExporter->getExportSettings();
-    $info = pathinfo($_SERVER['PHP_SELF']);
-    $url = $_SERVER['HTTP_HOST'] . $info['dirname'] . '/' . $ini['zip_archive'] . "-$rank-$taxon.zip";
+    $url = $ini['zip_archive'] . "-$rank-$taxon.zip";
     
     echo '<p>Creating meta.xml...<br>';
     flush();
