@@ -17,9 +17,11 @@ class Bootstrap
         $this->_sc = $this->_validateSc($sc);
         
         if (!empty($this->_errors)) {
+            echo '<span style="color: red; font-weight: bold;">Error!</span><br>';
             foreach ($this->_errors as $error) {
-                throw new Exception($error);
+                echo $error.'<br>';
             }
+            exit();
         }
         
         // Text files used to write to are created on the fly when the objects are created
@@ -50,7 +52,7 @@ class Bootstrap
     private function _validateDir ($dir)
     {
         if (!is_writable($dir)) {
-            $this->_errors[] = 'Export directory "' . $dir . '" is not writable!';
+            $this->_errors[] = 'Export directory "' . $dir . '" is not writable.';
         }
         return $dir;
     }
@@ -62,7 +64,7 @@ class Bootstrap
             ';', 
             chr(9)
         ))) {
-            $this->_errors[] = 'Delimiter "' . $del . '" is not a valid CSV delimiter!';
+            $this->_errors[] = 'Delimiter "' . $del . '" is not a valid CSV delimiter.';
         }
         return $del;
     }
@@ -74,15 +76,22 @@ class Bootstrap
             '\'',
             chr(0)
         ))) {
-            $this->_errors[] = 'Delimiter "' . $sep . '" is not a valid CSV separator!';
+            $this->_errors[] = 'Delimiter "' . $sep . '" is not a valid CSV separator.';
         }
         return $sep;
     }
 
-    // @TODO: implement filter
+    // @TODO: refine input filter
     private function _validateSc ($sc)
     {
+        foreach ($sc as $rank => $taxon) {
+            if (!in_array($rank, Taxon::$higherTaxa)) {
+                $this->_errors[] = 'Taxonomic rank to search for is invalid.';
+            }
+            if (!ereg("[a-zA-Z]+", $taxon)) {
+                $this->_errors[] = 'Name to search for contains invalid characters.';
+            }
+        }
         return $sc;
     }
-
 }

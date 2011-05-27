@@ -31,11 +31,9 @@ class DCAExporter
         $this->_del = $this->_ini['export']['delimiter'];
         $this->_sep = $this->_ini['export']['separator'];
         $this->_sc = $sc;
-        
         $this->_setDefaultDelAndSep();
         
         $bootstrap = new Bootstrap($this->_dbh, $this->_dir, $this->_del, $this->_sep, $this->_sc);
-        unset($bootstrap);
     }
 
     private function _setIni ()
@@ -57,6 +55,11 @@ class DCAExporter
             $this->_del = chr(9);
             $this->_sep = chr(0);
         }
+    }
+
+    public function getExportSettings ()
+    {
+        return $this->_ini['export'];
     }
 
     private function _setDbInst ()
@@ -115,6 +118,7 @@ class DCAExporter
                     $reference->taxonID = $taxon->taxonID;
                     $reference->decorate($rowRf);
                     $reference->writeObject();
+                    unset($reference);
                 }
             }
             
@@ -142,7 +146,9 @@ class DCAExporter
     public function zipArchive ()
     {
         $src = dirname(__FILE__) . '/' . $this->_dir;
-        $dest = dirname(__FILE__) . '/' . $this->_ini['export']['zip_archive'];
+        // Default name of archive is archive-rank-taxon.zip
+        $dest = dirname(__FILE__) . '/' . $this->_ini['export']['zip_archive'] . '-' . array_shift(
+            array_keys($this->_sc)) . '-' . array_shift(array_values($this->_sc)) . '.zip';
         
         $zip = new Zip();
         $zip->createArchive($src, $dest);
