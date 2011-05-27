@@ -16,9 +16,21 @@ if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !e
     $searchCriteria = array(
         $rank => $taxon
     );
-    // Construct download url
+    
+    // Initialize the class and check for errors
     require_once 'DCAExporter.php';
     $dcaExporter = new DCAExporter($searchCriteria);
+    $errors = $dcaExporter->getStartUpErrors();
+    if (!empty($errors)) {
+        echo '<p><span style="color: red; font-weight: bold;">Error!</span><br>';
+        foreach ($errors as $error) {
+            echo $error . '<br>';
+        }
+        echo "</p>\n<p><a href='index.php'>Back to the index</a></p>";
+        exit();
+    }
+    
+    // Construct download url
     $ini = $dcaExporter->getExportSettings();
     $url = $ini['zip_archive'] . "-$rank-$taxon.zip";
     

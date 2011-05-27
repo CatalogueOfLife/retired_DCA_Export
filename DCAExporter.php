@@ -12,36 +12,41 @@ require_once 'modules/Reference.php';
 
 class DCAExporter
 {
-    private $_ini;
     private $_dbh;
     private $_dir;
     private $_del;
     private $_sep;
     private $_sc;
     
-    private $_referenceSearchType = 'taxon';
+    public $ini;
+    public $startUpErrors;
 
     public function __construct ($sc)
     {
-        $this->_setIni();
-        $this->_setDbInst();
-        
-        $this->_dbh = DbHandler::getInstance('db');
-        $this->_dir = $this->_ini['export']['export_dir'];
-        $this->_del = $this->_ini['export']['delimiter'];
-        $this->_sep = $this->_ini['export']['separator'];
+        $this->ini = self::getIni();
+        $this->_dir = $this->ini['export']['export_dir'];
+        $this->_del = $this->ini['export']['delimiter'];
+        $this->_sep = $this->ini['export']['separator'];
         $this->_sc = $sc;
-        $this->_setDefaultDelAndSep();
+        $this->_setDefaults();
         
-        $bootstrap = new Bootstrap($this->_dbh, $this->_dir, $this->_del, $this->_sep, $this->_sc);
+        $bootstrap = new Bootstrap($this->_dir, $this->_del, $this->_sep, $this->_sc);
+        $this->startUpErrors = $bootstrap->getErrors();
+//        print_r($this->startUpErrors);
+        $this->_dbh = $bootstrap->getDbHandler();
     }
 
-    private function _setIni ()
+    public function getStartUpErrors ()
     {
-        $this->_ini = parse_ini_file('config/settings.ini', true);
+        return $this->startUpErrors;
     }
 
-    private function _setDefaultDelAndSep ()
+    public static function getIni ()
+    {
+        return parse_ini_file('config/settings.ini', true);
+    }
+
+    private function _setDefaults ()
     {
         if (empty($this->_del)) {
             $this->_del = ',';
@@ -59,30 +64,17 @@ class DCAExporter
 
     public function getExportSettings ()
     {
-        return $this->_ini['export'];
-    }
-
-    private function _setDbInst ()
-    {
-        $config = $this->_ini['db'];
-        $dbOptions = array();
-        if (isset($config["options"])) {
-            $options = explode(",", $config["options"]);
-            foreach ($options as $option) {
-                $pts = explode("=", trim($option));
-                $dbOptions[$pts[0]] = $pts[1];
-            }
-            DbHandler::createInstance('db', $config, $dbOptions);
-        }
+        return $this->ini['export'];
     }
 
     public function writeData ()
     {
-        $total = $this->_getTotalNumberOfTaxa();
+        $total = $this->getTotalNumberOfTaxa();
         for ($limit = 1000, $offset = 0; $offset < $total; $offset += $limit) {
             $taxa = $this->_getTaxa($limit, $offset);
             foreach ($taxa as $iTx => $rowTx) {
-                $taxon = new Taxon($this->_dbh, $this->_dir, $this->_del, $this->_sep);
+                $taxon = new Taxon($this->_dbh, $this->_dir, $this->_del, 
+                    $this->_sep);
                 // Decorate taxon with values fetched with getTaxa
                 $taxon->decorate(
                     $rowTx);
@@ -97,28 +89,34 @@ class DCAExporter
                 
                 // Remaing data is exported only for (infra)species
                 if (!$taxon->isHigherTaxon) {
-                    $vernaculars = $this->_getVernaculars($taxon->taxonID);
+                    $vernaculars = $this->_getVernaculars(
+                        $taxon->taxonID);
                     foreach ($vernaculars as $iVn => $rowVn) {
-                        $vernacular = new Vernacular($this->_dbh, 
+                        $vernacular = new Vernacular(
+                            $this->_dbh, 
                             $this->_dir, 
                             $this->_del, 
                             $this->_sep);
                         $vernacular->taxonID = $taxon->taxonID;
-                        $vernacular->decorate($rowVn);
+                        $vernacular->decorate(
+                            $rowVn);
                         $vernacular->setSource();
                         $vernacular->writeObject();
                         unset($vernacular);
                     }
                     
-                    $references = $this->_getReferences($taxon->taxonID, 
+                    $references = $this->_getReferences(
+                        $taxon->taxonID, 
                         $taxon->isSynonym);
                     foreach ($references as $iRf => $rowRf) {
-                        $reference = new Reference($this->_dbh, 
+                        $reference = new Reference(
+                            $this->_dbh, 
                             $this->_dir, 
                             $this->_del, 
                             $this->_sep);
                         $reference->taxonID = $taxon->taxonID;
-                        $reference->decorate($rowRf);
+                        $reference->decorate(
+                            $rowRf);
                         $reference->writeObject();
                         unset($reference);
                     }
@@ -150,7 +148,7 @@ class DCAExporter
     {
         $src = dirname(__FILE__) . '/' . $this->_dir;
         // Default name of archive is archive-rank-taxon.zip
-        $dest = dirname(__FILE__) . '/' . $this->_ini['export']['zip_archive'] .
+        $dest = dirname(__FILE__) . '/' . $this->ini['export']['zip_archive'] .
              '-' . array_shift(array_keys($this->_sc)) . '-' . array_shift(
                 array_values($this->_sc)) . '.zip';
         
@@ -159,7 +157,7 @@ class DCAExporter
         unset($zip);
     }
 
-    private function _getTotalNumberOfTaxa ()
+    public function getTotalNumberOfTaxa ()
     {
         $params = array();
         $query = 'SELECT COUNT(`id`)
@@ -212,7 +210,7 @@ class DCAExporter
         $stmt = $this->_dbh->prepare($query);
         if (!empty($this->_sc)) {
             foreach ($this->_sc as $field => $value) {
-                $stmt->bindValue(':'.$field, $value);
+                $stmt->bindValue(':' . $field, $value);
             }
         }
         $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
@@ -221,7 +219,7 @@ class DCAExporter
         $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $res ? $res : array();
     }
-    
+
     private function _getVernaculars ($taxon_id)
     {
         $query = 'SELECT t3.`name` as vernacularName, 

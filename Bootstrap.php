@@ -6,36 +6,57 @@ class Bootstrap
     private $_del;
     private $_sep;
     private $_sc;
+    
     private $_errors = array();
 
-    public function __construct ($dbh, $dir, $del, $sep, $sc)
+    public function __construct ($dir, $del, $sep, $sc)
     {
-        $this->_dbh = $dbh;
-        $this->_dir = $this->_validateDir($dir);
-        $this->_del = $this->_validateDel($del);
-        $this->_sep = $this->_validateSep($sep);
-        $this->_sc = $this->_validateSc($sc);
-        
-        if (!empty($this->_errors)) {
-            echo '<p><span style="color: red; font-weight: bold;">Error!</span><br>';
-            foreach ($this->_errors as $error) {
-                echo $error.'<br>';
+        $this->_createDbInstance('db');
+        $this->_dbh = DbHandler::getInstance('db');
+        if (!($this->_dbh instanceof PDO)) {
+            $this->_errors[] = 'Could not create database instance; check settings in settings.ini!';
+        } else {
+            $this->_dir = $this->_validateDir($dir);
+            $this->_del = $this->_validateDel($del);
+            $this->_sep = $this->_validateSep($sep);
+            $this->_sc = $this->_validateSc($sc);
+            
+            // Text files used to write to are created on the fly when the objects are created
+            // @TODO when standard has settled add 'description', 'distribution'
+            if (empty($this->_errors)) {
+                $this->_init(
+                array(
+                    'taxon', 
+                    'vernacular', 
+                    'reference'
+                ));
             }
-            echo "</p>\n<p><a href='index.php'>Back to the index</a></p>";
-            exit();
         }
-        
-        // Text files used to write to are created on the fly when the objects are created
-        $this->_init(
-            array(
-                'taxon', 
-                'vernacular',
-                'reference' /*, 
-                @TODO when standard has settled
-                'description', 
-                'distribution'
-                */
-            ));
+    }
+
+    private function _createDbInstance ($name)
+    {
+        $ini = DCAExporter::getIni();
+        $config = $ini['db'];
+        $dbOptions = array();
+        if (isset($config["options"])) {
+            $options = explode(",", $config["options"]);
+            foreach ($options as $option) {
+                $pts = explode("=", trim($option));
+                $dbOptions[$pts[0]] = $pts[1];
+            }
+            DbHandler::createInstance($name, $config, $dbOptions);
+        }
+    }
+
+    public function getDbHandler ()
+    {
+        return $this->_dbh;
+    }
+
+    public function getErrors ()
+    {
+        return $this->_errors;
     }
 
     // Create text files
@@ -74,7 +95,7 @@ class Bootstrap
     {
         if (!in_array($sep, array(
             '"', 
-            '\'',
+            '\'', 
             chr(0)
         ))) {
             $this->_errors[] = 'Delimiter "' . $sep . '" is not a valid CSV separator.';
