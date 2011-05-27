@@ -17,10 +17,11 @@ class Bootstrap
         $this->_sc = $this->_validateSc($sc);
         
         if (!empty($this->_errors)) {
-            echo '<span style="color: red; font-weight: bold;">Error!</span><br>';
+            echo '<p><span style="color: red; font-weight: bold;">Error!</span><br>';
             foreach ($this->_errors as $error) {
                 echo $error.'<br>';
             }
+            echo "</p>\n<p><a href='index.php'>Back to the index</a></p>";
             exit();
         }
         

@@ -31,7 +31,7 @@ if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !e
     echo 'Compressing to zip archive..<br>';
     flush();
     $dcaExporter->zipArchive();
-    echo "</p>\n<p>Ready! <a href='$url'>Download the zip archive</a>.</p>";
+    echo "</p>\n<p>Ready! <a href='$url'>Download the zip archive</a>.</p><p><a href='index.php'>Back to the index</a></p>";
 }
 else {
     require_once 'modules/Abstract.php';
