@@ -1,14 +1,14 @@
 <?php
 require_once 'DbHandler.php';
 require_once 'Bootstrap.php';
-require_once 'Abstract.php';
-require_once 'Taxon.php';
-require_once 'Vernacular.php';
-require_once 'Distribution.php';
-require_once 'Reference.php';
 require_once 'Indicator.php';
 require_once 'Zip.php';
 require_once 'Template.php';
+require_once 'modules/Abstract.php';
+require_once 'modules/Taxon.php';
+require_once 'modules/Vernacular.php';
+require_once 'modules/Distribution.php';
+require_once 'modules/Reference.php';
 
 class DCAExporter
 {
