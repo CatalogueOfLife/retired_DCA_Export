@@ -78,56 +78,60 @@ class DCAExporter
 
     public function writeData ()
     {
-        $taxa = $this->_getTaxa();
-        foreach ($taxa as $iTx => $rowTx) {
-            $taxon = new Taxon($this->_dbh, $this->_dir, $this->_del, $this->_sep);
-            // Decorate taxon with values fetched with getTaxa
-            $taxon->decorate(
-                $rowTx);
-            // Set additional properties
-            $taxon->setRank();
-            $taxon->setLsid();
-            $taxon->setScientificName();
-            $taxon->setNameStatus();
-            $taxon->setParentId();
-            $taxon->setScrutiny();
-            $taxon->writeObject();
-            
-            // Remaing data is exported only for (infra)species
-            if (!$taxon->isHigherTaxon) {
-                $vernaculars = $this->_getVernaculars($taxon->taxonID);
-                foreach ($vernaculars as $iVn => $rowVn) {
-                    $vernacular = new Vernacular($this->_dbh, 
-                        $this->_dir, 
-                        $this->_del, 
-                        $this->_sep);
-                    $vernacular->taxonID = $taxon->taxonID;
-                    $vernacular->decorate($rowVn);
-                    $vernacular->setSource();
-                    $vernacular->writeObject();
-                    unset($vernacular);
+        $total = $this->_getTotalNumberOfTaxa();
+        for ($limit = 1000, $offset = 0; $offset < $total; $offset += $limit) {
+            echo "$total | $offset | $limit<BR>";
+            $taxa = $this->_getTaxa($limit, $offset);
+            foreach ($taxa as $iTx => $rowTx) {
+                $taxon = new Taxon($this->_dbh, $this->_dir, $this->_del, $this->_sep);
+                // Decorate taxon with values fetched with getTaxa
+                $taxon->decorate(
+                    $rowTx);
+                // Set additional properties
+                $taxon->setRank();
+                $taxon->setLsid();
+                $taxon->setScientificName();
+                $taxon->setNameStatus();
+                $taxon->setParentId();
+                $taxon->setScrutiny();
+                $taxon->writeObject();
+                
+                // Remaing data is exported only for (infra)species
+                if (!$taxon->isHigherTaxon) {
+                    $vernaculars = $this->_getVernaculars($taxon->taxonID);
+                    foreach ($vernaculars as $iVn => $rowVn) {
+                        $vernacular = new Vernacular($this->_dbh, 
+                            $this->_dir, 
+                            $this->_del, 
+                            $this->_sep);
+                        $vernacular->taxonID = $taxon->taxonID;
+                        $vernacular->decorate($rowVn);
+                        $vernacular->setSource();
+                        $vernacular->writeObject();
+                        unset($vernacular);
+                    }
+                    
+                    $references = $this->_getReferences($taxon->taxonID, 
+                        $taxon->isSynonym);
+                    foreach ($references as $iRf => $rowRf) {
+                        $reference = new Reference($this->_dbh, 
+                            $this->_dir, 
+                            $this->_del, 
+                            $this->_sep);
+                        $reference->taxonID = $taxon->taxonID;
+                        $reference->decorate($rowRf);
+                        $reference->writeObject();
+                        unset($reference);
+                    }
                 }
                 
-                $references = $this->_getReferences($taxon->taxonID, 
-                    $taxon->isSynonym);
-                foreach ($references as $iRf => $rowRf) {
-                    $reference = new Reference($this->_dbh, 
-                        $this->_dir, 
-                        $this->_del, 
-                        $this->_sep);
-                    $reference->taxonID = $taxon->taxonID;
-                    $reference->decorate($rowRf);
-                    $reference->writeObject();
-                    unset($reference);
-                }
+                /*                
+                echo '<pre>';
+                print_r($taxon);
+                echo '</pre>';
+    */
+                unset($taxon);
             }
-            
-            /*                
-            echo '<pre>';
-            print_r($taxon);
-            echo '</pre>';
-*/
-            unset($taxon);
         }
     }
 
@@ -147,17 +151,37 @@ class DCAExporter
     {
         $src = dirname(__FILE__) . '/' . $this->_dir;
         // Default name of archive is archive-rank-taxon.zip
-        $dest = dirname(__FILE__) . '/' . $this->_ini['export']['zip_archive'] . '-' . array_shift(
-            array_keys($this->_sc)) . '-' . array_shift(array_values($this->_sc)) . '.zip';
+        $dest = dirname(__FILE__) . '/' . $this->_ini['export']['zip_archive'] .
+             '-' . array_shift(array_keys($this->_sc)) . '-' . array_shift(
+                array_values($this->_sc)) . '.zip';
         
         $zip = new Zip();
         $zip->createArchive($src, $dest);
         unset($zip);
     }
 
-    private function _getTaxa ()
+    private function _getTotalNumberOfTaxa ()
     {
         $params = array();
+        $query = 'SELECT COUNT(`id`)
+                  FROM `_search_scientific` ';
+        // @TODO: extend this for other search criteria!
+        if (!empty($this->_sc)) {
+            $query .= 'WHERE ';
+            foreach ($this->_sc as $field => $value) {
+                $query .= "`$field` LIKE ? AND ";
+                $params[] = $value;
+            }
+            $query = substr($query, 0, -4);
+        }
+        $stmt = $this->_dbh->prepare($query);
+        $stmt->execute($params);
+        $res = $stmt->fetch(PDO::FETCH_NUM);
+        return $res ? $res[0] : false;
+    }
+
+    private function _getTaxa ($limit, $offset)
+    {
         $query = 'SELECT `id` AS taxonID,
                          `source_database_id` AS datasetID,
                           IF (`source_database_name` != "", 
@@ -181,17 +205,24 @@ class DCAExporter
         if (!empty($this->_sc)) {
             $query .= 'WHERE ';
             foreach ($this->_sc as $field => $value) {
-                $query .= "`$field` LIKE ? AND ";
-                $params[] = $value;
+                $query .= "`$field` LIKE :$field AND ";
             }
             $query = substr($query, 0, -4);
         }
+        $query .= 'LIMIT :limit OFFSET :offset';
         $stmt = $this->_dbh->prepare($query);
-        $stmt->execute($params);
+        if (!empty($this->_sc)) {
+            foreach ($this->_sc as $field => $value) {
+                $stmt->bindValue(':'.$field, $value);
+            }
+        }
+        $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
+        $stmt->execute();
         $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $res ? $res : array();
     }
-
+    
     private function _getVernaculars ($taxon_id)
     {
         $query = 'SELECT t3.`name` as vernacularName, 

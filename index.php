@@ -8,44 +8,46 @@
 <h3>Catalogue of Life: Darwin Core Archive export</h3>
 
 <?php
-require_once 'Abstract.php';
-require_once 'Taxon.php';
-$ranks = Taxon::$higherTaxa;
-
 if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !empty($_GET['taxon'])) {
-    require_once 'DCAExporter.php';
+    
+    // $_GET input is validated in application
     $rank = $_GET['rank'];
     $taxon = $_GET['taxon'];
-    // $_GET input for rank and taxon is validated in application
-    $sc = array(
+    $searchCriteria = array(
         $rank => $taxon
     );
+    // Construct download url
+    require_once 'DCAExporter.php';
+    $dcaExporter = new DCAExporter($searchCriteria);
+    $ini = $dcaExporter->getExportSettings();
+    $info = pathinfo($_SERVER['PHP_SELF']);
+    $url = $_SERVER['HTTP_HOST'] . $info['dirname'] . '/' . $ini['zip_archive'] . "-$rank-$taxon.zip";
     
-    $dwaExporter = new DCAExporter($sc);
     echo '<p>Creating meta.xml...<br>';
     flush();
-    $dwaExporter->createMetaXml();
+    $dcaExporter->createMetaXml();
     echo 'Writing data...<br>';
     flush();
-    $dwaExporter->writeData();
+    $dcaExporter->writeData();
     echo 'Compressing to zip archive..<br>';
     flush();
-    $dwaExporter->zipArchive();
-    
-    $ini = $dwaExporter->getExportSettings();
-    $pathInfo = pathinfo($_SERVER['PHP_SELF']);
-    $downloadUrl = $_SERVER['HTTP_HOST'] . $pathInfo['dirname'] . '/' . $ini['zip_archive'] . "-$rank-$taxon.zip";
-    echo "</p>\n<p>Ready! <a href='$downloadUrl'>Download the zip archive</a>.</p>";
+    $dcaExporter->zipArchive();
+    echo "</p>\n<p>Ready! <a href='$url'>Download the zip archive</a>.</p>";
 }
 else {
-    echo '<p>This page offers a very basic interface on the application that exports data from the Catalogue of Life
-          in the <a href="http://code.google.com/p/gbif-ecat/wiki/DwCArchive">Darwin Core Archive format</a>.</p><p>
-          Select a rank from the popup menu and enter a taxon name to start the process. The name should match
-          exactly, wildcards are not allowed. Note that the higher the rank, the longer the export process will
-          take, so for demonstration purpose it is best to select a family or genus.</p>';
-    echo "\n<form id='postQuery' action='" . $_SERVER['PHP_SELF'] . "' method='get'>\n<select name='rank'>\n";
+    require_once 'Abstract.php';
+    require_once 'Taxon.php';
+    $ranks = Taxon::$higherTaxa;
+    // Omit rank subgenus as this is not available yet in AC
     $nrRanks = count($ranks) - 1;
     $selected = '';
+    
+    echo '<p>This page offers a very basic interface on the application that exports data from the Catalogue of Life
+          in the <a href="http://code.google.com/p/gbif-ecat/wiki/DwCArchive">Darwin Core Archive format</a>.</p><p>
+          Select a rank from the popup menu and enter a taxon name to start the export. The name should match
+          exactly, wildcards are not allowed. Note that the higher the rank, the longer the export process will
+          take, so for demonstration purpose it is best to select a family or genus.</p>';
+    echo "\n<form style='margin-top: 30px;' action='" . $_SERVER['PHP_SELF'] . "' method='get'>\n<select name='rank'>\n";
     for ($i = 0; $i < $nrRanks; $i++) {
         if ($i == ($nrRanks - 1)) {
             // Automatically select genus from popup
