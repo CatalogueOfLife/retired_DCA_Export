@@ -80,7 +80,6 @@ class DCAExporter
     {
         $total = $this->_getTotalNumberOfTaxa();
         for ($limit = 1000, $offset = 0; $offset < $total; $offset += $limit) {
-            echo "$total | $offset | $limit<BR>";
             $taxa = $this->_getTaxa($limit, $offset);
             foreach ($taxa as $iTx => $rowTx) {
                 $taxon = new Taxon($this->_dbh, $this->_dir, $this->_del, $this->_sep);
