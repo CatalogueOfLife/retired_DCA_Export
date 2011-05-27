@@ -34,8 +34,8 @@ if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !e
     echo "</p>\n<p>Ready! <a href='$url'>Download the zip archive</a>.</p>";
 }
 else {
-    require_once 'Abstract.php';
-    require_once 'Taxon.php';
+    require_once 'modules/Abstract.php';
+    require_once 'modules/Taxon.php';
     $ranks = Taxon::$higherTaxa;
     // Omit rank subgenus as this is not available yet in AC
     $nrRanks = count($ranks) - 1;
