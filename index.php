@@ -1,11 +1,21 @@
+<?php
+@ini_set('zlib.output_compression', 0);
+@ini_set('implicit_flush', 1);
+for ($i = 0; $i < ob_get_level(); $i++) {
+    ob_end_flush();
+}
+ob_implicit_flush(1);
+set_time_limit(0);
+?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<title>Catalogue of Life: Darwin Core Archive export</title>
+<title>i4Life WP4 Enhanced Download Service of the Catalogue of Life: Darwin Core Archive Export</title>
 </head>
-<body style="font: 12px verdana; width: 600px;">
-<h3>Catalogue of Life: Darwin Core Archive export</h3>
+<body style="font: 12px verdana; width: 800px;">
+<h3>i4Life WP4 Enhanced Download Service of the Catalogue of Life: 
+Darwin Core Archive Export</h3>
 
 <?php
 if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !empty($_GET['taxon'])) {
@@ -20,6 +30,7 @@ if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !e
     // Initialize the class and check for errors
     require_once 'DCAExporter.php';
     $dcaExporter = new DCAExporter($searchCriteria);
+    $dcaExporter->useIndicator();
     $errors = $dcaExporter->getStartUpErrors();
     if (!empty($errors)) {
         echo '<p><span style="color: red; font-weight: bold;">Error!</span><br>';
@@ -29,19 +40,24 @@ if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !e
         echo "</p>\n<p><a href='index.php'>Back to the index</a></p>";
         exit();
     }
-    
     // Construct download url
     $ini = $dcaExporter->getExportSettings();
     $url = $ini['zip_archive'] . "-$rank-$taxon.zip";
     
+    $total = $dcaExporter->getTotalNumberOfTaxa();
+    if ($total > 0) {
+        echo "<p>Creating export for $total taxa in $rank " . ucfirst($taxon) . '.</p>';
+    }
+    else {
+        echo "<p>No results found for $rank " . ucfirst($taxon) . '. <a href="index.php">Back to the index</a></p>';
+        exit();
+    }
+    
     echo '<p>Creating meta.xml...<br>';
-    flush();
     $dcaExporter->createMetaXml();
-    echo 'Writing data...<br>';
-    flush();
+    echo 'Writing data to text files...<br>';
     $dcaExporter->writeData();
-    echo 'Compressing to zip archive..<br>';
-    flush();
+    echo '<br>Compressing to zip archive..<br>';
     $dcaExporter->zipArchive();
     echo "</p>\n<p>Ready! <a href='$url'>Download the zip archive</a>.</p><p><a href='index.php'>Back to the index</a></p>";
 }
@@ -53,12 +69,8 @@ else {
     $nrRanks = count($ranks) - 1;
     $selected = '';
     
-    echo '<p>This page offers a very basic interface on the application that exports data from the Catalogue of Life
-          in the <a href="http://code.google.com/p/gbif-ecat/wiki/DwCArchive">Darwin Core Archive format</a>.</p><p>
-          Select a rank from the popup menu and enter a taxon name to start the export. The name should match
-          exactly, wildcards are not allowed. Note that the higher the rank, the longer the export process will
-          take, so for demonstration purpose it is best to select a family or genus.</p>';
-    echo "\n<form style='margin-top: 30px;' action='" . $_SERVER['PHP_SELF'] . "' method='get'>\n<select name='rank'>\n";
+    echo file_get_contents('templates/intro.tpl').
+         "\n<form style='margin-top: 30px;' action='" . $_SERVER['PHP_SELF'] . "' method='get'>\n<select name='rank'>\n";
     for ($i = 0; $i < $nrRanks; $i++) {
         if ($i == ($nrRanks - 1)) {
             // Automatically select genus from popup

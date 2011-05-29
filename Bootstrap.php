@@ -108,10 +108,10 @@ class Bootstrap
     {
         foreach ($sc as $rank => $taxon) {
             if (!in_array($rank, Taxon::$higherTaxa)) {
-                $this->_errors[] = 'Taxonomic rank to search for is invalid.';
+                $this->_errors[] = 'Rank <b>'.$rank.'</b> is invalid.';
             }
-            if (!ereg("[a-zA-Z]+", $taxon)) {
-                $this->_errors[] = 'Name to search for contains invalid characters.';
+            if ($taxon != '%' && !ereg("[a-zA-Z]+", $taxon)) {
+                $this->_errors[] = 'Name <b>'. $taxon.'</b> contains invalid characters.';
             }
         }
         return $sc;

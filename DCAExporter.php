@@ -20,6 +20,7 @@ class DCAExporter
     
     public $ini;
     public $startUpErrors;
+    private $_indicator;
 
     public function __construct ($sc)
     {
@@ -45,6 +46,10 @@ class DCAExporter
     {
         return parse_ini_file('config/settings.ini', true);
     }
+    
+    public function useIndicator() {
+        $this->_indicator = new Indicator();
+    }
 
     private function _setDefaults ()
     {
@@ -60,6 +65,12 @@ class DCAExporter
             $this->_del = chr(9);
             $this->_sep = chr(0);
         }
+        // Change search all option [all] to MySQL wildcard
+        foreach ($this->_sc as $k => $v) {
+            if ($v == '[all]') {
+                $this->_sc[$k] = '%';
+            }
+        }
     }
 
     public function getExportSettings ()
@@ -70,9 +81,12 @@ class DCAExporter
     public function writeData ()
     {
         $total = $this->getTotalNumberOfTaxa();
+        $this->_indicator ? $this->_indicator->init($total, 75, 50) : '';
+        
         for ($limit = 1000, $offset = 0; $offset < $total; $offset += $limit) {
             $taxa = $this->_getTaxa($limit, $offset);
             foreach ($taxa as $iTx => $rowTx) {
+                $this->_indicator ? $this->_indicator->iterate() : '';
                 $taxon = new Taxon($this->_dbh, $this->_dir, $this->_del, 
                     $this->_sep);
                 // Decorate taxon with values fetched with getTaxa
@@ -121,12 +135,6 @@ class DCAExporter
                         unset($reference);
                     }
                 }
-                
-                /*                
-                echo '<pre>';
-                print_r($taxon);
-                echo '</pre>';
-    */
                 unset($taxon);
             }
         }
@@ -134,7 +142,7 @@ class DCAExporter
 
     public function createMetaXml ()
     {
-        $src = dirname(__FILE__) . '/template/meta.tpl';
+        $src = dirname(__FILE__) . '/templates/meta.tpl';
         $dest = dirname(__FILE__) . '/' . $this->_dir;
         
         $template = new Template($src, $dest);

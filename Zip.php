@@ -4,7 +4,7 @@
  * 
  * Class to zip file or contents of a directory.
  * 
- * @author Ruud Altenburg, based on 
+ * @author Ruud Altenburg, extended and improved from 
  * http://stackoverflow.com/questions/1334613/how-to-recursively-zip-a-directory-in-php
  */
 class Zip
@@ -25,15 +25,29 @@ class Zip
             throw new Exception('Path to source ' . $this->_source . ' is invalid');
         }
         $zip = new ZipArchive();
-        if (!$zip->open($this->_destination, ZIPARCHIVE::CREATE)) {
+        $res = $zip->open($this->_destination, ZIPARCHIVE::CREATE);
+        if (!$res) {
             unset($zip);
-            throw new Exception('Cannot create zip archive ' . $this->_destination);
-        }
+            throw new Exception('Cannot create zip archive ' . $this->_destination .': ' .$res);
+        } 
+        /* TODO: skip creating archive if it already exists, or delete first and continue?
+        else {
+            if (file_exists($this->_destination)) {
+                unlink($this->_destination);
+            }
+            $res = $zip->open($this->_destination, ZIPARCHIVE::CREATE);
+        } */
         return $zip;
     }
-
+    
+    private function _disableTimeOut() {
+        set_time_limit(0);
+    }
+    
     public function createArchive ($source, $destination)
     {
+        // Needed for really large archives
+        $this->_disableTimeout();
         $zip = $this->_initZip($source, $destination);
         $this->_source = realpath($this->_source);
         if (is_dir($this->_source)) {
@@ -42,17 +56,21 @@ class Zip
                 RecursiveIteratorIterator::SELF_FIRST
             );
             foreach ($files as $file) {
-                $file = realpath($file);
-                if (is_dir($file)) {
-                    $zip->addEmptyDir(str_replace($this->_source .'/', '', $file .'/'));
-                }
-                else if (is_file($file)) {
-                    $zip->addFromString(str_replace($this->_source . '/', '', $file), file_get_contents($file));
+                // Skip hidden files and directories
+                $fileOrDir = str_replace($this->_source .'/', '', $file);
+                if ($fileOrDir[0] != '.') {
+                    $path = realpath($file);
+                    if (is_dir($path)) {
+                        $zip->addEmptyDir(str_replace($this->_source .'/', '', $path .'/'));
+                    }
+                    else if (is_file($path)) {
+                        $zip->addFile($path, $fileOrDir);
+                    }
                 }
             }
         } 
         else if (is_file($this->_source)) {
-            $zip->addFromString(basename($this->_source), file_get_contents($this->_source));
+            $zip->addFile($this->_source, basename($this->_source));
         }
         return $zip->close();
     }
