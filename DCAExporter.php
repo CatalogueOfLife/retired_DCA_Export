@@ -99,7 +99,7 @@ class DCAExporter
                 $taxon->setNameStatus();
                 $taxon->setParentId();
                 $taxon->setScrutiny();
-                $taxon->writeObject();
+                $taxon->writeModel();
                 
                 // Remaing data is exported only for (infra)species
                 if (!$taxon->isHigherTaxon) {
@@ -115,7 +115,7 @@ class DCAExporter
                         $vernacular->decorate(
                             $rowVn);
                         $vernacular->setSource();
-                        $vernacular->writeObject();
+                        $vernacular->writeModel();
                         unset($vernacular);
                     }
                     
@@ -131,7 +131,7 @@ class DCAExporter
                         $reference->taxonID = $taxon->taxonID;
                         $reference->decorate(
                             $rowRf);
-                        $reference->writeObject();
+                        $reference->writeModel();
                         unset($reference);
                     }
                 }
