@@ -11,10 +11,11 @@ set_time_limit(0);
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<title>i4Life WP4 Enhanced Download Service of the Catalogue of Life: Darwin Core Archive Export</title>
+<title>i4Life WP4 Enhanced Download Service of the Catalogue of Life:
+Darwin Core Archive Export</title>
 </head>
 <body style="font: 12px verdana; width: 800px;">
-<h3>i4Life WP4 Enhanced Download Service of the Catalogue of Life: 
+<h3>i4Life WP4 Enhanced Download Service of the Catalogue of Life:
 Darwin Core Archive Export</h3>
 
 <?php
@@ -40,9 +41,6 @@ if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !e
         echo "</p>\n<p><a href='index.php'>Back to the index</a></p>";
         exit();
     }
-    // Construct download url
-    $ini = $dcaExporter->getExportSettings();
-    $url = $ini['zip_archive'] . "-$rank-$taxon.zip";
     
     $total = $dcaExporter->getTotalNumberOfTaxa();
     if ($total > 0) {
@@ -59,7 +57,17 @@ if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !e
     $dcaExporter->writeData();
     echo '<br>Compressing to zip archive..<br>';
     $dcaExporter->zipArchive();
-    echo "</p>\n<p>Ready! <a href='$url'>Download the zip archive</a>.</p><p><a href='index.php'>Back to the index</a></p>";
+    echo "</p>\n";
+    
+    // Construct download url and calculate file size
+    $ini = $dcaExporter->getExportSettings();
+    $url = $ini['zip_archive'] . "-$rank-$taxon.zip";
+    $sizeKb = filesize(dirname(__FILE__) . '/' . $url) / 1024;
+    $size = round($sizeKb, 1) . ' KB';
+    if ($sizeKb > 999) {
+        $size = round($sizeKb / 1024, 1) . ' MB';
+    }
+    echo "<p>Ready! <a href='$url'>Download the zip archive</a> ($size).</p><p><a href='index.php'>Back to the index</a></p>";
 }
 else {
     require_once 'modules/Abstract.php';
@@ -69,8 +77,7 @@ else {
     $nrRanks = count($ranks) - 1;
     $selected = '';
     
-    echo file_get_contents('templates/intro.tpl').
-         "\n<form style='margin-top: 30px;' action='" . $_SERVER['PHP_SELF'] . "' method='get'>\n<select name='rank'>\n";
+    echo file_get_contents('templates/intro.tpl') . "\n<form style='margin-top: 30px;' action='" . $_SERVER['PHP_SELF'] . "' method='get'>\n<select name='rank'>\n";
     for ($i = 0; $i < $nrRanks; $i++) {
         if ($i == ($nrRanks - 1)) {
             // Automatically select genus from popup

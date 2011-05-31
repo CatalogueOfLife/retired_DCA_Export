@@ -126,7 +126,7 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
 
     public function setNameStatus ()
     {
-        if (!in_array($this->status, self::$scientificNameStatus)) {
+        if (!array_key_exists($this->status, self::$scientificNameStatus)) {
             // Return accepted name for higher taxa
             $this->taxonomicStatus = self::$scientificNameStatus[1];
             return $this->taxonomicStatus;

@@ -188,12 +188,15 @@ class DCAExporter
     private function _getTaxa ($limit, $offset)
     {
         $query = 'SELECT `id` AS taxonID,
-                         `source_database_id` AS datasetID,
+                          IF (`source_database_id` > 0,
+                              `source_database_id`,
+                              "") AS datasetID,
                           IF (`source_database_name` != "", 
-                             `source_database_name`, 
-                             "Catalogue of Life"
-                          ) AS datasetName,
-                         `accepted_species_id` AS acceptedNameUsageID,
+                              `source_database_name`, 
+                              "Catalogue of Life") AS datasetName,
+                          IF (`accepted_species_id` > 0,
+                              `accepted_species_id`,
+                              "") AS acceptedNameUsageID,
                          `status`,
                          `kingdom`,
                          `phylum`,
