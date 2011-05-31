@@ -22,7 +22,6 @@ class Bootstrap
             $this->_sc = $this->_validateSc($sc);
             
             // Text files used to write to are created on the fly when the objects are created
-            // @TODO when standard has settled add 'description', 'distribution'
             if (empty($this->_errors)) {
                 $this->_init(
                 array(
@@ -37,7 +36,7 @@ class Bootstrap
 
     private function _createDbInstance ($name)
     {
-        $ini = DCAExporter::getIni();
+        $ini = parse_ini_file('config/settings.ini', true);
         $config = $ini['db'];
         $dbOptions = array();
         if (isset($config["options"])) {

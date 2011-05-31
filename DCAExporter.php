@@ -24,7 +24,7 @@ class DCAExporter
 
     public function __construct ($sc)
     {
-        $this->ini = self::getIni();
+        $this->ini = parse_ini_file('config/settings.ini', true);
         $this->_dir = $this->ini['export']['export_dir'];
         $this->_del = $this->ini['export']['delimiter'];
         $this->_sep = $this->ini['export']['separator'];
@@ -33,8 +33,9 @@ class DCAExporter
         
         $bootstrap = new Bootstrap($this->_dir, $this->_del, $this->_sep, $this->_sc);
         $this->startUpErrors = $bootstrap->getErrors();
-        //        print_r($this->startUpErrors);
+        // print_r($this->startUpErrors);
         $this->_dbh = $bootstrap->getDbHandler();
+        unset($bootstrap);
     }
 
     public function getStartUpErrors ()
@@ -42,9 +43,15 @@ class DCAExporter
         return $this->startUpErrors;
     }
 
-    public static function getIni ()
+    public function archiveExists ()
     {
-        return parse_ini_file('config/settings.ini', true);
+        $zip = dirname(__FILE__) . '/' . $this->ini['export']['zip_archive'] .
+             '-' . array_shift(array_keys($this->_sc)) . '-' . array_shift(
+                array_values($this->_sc)) . '.zip';
+        if (file_exists($zip)) {
+            return true;
+        }
+        return false;
     }
 
     public function useIndicator ()
@@ -126,9 +133,12 @@ class DCAExporter
                     // Distribution
                     // Data can be stored in distribution or distribution_free_text tables
                     // Try distribution first; if empty do second query on distribution_free_text
-                    $distributions = $this->_getDistributions($taxon->taxonID);
+                    $distributions = $this->_getDistributions(
+                        $taxon->taxonID);
                     if (empty($distributions)) {
-                        $distributions = $this->_getDistributions($taxon->taxonID, true);
+                        $distributions = $this->_getDistributions(
+                            $taxon->taxonID, 
+                            true);
                     }
                     foreach ($distributions as $iDs => $rowDs) {
                         $distribution = $this->_initModel(
