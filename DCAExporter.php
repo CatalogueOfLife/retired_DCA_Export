@@ -12,7 +12,7 @@ require_once 'modules/Reference.php';
 
 class DCAExporter
 {
-    private $_dbh; 
+    private $_dbh;
     private $_dir;
     private $_del;
     private $_sep;
@@ -33,7 +33,7 @@ class DCAExporter
         
         $bootstrap = new Bootstrap($this->_dir, $this->_del, $this->_sep, $this->_sc);
         $this->startUpErrors = $bootstrap->getErrors();
-//        print_r($this->startUpErrors);
+        //        print_r($this->startUpErrors);
         $this->_dbh = $bootstrap->getDbHandler();
     }
 
@@ -46,8 +46,9 @@ class DCAExporter
     {
         return parse_ini_file('config/settings.ini', true);
     }
-    
-    public function useIndicator() {
+
+    public function useIndicator ()
+    {
         $this->_indicator = new Indicator();
     }
 
@@ -87,12 +88,7 @@ class DCAExporter
             $taxa = $this->_getTaxa($limit, $offset);
             foreach ($taxa as $iTx => $rowTx) {
                 $this->_indicator ? $this->_indicator->iterate() : '';
-                $taxon = new Taxon($this->_dbh, $this->_dir, $this->_del, 
-                    $this->_sep);
-                // Decorate taxon with values fetched with getTaxa
-                $taxon->decorate(
-                    $rowTx);
-                // Set additional properties
+                $taxon = $this->_initModel('Taxon', $rowTx);
                 $taxon->setRank();
                 $taxon->setLsid();
                 $taxon->setScientificName();
@@ -103,41 +99,64 @@ class DCAExporter
                 
                 // Remaing data is exported only for (infra)species
                 if (!$taxon->isHigherTaxon) {
+                    // Vernaculars
                     $vernaculars = $this->_getVernaculars(
                         $taxon->taxonID);
                     foreach ($vernaculars as $iVn => $rowVn) {
-                        $vernacular = new Vernacular(
-                            $this->_dbh, 
-                            $this->_dir, 
-                            $this->_del, 
-                            $this->_sep);
-                        $vernacular->taxonID = $taxon->taxonID;
-                        $vernacular->decorate(
-                            $rowVn);
+                        $vernacular = $this->_initModel(
+                            'Vernacular', 
+                            $rowVn, 
+                            $taxon->taxonID);
                         $vernacular->setSource();
                         $vernacular->writeModel();
                         unset($vernacular);
                     }
-                    
+                    // References
                     $references = $this->_getReferences(
                         $taxon->taxonID, 
                         $taxon->isSynonym);
                     foreach ($references as $iRf => $rowRf) {
-                        $reference = new Reference(
-                            $this->_dbh, 
-                            $this->_dir, 
-                            $this->_del, 
-                            $this->_sep);
-                        $reference->taxonID = $taxon->taxonID;
-                        $reference->decorate(
-                            $rowRf);
+                        $reference = $this->_initModel(
+                            'Reference', 
+                            $rowRf, 
+                            $taxon->taxonID);
                         $reference->writeModel();
                         unset($reference);
+                    }
+                    // Distribution
+                    // Data can be stored in distribution or distribution_free_text tables
+                    // Try distribution first; if empty do second query on distribution_free_text
+                    $distributions = $this->_getDistributions($taxon->taxonID);
+                    if (empty($distributions)) {
+                        $distributions = $this->_getDistributions($taxon->taxonID, true);
+                    }
+                    foreach ($distributions as $iDs => $rowDs) {
+                        $distribution = $this->_initModel(
+                            'Distribution', 
+                            $rowDs, 
+                            $taxon->taxonID);
+                        $distribution->writeModel();
+                        unset($distribution);
                     }
                 }
                 unset($taxon);
             }
         }
+    }
+
+    private function _initModel ($model, $data, $taxonId = null)
+    {
+        try {
+            $model = new $model($this->_dbh, $this->_dir, $this->_del, $this->_sep);
+            if ($taxonId) {
+                $model->taxonID = $taxonId;
+            }
+            $model->decorate($data);
+        }
+        catch (Exception $e) {
+            return $e;
+        }
+        return $model;
     }
 
     public function createMetaXml ()
@@ -271,6 +290,35 @@ class DCAExporter
                   LEFT JOIN `uri` AS t2 ON t1.`uri_id` = t2.`id`
                   LEFT JOIN `reference_to_' . $type . '` AS t3 ON t1.`id` = t3.`reference_id` 
                   WHERE t3.`' . $type . '_id` = ?';
+        $stmt = $this->_dbh->prepare($query);
+        $stmt->execute(array(
+            $taxon_id
+        ));
+        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $res ? $res : array();
+    }
+
+    private function _getDistributions ($taxon_id, $distributionFreeText = false)
+    {
+        if (!$distributionFreeText) {
+            $query = 'SELECT t2.`status` AS occurrenceStatus,
+                         t3.`original_code` AS locationID,
+                         t3.`name` AS locality,
+                         "" AS establishmentMeans
+                      FROM `distribution` AS t1 
+                      LEFT JOIN `distribution_status` AS t2 ON t1.`distribution_status_id` = t2.`id` 
+                      LEFT JOIN `region` AS t3 ON t1.`region_id` = t3.`id`
+                      WHERE t1.`taxon_detail_id` = ?';
+        }
+        else {
+            $query = 'SELECT "" AS occurrenceStatus,
+                         "" AS locationID,
+                         t2.`free_text` AS locality,
+                         "" AS establishmentMeans
+                      FROM `distribution_free_text` AS t1 
+                      LEFT JOIN `region_free_text` AS t2 ON t1.`region_free_text_id` = t2.`id`
+                      WHERE t1.`taxon_detail_id` = ?';
+        }
         $stmt = $this->_dbh->prepare($query);
         $stmt->execute(array(
             $taxon_id
