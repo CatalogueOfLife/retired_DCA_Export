@@ -30,7 +30,7 @@ if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !e
         $rank => $taxon
     );
     
-    // Initialize the class and check for errors
+    // Initialize the class
     require_once 'DCAExporter.php';
     $dcaExporter = new DCAExporter($searchCriteria);
     
@@ -38,6 +38,7 @@ if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !e
     if (!$dcaExporter->archiveExists()) {
         // Archive does not yet exist; create export
         $dcaExporter->useIndicator();
+        // Check for errors first
         $errors = $dcaExporter->getStartUpErrors();
         if (!empty($errors)) {
             echo '<p><span style="color: red; font-weight: bold;">Error!</span><br>';
@@ -47,7 +48,7 @@ if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !e
             echo "</p>\n<p><a href='index.php'>Back to the index</a></p>";
             exit();
         }
-        
+        // No errors, ready to go!
         $total = $dcaExporter->getTotalNumberOfTaxa();
         if ($total > 0) {
             echo "<p>Creating export for $total taxa in $rank " . ucfirst($taxon) . '.</p>';
@@ -57,7 +58,6 @@ if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !e
                 <a href="index.php">Back to the index</a></p>';
             exit();
         }
-        
         echo '<p>Creating meta.xml...<br>';
         $dcaExporter->createMetaXml();
         echo 'Writing data to text files...<br>';
