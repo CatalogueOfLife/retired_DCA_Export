@@ -12,7 +12,7 @@ require_once 'modules/Reference.php';
 
 class DCAExporter
 {
-    private $_dbh;
+    private $_dbh; 
     private $_dir;
     private $_del;
     private $_sep;
