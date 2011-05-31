@@ -28,7 +28,8 @@ class Bootstrap
                 array(
                     'taxon', 
                     'vernacular', 
-                    'reference'
+                    'reference',
+                    'distribution'
                 ));
             }
         }
@@ -60,14 +61,14 @@ class Bootstrap
     }
 
     // Create text files
-    private function _init (array $objects)
+    private function _init (array $models)
     {
-        foreach ($objects as $object) {
-            $objectName = ucfirst($object);
-            $$object = new $objectName($this->_dbh, $this->_dir, $this->_del, $this->_sep);
-            $$object->init();
-            $$object->writeHeader();
-            unset($$object);
+        foreach ($models as $model) {
+            $modelName = ucfirst($model);
+            $$model = new $modelName($this->_dbh, $this->_dir, $this->_del, $this->_sep);
+            $$model->init();
+            $$model->writeHeader();
+            unset($$model);
         }
     }
 

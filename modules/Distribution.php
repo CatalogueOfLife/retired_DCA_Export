@@ -3,9 +3,11 @@ require_once 'Interface.php';
 class Distribution extends DCAExporterAbstract implements DCA_Interface
 {
     public $id;
-    public $locality;
     public $occurrenceStatus;
-    
+    public $locationID;
+    public $locality;
+    public $establishmentMeans;
+        
     const FILE = 'distribution.txt';
 
     public function __construct(PDO $dbh, $dir, $del, $sep) {

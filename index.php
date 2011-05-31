@@ -15,7 +15,8 @@ set_time_limit(0);
 Darwin Core Archive Export</title>
 </head>
 <body style="font: 12px verdana; width: 800px;">
-<h3>i4Life WP4 Enhanced Download Service of the Catalogue of Life:
+<img src="images/i4life_logo_sm.jpg" width="150" height="62" style="right: 0; float: right; padding: 0 10px;" alt="i4Life">
+<h3>i4Life WP4 Enhanced Download Service of the Catalogue of Life:<br>
 Darwin Core Archive Export</h3>
 
 <?php
@@ -47,7 +48,8 @@ if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !e
         echo "<p>Creating export for $total taxa in $rank " . ucfirst($taxon) . '.</p>';
     }
     else {
-        echo "<p>No results found for $rank " . ucfirst($taxon) . '. <a href="index.php">Back to the index</a></p>';
+        echo "<p>No results found for $rank " . ucfirst($taxon) . '. 
+            <a href="index.php">Back to the index</a></p>';
         exit();
     }
     
@@ -67,7 +69,8 @@ if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !e
     if ($sizeKb > 999) {
         $size = round($sizeKb / 1024, 1) . ' MB';
     }
-    echo "<p>Ready! <a href='$url'>Download the zip archive</a> ($size).</p><p><a href='index.php'>Back to the index</a></p>";
+    echo "<p>Ready! <a href='$url'>Download the zip archive</a> ($size).</p>
+        <p><a href='index.php'>Back to the index</a></p>";
 }
 else {
     require_once 'modules/Abstract.php';
@@ -77,7 +80,8 @@ else {
     $nrRanks = count($ranks) - 1;
     $selected = '';
     
-    echo file_get_contents('templates/intro.tpl') . "\n<form style='margin-top: 30px;' action='" . $_SERVER['PHP_SELF'] . "' method='get'>\n<select name='rank'>\n";
+    echo file_get_contents('templates/intro.tpl') . "\n<form style='margin-top: 30px;' 
+        action='" . $_SERVER['PHP_SELF'] . "' method='get'>\n<select name='rank'>\n";
     for ($i = 0; $i < $nrRanks; $i++) {
         if ($i == ($nrRanks - 1)) {
             // Automatically select genus from popup
