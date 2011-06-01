@@ -2,8 +2,8 @@
 exports data from the Catalogue of Life v1.6 (the 2011 DVD editon) 
 in the <a href="http://code.google.com/p/gbif-ecat/wiki/DwCArchive">Darwin Core Archive format</a>.</p>
 
-<p>This service can be used to create a block level III download of the Catalogue of Life Dataset. 
-This is the so-called &lsquo;naked checklist&rsquo;, plus common names and distribution. 
+<p>This service can be used to create a Block level I, II or III download of the Catalogue of Life Dataset. 
+This is the so-called &lsquo;naked checklist&rsquo;, plus common names (Block II) and distribution (Block III). 
 See the &lsquo;Download and Piping Tools Specifications, Deliverable 2.1&rsquo; (28 April 2011) document 
 for more information or <a href="documentation/blocks.rtf">read the block definition</a>.</p>
 
@@ -11,3 +11,20 @@ for more information or <a href="documentation/blocks.rtf">read the block defini
 (89 MB), or select a rank from the popup menu and enter a taxon name to start the export. 
 The name should match exactly, wildcards are not allowed. Note that the higher the rank, 
 the longer the export process will take.</p>
+
+<form style="margin-top: 30px;" action="[action]" method="get">
+<div id="popup">
+<select name="rank" style="margin-left: 7px;">
+[select]</select>
+<input type="text" name="taxon" style="margin: 0 7px;" />
+<input type="submit" name="submit" value="Start" />
+</div>
+<div id="radio" style="margin: 7px 0;">
+<input type="radio" name="block" value="1" id="block1" />
+<label for="block1">Block I</label>
+<input type="radio" name="block" value="2" id="block2" />
+<label for="block2">Block II</label>
+<input type="radio" name="block" value="3" id="block3" checked />
+<label for="block3">Block III</label>
+</div>
+</form>

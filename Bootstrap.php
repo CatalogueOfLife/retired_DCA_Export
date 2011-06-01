@@ -6,30 +6,34 @@ class Bootstrap
     private $_del;
     private $_sep;
     private $_sc;
+    private $_bl;
     
     private $_errors = array();
 
-    public function __construct ($dir, $del, $sep, $sc)
+    public function __construct ($dir, $del, $sep, $sc, $bl)
     {
         $this->_createDbInstance('db');
         $this->_dbh = DbHandler::getInstance('db');
         if (!($this->_dbh instanceof PDO)) {
             $this->_errors[] = 'Could not create database instance; check settings in settings.ini!';
-        } else {
+        }
+        else {
             $this->_dir = $this->_validateDir($dir);
             $this->_del = $this->_validateDel($del);
             $this->_sep = $this->_validateSep($sep);
             $this->_sc = $this->_validateSc($sc);
+            $this->_bl = $this->_validateBl($bl);
             
             // Text files used to write to are created on the fly when the objects are created
-            if (empty($this->_errors)) {
+            if (empty(
+                $this->_errors)) {
                 $this->_init(
-                array(
-                    'taxon', 
-                    'vernacular', 
-                    'reference',
-                    'distribution'
-                ));
+                    array(
+                        'taxon', 
+                        'vernacular', 
+                        'reference', 
+                        'distribution'
+                    ));
             }
         }
     }
@@ -108,12 +112,25 @@ class Bootstrap
     {
         foreach ($sc as $rank => $taxon) {
             if (!in_array($rank, Taxon::$higherTaxa)) {
-                $this->_errors[] = 'Rank <b>'.$rank.'</b> is invalid.';
+                $this->_errors[] = 'Rank <b>' . $rank . '</b> is invalid.';
             }
             if ($taxon != '%' && !ereg("[a-zA-Z]+", $taxon)) {
-                $this->_errors[] = 'Name <b>'. $taxon.'</b> contains invalid characters.';
+                $this->_errors[] = 'Name <b>' . $taxon . '</b> contains invalid characters.';
             }
         }
         return $sc;
     }
+
+    private function _validateBl ($bl)
+    {
+        if (!in_array($bl, array(
+            1, 
+            2, 
+            3
+        ))) {
+            $this->_errors[] = 'Incorrect Block level "' . $bl . '".';
+        }
+        return $bl;
+    }
+
 }

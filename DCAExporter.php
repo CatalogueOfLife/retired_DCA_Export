@@ -12,31 +12,41 @@ require_once 'modules/Reference.php';
 
 class DCAExporter
 {
+    // Database handler
     private $_dbh;
+    // Export directory
     private $_dir;
+    // Text file delimiter
     private $_del;
+    // Text file separator
     private $_sep;
+    // Search criteria
     private $_sc;
+    // Block level; determines amount of data returned
+    private $_bl;
     
     public $ini;
     public $startUpErrors;
     private $_indicator;
 
-    public function __construct ($sc)
-    {
-        $this->ini = parse_ini_file('config/settings.ini', true);
-        $this->_dir = $this->ini['export']['export_dir'];
-        $this->_del = $this->ini['export']['delimiter'];
-        $this->_sep = $this->ini['export']['separator'];
-        $this->_sc = $sc;
-        $this->_setDefaults();
-        
-        $bootstrap = new Bootstrap($this->_dir, $this->_del, $this->_sep, $this->_sc);
-        $this->startUpErrors = $bootstrap->getErrors();
-        // print_r($this->startUpErrors);
-        $this->_dbh = $bootstrap->getDbHandler();
-        unset($bootstrap);
-    }
+    public 
+
+function __construct ($sc, $bl)
+{
+    $this->ini = parse_ini_file('config/settings.ini', true);
+    $this->_dir = $this->ini['export']['export_dir'];
+    $this->_del = $this->ini['export']['delimiter'];
+    $this->_sep = $this->ini['export']['separator'];
+    $this->_sc = $sc;
+    $this->_bl = $bl;
+    $this->_setDefaults();
+    
+    $bootstrap = new Bootstrap($this->_dir, $this->_del, $this->_sep, $this->_sc, $this->_bl);
+    $this->startUpErrors = $bootstrap->getErrors();
+    // print_r($this->startUpErrors);
+    $this->_dbh = $bootstrap->getDbHandler();
+    unset($bootstrap);
+}
 
     public function getStartUpErrors ()
     {
@@ -45,10 +55,7 @@ class DCAExporter
 
     public function archiveExists ()
     {
-        $zip = dirname(__FILE__) . '/' . $this->ini['export']['zip_archive'] .
-             '-' . array_shift(array_keys($this->_sc)) . '-' . array_shift(
-                array_values($this->_sc)) . '.zip';
-        if (file_exists($zip)) {
+        if (file_exists($this->_getZipArchiveName())) {
             return true;
         }
         return false;
@@ -105,7 +112,8 @@ class DCAExporter
                 $taxon->writeModel();
                 
                 // Remaing data is exported only for (infra)species
-                if (!$taxon->isHigherTaxon) {
+                // and for Block levels II and III
+                if (!$taxon->isHigherTaxon && $this->_bl > 1) {
                     // Vernaculars
                     $vernaculars = $this->_getVernaculars(
                         $taxon->taxonID);
@@ -133,20 +141,23 @@ class DCAExporter
                     // Distribution
                     // Data can be stored in distribution or distribution_free_text tables
                     // Try distribution first; if empty do second query on distribution_free_text
-                    $distributions = $this->_getDistributions(
-                        $taxon->taxonID);
-                    if (empty($distributions)) {
+                    // Export only if Block level III has been selected
+                    if ($this->_bl > 2) {
                         $distributions = $this->_getDistributions(
-                            $taxon->taxonID, 
-                            true);
-                    }
-                    foreach ($distributions as $iDs => $rowDs) {
-                        $distribution = $this->_initModel(
-                            'Distribution', 
-                            $rowDs, 
                             $taxon->taxonID);
-                        $distribution->writeModel();
-                        unset($distribution);
+                        if (empty($distributions)) {
+                            $distributions = $this->_getDistributions(
+                                $taxon->taxonID, 
+                                true);
+                        }
+                        foreach ($distributions as $iDs => $rowDs) {
+                            $distribution = $this->_initModel(
+                                'Distribution', 
+                                $rowDs, 
+                                $taxon->taxonID);
+                            $distribution->writeModel();
+                            unset($distribution);
+                        }
                     }
                 }
                 unset($taxon);
@@ -185,13 +196,18 @@ class DCAExporter
     {
         $src = dirname(__FILE__) . '/' . $this->_dir;
         // Default name of archive is archive-rank-taxon.zip
-        $dest = dirname(__FILE__) . '/' . $this->ini['export']['zip_archive'] .
-             '-' . array_shift(array_keys($this->_sc)) . '-' . array_shift(
-                array_values($this->_sc)) . '.zip';
-        
+        $dest = $this->_getZipArchiveName();
         $zip = new Zip();
         $zip->createArchive($src, $dest);
         unset($zip);
+    }
+    
+    private function _getZipArchiveName() {
+        return dirname(__FILE__) . '/' . 
+               $this->ini['export']['zip_archive'] . '-' . 
+               array_shift(array_keys($this->_sc)) . '-' . 
+               array_shift(array_values($this->_sc)) . '-bl' .
+               $this->_bl . '.zip';
     }
 
     public function getTotalNumberOfTaxa ()

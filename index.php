@@ -15,7 +15,8 @@ set_time_limit(0);
 Darwin Core Archive Export</title>
 </head>
 <body style="font: 12px verdana; width: 800px;">
-<img src="images/i4life_logo_sm.jpg" width="150" height="62" style="right: 0; float: right; padding: 0 10px;" alt="i4Life">
+<img src="images/i4life_logo_sm.jpg" width="150" height="62"
+    style="right: 0; float: right; padding: 0 10px;" alt="i4Life">
 <h3>i4Life WP4 Enhanced Download Service of the Catalogue of Life:<br>
 Darwin Core Archive Export</h3>
 
@@ -24,13 +25,14 @@ if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !e
     // $_GET input is validated in application
     $rank = $_GET['rank'];
     $taxon = $_GET['taxon'];
+    $block = $_GET['block'];
     $searchCriteria = array(
         $rank => $taxon
     );
     
     // Initialize the class
     require_once 'DCAExporter.php';
-    $dcaExporter = new DCAExporter($searchCriteria);
+    $dcaExporter = new DCAExporter($searchCriteria, $block);
     
     // Check if archive already exits; if it does skip export
     if (!$dcaExporter->archiveExists()) {
@@ -67,7 +69,7 @@ if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !e
     
     // Construct download url and calculate file size
     $ini = $dcaExporter->getExportSettings();
-    $url = $ini['zip_archive'] . "-$rank-$taxon.zip";
+    $url = $ini['zip_archive'] . "-$rank-$taxon-bl$block.zip";
     $sizeKb = filesize(dirname(__FILE__) . '/' . $url) / 1024;
     $size = round($sizeKb, 1) . ' KB';
     if ($sizeKb > 999) {
@@ -82,21 +84,23 @@ else {
     $ranks = Taxon::$higherTaxa;
     // Omit rank subgenus as this is not available yet in AC
     $nrRanks = count($ranks) - 1;
-    $selected = '';
-    
-    echo file_get_contents('templates/intro.tpl') . "\n<form style='margin-top: 30px;' 
-        action='" . $_SERVER['PHP_SELF'] . "' method='get'>\n<select name='rank'>\n";
+    $select = $selected = '';
     for ($i = 0; $i < $nrRanks; $i++) {
         if ($i == ($nrRanks - 1)) {
             // Automatically select genus from popup
             $selected = 'selected';
         }
-        echo "<option value='$ranks[$i]' $selected>" . ucfirst($ranks[$i]) . "</option>\n";
+        $select .= "<option value='$ranks[$i]' $selected>" . ucfirst($ranks[$i]) . "</option>\n";
     }
-    echo '</select>
-          <input type="text" name="taxon" />
-          <input type="submit" name="submit" value="Start" />
-          </form>';
+    
+    $intro = file_get_contents('templates/intro.tpl');
+    echo str_replace(array(
+        '[action]', 
+        '[select]'
+    ), array(
+        $_SERVER['PHP_SELF'], 
+        $select
+    ), $intro);
 }
 ?>
 </body>
