@@ -15,14 +15,12 @@ set_time_limit(0);
 Darwin Core Archive Export</title>
 </head>
 <body style="font: 12px verdana; width: 800px;">
-<img src="images/i4life_logo_sm.jpg" width="150" height="62"
-    style="right: 0; float: right; padding: 0 10px;" alt="i4Life">
+<img src="images/i4life_logo_sm.jpg" width="150" height="62" style="right: 0; float: right; padding: 0 10px;" alt="i4Life">
 <h3>i4Life WP4 Enhanced Download Service of the Catalogue of Life:<br>
 Darwin Core Archive Export</h3>
 
 <?php
 if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !empty($_GET['taxon'])) {
-    
     // $_GET input is validated in application
     $rank = $_GET['rank'];
     $taxon = $_GET['taxon'];
@@ -62,7 +60,7 @@ if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !e
         $dcaExporter->createMetaXml();
         echo 'Writing data to text files...<br>';
         $dcaExporter->writeData();
-        echo '<br>Compressing to zip archive..<br>';
+        echo '<br>Compressing to zip archive...<br>';
         $dcaExporter->zipArchive();
         echo "</p>\n";
     }
