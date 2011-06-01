@@ -45,8 +45,5 @@ As the standard has not yet been finalized, only a subset of the available data 
 This obviates the need to rewrite the export classes in the future. When the standard has been fixed, 
 writing the remaining export modules is a matter of a few days.
 
-Due to time constraints, the software has hardly been tested. In particular the creation of very large archives 
-has not yet been tested on all platforms.
-
 Please submit bugs and suggestions to:
 http://dev.4d4life.eu:8081/browse/DS
