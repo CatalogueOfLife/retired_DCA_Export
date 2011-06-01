@@ -1,4 +1,4 @@
-<p style="margin-top: 20px;">This page offers a very basic interface on the application that 
+<p style="margin-top: 20px;">This page offers a very basic temporary interface on the application that 
 exports data from the Catalogue of Life v1.6 (the 2011 DVD editon) 
 in the <a href="http://code.google.com/p/gbif-ecat/wiki/DwCArchive">Darwin Core Archive format</a>.</p>
 
