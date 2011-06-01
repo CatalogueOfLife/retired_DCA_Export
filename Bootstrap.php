@@ -24,6 +24,8 @@ class Bootstrap
             $this->_sc = $this->_validateSc($sc);
             $this->_bl = $this->_validateBl($bl);
             
+            $this->_setInternalCodingToUTF8();
+            
             // Text files used to write to are created on the fly when the objects are created
             if (empty(
                 $this->_errors)) {
@@ -35,6 +37,12 @@ class Bootstrap
                         'distribution'
                     ));
             }
+        }
+    }
+    
+    private function _setInternalCodingToUTF8 () {
+        if (mb_internal_encoding() != 'UTF-8') {
+            mb_internal_encoding("UTF-8");
         }
     }
 

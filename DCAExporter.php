@@ -187,7 +187,9 @@ function __construct ($sc, $bl)
         
         $template = new Template($src, $dest);
         $template->setDelimiter($this->_del);
-        $template->setSeparator($this->_sep);
+        // Null character is invalid in xml, replace with empty string
+        $this->_sep != chr(0) ? $sep = $this->_sep : $sep = '';
+        $template->setSeparator($sep);
         $template->writeFile('meta.xml');
         unset($template);
     }
