@@ -77,8 +77,8 @@ function __construct ($sc, $bl)
         // Tab delimited is a special case
         // fputcsv only accepts single character del and sep
         if ($this->_del == '\t') {
-            $this->_del = chr(9);
-            $this->_sep = chr(0);
+            $this->_del = "\t";
+            $this->_sep = "";
         }
         // Change search all option [all] to MySQL wildcard
         foreach ($this->_sc as $k => $v) {

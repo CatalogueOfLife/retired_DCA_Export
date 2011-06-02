@@ -96,7 +96,7 @@ class Bootstrap
         if (!in_array($del, array(
             ',', 
             ';', 
-            chr(9)
+            "\t"
         ))) {
             $this->_errors[] = 'Delimiter "' . $del . '" is not a valid CSV delimiter.';
         }
@@ -108,7 +108,7 @@ class Bootstrap
         if (!in_array($sep, array(
             '"', 
             '\'', 
-            chr(0)
+            ''
         ))) {
             $this->_errors[] = 'Delimiter "' . $sep . '" is not a valid CSV separator.';
         }
