@@ -12,42 +12,57 @@ require_once 'modules/Reference.php';
 
 class DCAExporter
 {
+    // Database handler
     private $_dbh;
+    // Export directory
     private $_dir;
+    // Text file delimiter
     private $_del;
+    // Text file separator
     private $_sep;
+    // Search criteria
     private $_sc;
+    // Block level; determines amount of data returned
+    private $_bl;
     
     public $ini;
     public $startUpErrors;
     private $_indicator;
 
-    public function __construct ($sc)
-    {
-        $this->ini = self::getIni();
-        $this->_dir = $this->ini['export']['export_dir'];
-        $this->_del = $this->ini['export']['delimiter'];
-        $this->_sep = $this->ini['export']['separator'];
-        $this->_sc = $sc;
-        $this->_setDefaults();
-        
-        $bootstrap = new Bootstrap($this->_dir, $this->_del, $this->_sep, $this->_sc);
-        $this->startUpErrors = $bootstrap->getErrors();
-//        print_r($this->startUpErrors);
-        $this->_dbh = $bootstrap->getDbHandler();
-    }
+    public 
+
+function __construct ($sc, $bl)
+{
+    $this->ini = parse_ini_file('config/settings.ini', true);
+    $this->_dir = $this->ini['export']['export_dir'];
+    $this->_del = $this->ini['export']['delimiter'];
+    $this->_sep = $this->ini['export']['separator'];
+    $this->_sc = $sc;
+    $this->_bl = $bl;
+    $this->_setDefaults();
+    
+    $bootstrap = new Bootstrap($this->_dir, $this->_del, $this->_sep, $this->_sc, $this->_bl);
+    $this->startUpErrors = $bootstrap->getErrors();
+    // print_r($this->startUpErrors);
+    $this->_dbh = $bootstrap->getDbHandler();
+    unset($bootstrap);
+}
 
     public function getStartUpErrors ()
     {
         return $this->startUpErrors;
     }
 
-    public static function getIni ()
+    public function archiveExists ()
     {
-        return parse_ini_file('config/settings.ini', true);
+        if (file_exists($this->_getZipArchiveName())) {
+            return true;
+        }
+        return false;
     }
-    
-    public function useIndicator() {
+
+    public function useIndicator ()
+    {
         $this->_indicator = new Indicator();
     }
 
@@ -62,8 +77,8 @@ class DCAExporter
         // Tab delimited is a special case
         // fputcsv only accepts single character del and sep
         if ($this->_del == '\t') {
-            $this->_del = chr(9);
-            $this->_sep = chr(0);
+            $this->_del = "\t";
+            $this->_sep = "";
         }
         // Change search all option [all] to MySQL wildcard
         foreach ($this->_sc as $k => $v) {
@@ -87,57 +102,82 @@ class DCAExporter
             $taxa = $this->_getTaxa($limit, $offset);
             foreach ($taxa as $iTx => $rowTx) {
                 $this->_indicator ? $this->_indicator->iterate() : '';
-                $taxon = new Taxon($this->_dbh, $this->_dir, $this->_del, 
-                    $this->_sep);
-                // Decorate taxon with values fetched with getTaxa
-                $taxon->decorate(
-                    $rowTx);
-                // Set additional properties
+                $taxon = $this->_initModel('Taxon', $rowTx);
                 $taxon->setRank();
                 $taxon->setLsid();
                 $taxon->setScientificName();
                 $taxon->setNameStatus();
                 $taxon->setParentId();
                 $taxon->setScrutiny();
-                $taxon->writeObject();
+                $taxon->writeModel();
                 
                 // Remaing data is exported only for (infra)species
-                if (!$taxon->isHigherTaxon) {
+                // and for Block levels II and III
+                if (!$taxon->isHigherTaxon && $this->_bl > 1) {
+                    // Vernaculars
                     $vernaculars = $this->_getVernaculars(
                         $taxon->taxonID);
                     foreach ($vernaculars as $iVn => $rowVn) {
-                        $vernacular = new Vernacular(
-                            $this->_dbh, 
-                            $this->_dir, 
-                            $this->_del, 
-                            $this->_sep);
-                        $vernacular->taxonID = $taxon->taxonID;
-                        $vernacular->decorate(
-                            $rowVn);
+                        $vernacular = $this->_initModel(
+                            'Vernacular', 
+                            $rowVn, 
+                            $taxon->taxonID);
                         $vernacular->setSource();
-                        $vernacular->writeObject();
+                        $vernacular->writeModel();
                         unset($vernacular);
                     }
-                    
+                    // References
                     $references = $this->_getReferences(
                         $taxon->taxonID, 
                         $taxon->isSynonym);
                     foreach ($references as $iRf => $rowRf) {
-                        $reference = new Reference(
-                            $this->_dbh, 
-                            $this->_dir, 
-                            $this->_del, 
-                            $this->_sep);
-                        $reference->taxonID = $taxon->taxonID;
-                        $reference->decorate(
-                            $rowRf);
-                        $reference->writeObject();
+                        $reference = $this->_initModel(
+                            'Reference', 
+                            $rowRf, 
+                            $taxon->taxonID);
+                        $reference->writeModel();
                         unset($reference);
+                    }
+                    // Distribution
+                    // Data can be stored in distribution or distribution_free_text tables
+                    // Try distribution first; if empty do second query on distribution_free_text
+                    // Export only if Block level III has been selected
+                    if ($this->_bl > 2) {
+                        $distributions = $this->_getDistributions(
+                            $taxon->taxonID);
+                        if (empty($distributions)) {
+                            $distributions = $this->_getDistributions(
+                                $taxon->taxonID, 
+                                true);
+                        }
+                        foreach ($distributions as $iDs => $rowDs) {
+                            $distribution = $this->_initModel(
+                                'Distribution', 
+                                $rowDs, 
+                                $taxon->taxonID);
+                            $distribution->writeModel();
+                            unset($distribution);
+                        }
                     }
                 }
                 unset($taxon);
             }
         }
+    }
+
+    private function _initModel ($model, $data, $taxonId = null)
+    {
+        try {
+            $model = new $model($this->_dbh, $this->_dir, $this->_del, $this->_sep);
+            if ($taxonId) {
+                $model->taxonID = $taxonId;
+            }
+            $model->decorate($data);
+        }
+        catch (Exception $e) {
+            return $e;
+        }
+        return $model;
     }
 
     public function createMetaXml ()
@@ -147,7 +187,9 @@ class DCAExporter
         
         $template = new Template($src, $dest);
         $template->setDelimiter($this->_del);
-        $template->setSeparator($this->_sep);
+        // Null character is invalid in xml, replace with empty string
+        $this->_sep != chr(0) ? $sep = $this->_sep : $sep = '';
+        $template->setSeparator($sep);
         $template->writeFile('meta.xml');
         unset($template);
     }
@@ -156,13 +198,18 @@ class DCAExporter
     {
         $src = dirname(__FILE__) . '/' . $this->_dir;
         // Default name of archive is archive-rank-taxon.zip
-        $dest = dirname(__FILE__) . '/' . $this->ini['export']['zip_archive'] .
-             '-' . array_shift(array_keys($this->_sc)) . '-' . array_shift(
-                array_values($this->_sc)) . '.zip';
-        
+        $dest = $this->_getZipArchiveName();
         $zip = new Zip();
         $zip->createArchive($src, $dest);
         unset($zip);
+    }
+    
+    private function _getZipArchiveName() {
+        return dirname(__FILE__) . '/' . 
+               $this->ini['export']['zip_archive'] . '-' . 
+               array_shift(array_keys($this->_sc)) . '-' . 
+               array_shift(array_values($this->_sc)) . '-bl' .
+               $this->_bl . '.zip';
     }
 
     public function getTotalNumberOfTaxa ()
@@ -188,12 +235,15 @@ class DCAExporter
     private function _getTaxa ($limit, $offset)
     {
         $query = 'SELECT `id` AS taxonID,
-                         `source_database_id` AS datasetID,
+                          IF (`source_database_id` > 0,
+                              `source_database_id`,
+                              "") AS datasetID,
                           IF (`source_database_name` != "", 
-                             `source_database_name`, 
-                             "Catalogue of Life"
-                          ) AS datasetName,
-                         `accepted_species_id` AS acceptedNameUsageID,
+                              `source_database_name`, 
+                              "Catalogue of Life") AS datasetName,
+                          IF (`accepted_species_id` > 0,
+                              `accepted_species_id`,
+                              "") AS acceptedNameUsageID,
                          `status`,
                          `kingdom`,
                          `phylum`,
@@ -268,6 +318,35 @@ class DCAExporter
                   LEFT JOIN `uri` AS t2 ON t1.`uri_id` = t2.`id`
                   LEFT JOIN `reference_to_' . $type . '` AS t3 ON t1.`id` = t3.`reference_id` 
                   WHERE t3.`' . $type . '_id` = ?';
+        $stmt = $this->_dbh->prepare($query);
+        $stmt->execute(array(
+            $taxon_id
+        ));
+        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $res ? $res : array();
+    }
+
+    private function _getDistributions ($taxon_id, $distributionFreeText = false)
+    {
+        if (!$distributionFreeText) {
+            $query = 'SELECT t2.`status` AS occurrenceStatus,
+                         t3.`original_code` AS locationID,
+                         t3.`name` AS locality,
+                         "" AS establishmentMeans
+                      FROM `distribution` AS t1 
+                      LEFT JOIN `distribution_status` AS t2 ON t1.`distribution_status_id` = t2.`id` 
+                      LEFT JOIN `region` AS t3 ON t1.`region_id` = t3.`id`
+                      WHERE t1.`taxon_detail_id` = ?';
+        }
+        else {
+            $query = 'SELECT "" AS occurrenceStatus,
+                         "" AS locationID,
+                         t2.`free_text` AS locality,
+                         "" AS establishmentMeans
+                      FROM `distribution_free_text` AS t1 
+                      LEFT JOIN `region_free_text` AS t2 ON t1.`region_free_text_id` = t2.`id`
+                      WHERE t1.`taxon_detail_id` = ?';
+        }
         $stmt = $this->_dbh->prepare($query);
         $stmt->execute(array(
             $taxon_id

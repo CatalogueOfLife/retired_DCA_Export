@@ -23,6 +23,19 @@ abstract class DCAExporterAbstract
         }
     }
 
+    private function _cleanString ($str)
+    {
+        $delete = array(
+            "\r", 
+            "\n", 
+            "\r\n"
+        );
+        $space = array(
+            "\t"
+        );
+        return str_replace($space, ' ', str_replace($delete, '', $str));
+    }
+
     protected function _createTextFile ($fileName)
     {
         if (!$this->_dir) {
@@ -33,8 +46,7 @@ abstract class DCAExporterAbstract
         if (!$fh) {
             throw new Exception('Cannot create file ' . $fileName . '"');
         }
-        // Required to set file to UTF-8
-        fwrite($fh, pack("CCC", 0xef, 0xbb, 0xbf));
+        fwrite($fh, "\xEF\xBB\xBF");
         fclose($fh);
     }
 
@@ -55,6 +67,29 @@ abstract class DCAExporterAbstract
 
     protected function _writeLine ($fh, array $fields)
     {
-        fputcsv($fh, $fields, $this->_del, $this->_sep);
+        //fputcsv($fh, $fields, $this->_del, $this->_sep);
+        $this->fputcsv2($fh, $fields, $this->_del, $this->_sep);
+    }
+
+    /*
+     * Replacement function for fputcsv that actually works!
+     */
+    public function fputcsv2 ($fh, array $fields, $del = ',', $sep = '"', $mysql_null = false)
+    {
+        $del_esc = preg_quote($del, '/');
+        $sep_esc = preg_quote($sep, '/');
+        
+        $output = array();
+        foreach ($fields as $field) {
+            if ($field === null && $mysql_null) {
+                $output[] = 'NULL';
+                continue;
+            }
+            $field = $this->_cleanString($field);
+            $output[] = preg_match("/(?:${del_esc}|${sep_esc}|\s)/", $field) ? ($sep . str_replace(
+                $sep, $sep . $sep, $field) . $sep) : $field;
+        }
+        
+        fwrite($fh, join($del, $output) . "\n");
     }
 }

@@ -40,7 +40,7 @@ class Reference extends DCAExporterAbstract implements DCA_Interface
         $this->_writeLine($this->_fh, $fields);
     }
 
-    public function writeObject ()
+    public function writeModel ()
     {
         $fields = array(
             $this->taxonID, 

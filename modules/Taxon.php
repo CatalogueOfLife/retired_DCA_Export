@@ -105,28 +105,26 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
 
     public function setLsid ()
     {
-        if (!$this->isHigherTaxon) {
-            $query = 'SELECT t1.`resource_identifier` AS LSID 
-                      FROM `uri` AS t1  
-                      LEFT JOIN `uri_to_taxon` AS t2 ON t1.`id` = t2.`uri_id` 
-                      LEFT JOIN `uri_scheme` AS t3 ON t1.`uri_scheme_id` = t3.`id` 
-                      WHERE t2.`taxon_id` = ? AND 
-                            t3.`scheme` = "lsid"';
-            $stmt = $this->_dbh->prepare($query);
-            $stmt->execute(array(
-                $this->taxonID
-            ));
-            if ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $this->identifier = $res['LSID'];
-                return true;
-            }
-            return false;
+        $query = 'SELECT t1.`resource_identifier` AS LSID 
+                  FROM `uri` AS t1  
+                  LEFT JOIN `uri_to_taxon` AS t2 ON t1.`id` = t2.`uri_id` 
+                  LEFT JOIN `uri_scheme` AS t3 ON t1.`uri_scheme_id` = t3.`id` 
+                  WHERE t2.`taxon_id` = ? AND 
+                        t3.`scheme` = "lsid"';
+        $stmt = $this->_dbh->prepare($query);
+        $stmt->execute(array(
+            $this->taxonID
+        ));
+        if ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $this->identifier = $res['LSID'];
+            return true;
         }
+        return false;
     }
 
     public function setNameStatus ()
     {
-        if (!in_array($this->status, self::$scientificNameStatus)) {
+        if (!array_key_exists($this->status, self::$scientificNameStatus)) {
             // Return accepted name for higher taxa
             $this->taxonomicStatus = self::$scientificNameStatus[1];
             return $this->taxonomicStatus;
@@ -206,7 +204,7 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
         $this->_writeLine($this->_fh, $fields);
     }
 
-    public function writeObject ()
+    public function writeModel ()
     {
         $fields = array(
             $this->taxonID, 
