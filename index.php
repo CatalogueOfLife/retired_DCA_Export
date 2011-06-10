@@ -28,16 +28,10 @@ if (formIsSubmitted()) {
     $dcaExporter = new DCAExporter($searchCriteria, $block);
     // Check if archive already exits; if it does skip export
     if (!$dcaExporter->archiveExists()) {
-        // Archive does not yet exist; create export
         $dcaExporter->useIndicator();
-        // Check for errors first
         $errors = $dcaExporter->getStartUpErrors();
         if (!empty($errors)) {
-            echo '<p><span style="color: red; font-weight: bold;">Error!</span><br>';
-            foreach ($errors as $error) {
-                echo $error . '<br>';
-            }
-            echo "</p>\n<p><a href='index.php'>Back to the index</a></p>";
+            printErrors($errors);
             exit();
         }
         // No errors, ready to go!
@@ -66,18 +60,7 @@ if (formIsSubmitted()) {
         <p><a href='index.php'>Back to the index</a></p>";
 }
 else {
-    $ranks = Taxon::$higherTaxa;
-    // Omit rank subgenus as this is not available yet in AC
-    $nrRanks = count($ranks) - 1;
-    $select = $selected = '';
-    for ($i = 0; $i < $nrRanks; $i++) {
-        if ($i == ($nrRanks - 1)) {
-            // Automatically select genus from popup
-            $selected = 'selected';
-        }
-        $select .= "<option value='$ranks[$i]' $selected>" . ucfirst($ranks[$i]) . "</option>\n";
-    }
-    
+    $select = setSelect();
     $intro = file_get_contents('templates/intro.tpl');
     echo str_replace(array(
         '[action]', 
@@ -107,6 +90,15 @@ function formIsSubmitted ()
     return false;
 }
 
+function printErrors ($errors)
+{
+    echo '<p><span style="color: red; font-weight: bold;">Error!</span><br>';
+    foreach ($errors as $error) {
+        echo $error . '<br>';
+    }
+    echo "</p>\n<p><a href='index.php'>Back to the index</a></p>";
+}
+
 function setDownloadSize ($url)
 {
     $sizeKb = filesize(dirname(__FILE__) . '/' . $url) / 1024;
@@ -115,6 +107,22 @@ function setDownloadSize ($url)
         $size = round($sizeKb / 1024, 1) . ' MB';
     }
     return $size;
+}
+
+function setSelect ()
+{
+    $ranks = Taxon::$higherTaxa;
+    // Omit rank subgenus as this is not available yet in AC
+    $nrRanks = count($ranks) - 1;
+    $select = $selected = '';
+    for ($i = 0; $i < $nrRanks; $i++) {
+        if ($i == ($nrRanks - 1)) {
+            // Automatically select genus from popup
+            $selected = 'selected';
+        }
+        $select .= "<option value='$ranks[$i]' $selected>" . ucfirst($ranks[$i]) . "</option>\n";
+    }
+    return $select;
 }
 ?>
 </body>
