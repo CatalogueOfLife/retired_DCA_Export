@@ -41,7 +41,6 @@ class DCAExporter
         
         $bootstrap = new Bootstrap($this->_dir, $this->_del, $this->_sep, $this->_sc, $this->_bl);
         $this->startUpErrors = $bootstrap->getErrors();
-        // print_r($this->startUpErrors);
         $this->_dbh = $bootstrap->getDbHandler();
         unset($bootstrap);
     }
@@ -105,9 +104,13 @@ class DCAExporter
 
     private function _getZipArchiveName ()
     {
-        return dirname(__FILE__) . '/' . $this->ini['export']['zip_archive'] . '-' . array_shift(
-            array_keys($this->_sc)) . '-' . array_shift(array_values($this->_sc)) . '-bl' . $this->_bl .
-             '.zip';
+        $rank = array_shift(array_keys($this->_sc));
+        $taxon = array_shift(array_values($this->_sc));
+        $file = $rank . '-' . $taxon . '-bl' . $this->_bl . '.zip';
+        if ($taxon == '[all]') {
+            $file = 'complete.zip';
+        }
+        return dirname(__FILE__) . '/' . $this->ini['export']['zip_archive'] . '-' . $file;
     }
 
     private function _getTaxa ($limit, $offset)

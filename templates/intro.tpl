@@ -8,7 +8,7 @@ See the &lsquo;Download and Piping Tools Specifications, Deliverable 2.1&rsquo; 
 for more information or <a href="documentation/blocks.rtf">read the block definition</a>.</p>
 
 <p>Download a Darwin Core Archive for the <a href="zip-fixed/archive-complete.zip">complete Catalogue of Life</a> 
-(89 MB), or select a rank from the popup menu and enter a taxon name to start the export. 
+(140 MB), or select a rank from the popup menu and enter a taxon name to start the export. 
 The name should match exactly, wildcards are not allowed. Note that the higher the rank, 
 the longer the export process will take.</p>
 

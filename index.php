@@ -1,3 +1,6 @@
+<?php
+alwaysFlush();
+?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
@@ -11,21 +14,14 @@ Darwin Core Archive Export</title>
 <h3>i4Life WP4 Enhanced Download Service of the Catalogue of Life:<br>
 Darwin Core Archive Export</h3>
 <?php
-alwaysFlush();
 require_once 'DCAExporter.php';
-$ini = DCAExporter::getExportSettings();
-echo '<p style="font-size: 11px; margin-bottom: 30px;">Version ' . DCAExporter::getVersion() . "</p>\n";
+echo '<p style="font-size: 11px; margin: 0 0 25px 0;">Version ' . DCAExporter::getVersion() . "</p>\n";
 
 if (formIsSubmitted()) {
-    // $_GET input is validated in application
-    $rank = $_GET['rank'];
-    $taxon = $_GET['taxon'];
-    $block = $_GET['block'];
-    $searchCriteria = array(
-        $rank => $taxon
-    );
-    
-    $dcaExporter = new DCAExporter($searchCriteria, $block);
+    // $_GET input is validated in application!
+    $dcaExporter = new DCAExporter(array(
+        $_GET['rank'] => $_GET['taxon']
+    ), $_GET['block']);
     // Check if archive already exits; if it does skip export
     if (!$dcaExporter->archiveExists()) {
         $dcaExporter->useIndicator();
@@ -37,7 +33,8 @@ if (formIsSubmitted()) {
         // No errors, ready to go!
         $total = $dcaExporter->getTotalNumberOfTaxa();
         if ($total > 0) {
-            echo "<p>Creating export for $total taxa in $rank " . ucfirst($taxon) . '.</p>';
+            echo "<p>Creating export for $total taxa in " . $_GET['rank'] . ' ' . ucfirst(
+                $_GET['taxon']) . ".</p>\n";
         }
         else {
             echo "<p>No results found for $rank " . ucfirst($taxon) . '. 
@@ -52,9 +49,7 @@ if (formIsSubmitted()) {
         $dcaExporter->zipArchive();
         echo "</p>\n";
     }
-    
-    // Construct download url and calculate file size
-    $url = $ini['zip_archive'] . "-$rank-$taxon-bl$block.zip";
+    $url = setDownloadUrl();
     $size = setDownloadSize($url);
     echo "<p>Ready! <a href='$url'>Download the zip archive</a> ($size).</p>
         <p><a href='index.php'>Back to the index</a></p>";
@@ -97,6 +92,16 @@ function printErrors ($errors)
         echo $error . '<br>';
     }
     echo "</p>\n<p><a href='index.php'>Back to the index</a></p>";
+}
+
+function setDownloadUrl ()
+{
+    $ini = DCAExporter::getExportSettings();
+    $url = $ini['zip_archive'] . '-' . $_GET['rank'] . '-' . $_GET['taxon'] . '-bl' . $_GET['block'] . '.zip';
+    if ($_GET['taxon'] == '[all]') {
+        $url = $ini['zip_archive'] . '-complete.zip';
+    }
+    return $url;
 }
 
 function setDownloadSize ($url)
