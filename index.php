@@ -1,8 +1,3 @@
-<?php
-require_once 'DCAExporter.php';
-$ini = DCAExporter::getExportSettings();
-alwaysFlush();
-?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
@@ -13,10 +8,12 @@ Darwin Core Archive Export</title>
 <body style="font: 12px verdana; width: 800px;">
 <img src="images/i4life_logo_sm.jpg" width="150" height="62"
     style="right: 0; float: right; padding: 0 10px;" alt="i4Life">
-<h3>i4Life WP4 Enhanced Download Service of
-the Catalogue of Life:<br>
+<h3>i4Life WP4 Enhanced Download Service of the Catalogue of Life:<br>
 Darwin Core Archive Export</h3>
 <?php
+alwaysFlush();
+require_once 'DCAExporter.php';
+$ini = DCAExporter::getExportSettings();
 echo '<p style="font-size: 11px; margin-bottom: 30px;">Version ' . DCAExporter::getVersion() . "</p>\n";
 
 if (formIsSubmitted()) {
