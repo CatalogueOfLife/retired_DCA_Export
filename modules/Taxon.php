@@ -199,7 +199,8 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
             'infraspecificEpithet', 
             'scientificNameAuthorship', 
             'nameAccordingTo', 
-            'modified'
+            'modified',
+            'rights'
         );
         $this->_writeLine($this->_fh, $fields);
     }
@@ -227,7 +228,8 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
             $this->infraspecificEpithet, 
             $this->scientificNameAuthorship, 
             $this->nameAccordingTo, 
-            $this->modified
+            $this->modified,
+            $this->_rights
         );
         $this->_writeLine($this->_fh, $fields);
     }

@@ -29,28 +29,33 @@ class DCAExporter
     public $startUpErrors;
     private $_indicator;
 
-    public 
-
-function __construct ($sc, $bl)
-{
-    $this->ini = parse_ini_file('config/settings.ini', true);
-    $this->_dir = $this->ini['export']['export_dir'];
-    $this->_del = $this->ini['export']['delimiter'];
-    $this->_sep = $this->ini['export']['separator'];
-    $this->_sc = $sc;
-    $this->_bl = $bl;
-    $this->_setDefaults();
-    
-    $bootstrap = new Bootstrap($this->_dir, $this->_del, $this->_sep, $this->_sc, $this->_bl);
-    $this->startUpErrors = $bootstrap->getErrors();
-    // print_r($this->startUpErrors);
-    $this->_dbh = $bootstrap->getDbHandler();
-    unset($bootstrap);
-}
-
-    public function getStartUpErrors ()
+    public function __construct ($sc, $bl)
     {
-        return $this->startUpErrors;
+        $this->ini = parse_ini_file('config/settings.ini', true);
+        $this->_dir = $this->ini['export']['export_dir'];
+        $this->_del = $this->ini['export']['delimiter'];
+        $this->_sep = $this->ini['export']['separator'];
+        $this->_sc = $sc;
+        $this->_bl = $bl;
+        $this->_setDefaults();
+        
+        $bootstrap = new Bootstrap($this->_dir, $this->_del, $this->_sep, $this->_sc, $this->_bl);
+        $this->startUpErrors = $bootstrap->getErrors();
+        // print_r($this->startUpErrors);
+        $this->_dbh = $bootstrap->getDbHandler();
+        unset($bootstrap);
+    }
+
+    public static function getExportSettings ()
+    {
+        $ini = parse_ini_file('config/settings.ini', true);
+        return $ini['export'];
+    }
+
+    public static function getVersion ()
+    {
+        $ini = parse_ini_file('config/settings.ini', true);
+        return $ini['settings']['version'] . ' [r' . $ini['settings']['revision'] . ']';
     }
 
     public function archiveExists ()
@@ -59,11 +64,6 @@ function __construct ($sc, $bl)
             return true;
         }
         return false;
-    }
-
-    public function useIndicator ()
-    {
-        $this->_indicator = new Indicator();
     }
 
     private function _setDefaults ()
@@ -88,83 +88,6 @@ function __construct ($sc, $bl)
         }
     }
 
-    public function getExportSettings ()
-    {
-        return $this->ini['export'];
-    }
-
-    public function writeData ()
-    {
-        $total = $this->getTotalNumberOfTaxa();
-        $this->_indicator ? $this->_indicator->init($total, 75, 50) : '';
-        
-        for ($limit = 1000, $offset = 0; $offset < $total; $offset += $limit) {
-            $taxa = $this->_getTaxa($limit, $offset);
-            foreach ($taxa as $iTx => $rowTx) {
-                $this->_indicator ? $this->_indicator->iterate() : '';
-                $taxon = $this->_initModel('Taxon', $rowTx);
-                $taxon->setRank();
-                $taxon->setLsid();
-                $taxon->setScientificName();
-                $taxon->setNameStatus();
-                $taxon->setParentId();
-                $taxon->setScrutiny();
-                $taxon->writeModel();
-                
-                // Remaing data is exported only for (infra)species
-                // and for Block levels II and III
-                if (!$taxon->isHigherTaxon && $this->_bl > 1) {
-                    // Vernaculars
-                    $vernaculars = $this->_getVernaculars(
-                        $taxon->taxonID);
-                    foreach ($vernaculars as $iVn => $rowVn) {
-                        $vernacular = $this->_initModel(
-                            'Vernacular', 
-                            $rowVn, 
-                            $taxon->taxonID);
-                        $vernacular->setSource();
-                        $vernacular->writeModel();
-                        unset($vernacular);
-                    }
-                    // References
-                    $references = $this->_getReferences(
-                        $taxon->taxonID, 
-                        $taxon->isSynonym);
-                    foreach ($references as $iRf => $rowRf) {
-                        $reference = $this->_initModel(
-                            'Reference', 
-                            $rowRf, 
-                            $taxon->taxonID);
-                        $reference->writeModel();
-                        unset($reference);
-                    }
-                    // Distribution
-                    // Data can be stored in distribution or distribution_free_text tables
-                    // Try distribution first; if empty do second query on distribution_free_text
-                    // Export only if Block level III has been selected
-                    if ($this->_bl > 2) {
-                        $distributions = $this->_getDistributions(
-                            $taxon->taxonID);
-                        if (empty($distributions)) {
-                            $distributions = $this->_getDistributions(
-                                $taxon->taxonID, 
-                                true);
-                        }
-                        foreach ($distributions as $iDs => $rowDs) {
-                            $distribution = $this->_initModel(
-                                'Distribution', 
-                                $rowDs, 
-                                $taxon->taxonID);
-                            $distribution->writeModel();
-                            unset($distribution);
-                        }
-                    }
-                }
-                unset($taxon);
-            }
-        }
-    }
-
     private function _initModel ($model, $data, $taxonId = null)
     {
         try {
@@ -180,56 +103,11 @@ function __construct ($sc, $bl)
         return $model;
     }
 
-    public function createMetaXml ()
+    private function _getZipArchiveName ()
     {
-        $src = dirname(__FILE__) . '/templates/meta.tpl';
-        $dest = dirname(__FILE__) . '/' . $this->_dir;
-        
-        $template = new Template($src, $dest);
-        $template->setDelimiter($this->_del);
-        // Null character is invalid in xml, replace with empty string
-        $this->_sep != chr(0) ? $sep = $this->_sep : $sep = '';
-        $template->setSeparator($sep);
-        $template->writeFile('meta.xml');
-        unset($template);
-    }
-
-    public function zipArchive ()
-    {
-        $src = dirname(__FILE__) . '/' . $this->_dir;
-        // Default name of archive is archive-rank-taxon.zip
-        $dest = $this->_getZipArchiveName();
-        $zip = new Zip();
-        $zip->createArchive($src, $dest);
-        unset($zip);
-    }
-    
-    private function _getZipArchiveName() {
-        return dirname(__FILE__) . '/' . 
-               $this->ini['export']['zip_archive'] . '-' . 
-               array_shift(array_keys($this->_sc)) . '-' . 
-               array_shift(array_values($this->_sc)) . '-bl' .
-               $this->_bl . '.zip';
-    }
-
-    public function getTotalNumberOfTaxa ()
-    {
-        $params = array();
-        $query = 'SELECT COUNT(`id`)
-                  FROM `_search_scientific` ';
-        // @TODO: extend this for other search criteria!
-        if (!empty($this->_sc)) {
-            $query .= 'WHERE ';
-            foreach ($this->_sc as $field => $value) {
-                $query .= "`$field` LIKE ? AND ";
-                $params[] = $value;
-            }
-            $query = substr($query, 0, -4);
-        }
-        $stmt = $this->_dbh->prepare($query);
-        $stmt->execute($params);
-        $res = $stmt->fetch(PDO::FETCH_NUM);
-        return $res ? $res[0] : false;
+        return dirname(__FILE__) . '/' . $this->ini['export']['zip_archive'] . '-' . array_shift(
+            array_keys($this->_sc)) . '-' . array_shift(array_values($this->_sc)) . '-bl' . $this->_bl .
+             '.zip';
     }
 
     private function _getTaxa ($limit, $offset)
@@ -353,5 +231,135 @@ function __construct ($sc, $bl)
         ));
         $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $res ? $res : array();
+    }
+
+    public function getStartUpErrors ()
+    {
+        return $this->startUpErrors;
+    }
+
+    public function getTotalNumberOfTaxa ()
+    {
+        $params = array();
+        $query = 'SELECT COUNT(`id`)
+                  FROM `_search_scientific` ';
+        // @TODO: extend this for other search criteria!
+        if (!empty($this->_sc)) {
+            $query .= 'WHERE ';
+            foreach ($this->_sc as $field => $value) {
+                $query .= "`$field` LIKE ? AND ";
+                $params[] = $value;
+            }
+            $query = substr($query, 0, -4);
+        }
+        $stmt = $this->_dbh->prepare($query);
+        $stmt->execute($params);
+        $res = $stmt->fetch(PDO::FETCH_NUM);
+        return $res ? $res[0] : false;
+    }
+
+    public function useIndicator ()
+    {
+        $this->_indicator = new Indicator();
+    }
+
+    public function writeData ()
+    {
+        $total = $this->getTotalNumberOfTaxa();
+        $this->_indicator ? $this->_indicator->init($total, 75, 50) : '';
+        
+        for ($limit = 1000, $offset = 0; $offset < $total; $offset += $limit) {
+            $taxa = $this->_getTaxa($limit, $offset);
+            foreach ($taxa as $iTx => $rowTx) {
+                $this->_indicator ? $this->_indicator->iterate() : '';
+                $taxon = $this->_initModel('Taxon', $rowTx);
+                $taxon->setRank();
+                $taxon->setLsid();
+                $taxon->setScientificName();
+                $taxon->setNameStatus();
+                $taxon->setParentId();
+                $taxon->setScrutiny();
+                $taxon->writeModel();
+                
+                // Remaing data is exported only for (infra)species
+                // and for Block levels II and III
+                if (!$taxon->isHigherTaxon &&
+                     $this->_bl > 1) {
+                        // Vernaculars
+                        $vernaculars = $this->_getVernaculars(
+                            $taxon->taxonID);
+                    foreach ($vernaculars as $iVn => $rowVn) {
+                        $vernacular = $this->_initModel(
+                            'Vernacular', 
+                            $rowVn, 
+                            $taxon->taxonID);
+                        $vernacular->setSource();
+                        $vernacular->writeModel();
+                        unset($vernacular);
+                    }
+                    // References
+                    $references = $this->_getReferences(
+                        $taxon->taxonID, 
+                        $taxon->isSynonym);
+                    foreach ($references as $iRf => $rowRf) {
+                        $reference = $this->_initModel(
+                            'Reference', 
+                            $rowRf, 
+                            $taxon->taxonID);
+                        $reference->writeModel();
+                        unset($reference);
+                    }
+                    // Distribution
+                    // Data can be stored in distribution or distribution_free_text tables
+                    // Try distribution first; if empty do second query on distribution_free_text
+                    // Export only if Block level III has been selected
+                    if ($this->_bl >
+                         2) {
+                            $distributions = $this->_getDistributions(
+                                $taxon->taxonID);
+                        if (empty(
+                            $distributions)) {
+                            $distributions = $this->_getDistributions(
+                                $taxon->taxonID, 
+                                true);
+                        }
+                        foreach ($distributions as $iDs => $rowDs) {
+                            $distribution = $this->_initModel(
+                                'Distribution', 
+                                $rowDs, 
+                                $taxon->taxonID);
+                            $distribution->writeModel();
+                            unset(
+                                $distribution);
+                        }
+                    }
+                }
+                unset($taxon);
+            }
+        }
+    }
+
+    public function createMetaXml ()
+    {
+        $src = dirname(__FILE__) . '/templates/meta.tpl';
+        $dest = dirname(__FILE__) . '/' . $this->_dir;
+        
+        $template = new Template($src, $dest);
+        $template->setDelimiter($this->_del);
+        // Null character is invalid in xml, replace with empty string
+        $this->_sep != chr(0) ? $sep = $this->_sep : $sep = '';
+        $template->setSeparator($sep);
+        $template->writeFile('meta.xml');
+        unset($template);
+    }
+
+    public function zipArchive ()
+    {
+        $src = dirname(__FILE__) . '/' . $this->_dir;
+        // Default name of archive is archive-rank-taxon.zip
+        $dest = $this->_getZipArchiveName();
+        $zip = new Zip();
+        $zip->createArchive($src, $dest);
+        unset($zip);
     }
 }

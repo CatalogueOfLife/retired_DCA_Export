@@ -1,4 +1,7 @@
 <?php
+require_once 'DCAExporter.php';
+
+// Always flush page
 @ini_set('zlib.output_compression', 0);
 @ini_set('implicit_flush', 1);
 for ($i = 0; $i < ob_get_level(); $i++) {
@@ -19,6 +22,9 @@ Darwin Core Archive Export</title>
     style="right: 0; float: right; padding: 0 10px;" alt="i4Life">
 <h3>i4Life WP4 Enhanced Download Service of the Catalogue of Life:<br>
 Darwin Core Archive Export</h3>
+<?php
+echo '<p style="font-size: 11px; margin-bottom: 30px;">Version '.DCAExporter::getVersion()."</p>\n";
+?>
 
 <?php
 if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !empty($_GET['taxon'])) {
@@ -30,10 +36,7 @@ if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !e
         $rank => $taxon
     );
     
-    // Initialize the class
-    require_once 'DCAExporter.php';
     $dcaExporter = new DCAExporter($searchCriteria, $block);
-    
     // Check if archive already exits; if it does skip export
     if (!$dcaExporter->archiveExists()) {
         // Archive does not yet exist; create export
@@ -68,7 +71,7 @@ if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !e
     }
     
     // Construct download url and calculate file size
-    $ini = $dcaExporter->getExportSettings();
+    $ini = DCAExporter::getExportSettings();
     $url = $ini['zip_archive'] . "-$rank-$taxon-bl$block.zip";
     $sizeKb = filesize(dirname(__FILE__) . '/' . $url) / 1024;
     $size = round($sizeKb, 1) . ' KB';
@@ -79,8 +82,6 @@ if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !e
         <p><a href='index.php'>Back to the index</a></p>";
 }
 else {
-    require_once 'modules/Abstract.php';
-    require_once 'modules/Taxon.php';
     $ranks = Taxon::$higherTaxa;
     // Omit rank subgenus as this is not available yet in AC
     $nrRanks = count($ranks) - 1;

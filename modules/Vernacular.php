@@ -59,7 +59,8 @@ class Vernacular extends DCAExporterAbstract implements DCA_Interface
             'language', 
             'countryCode', 
             'locality', 
-            'source'
+            'source', 
+            'rights'
         );
         $this->_writeLine($this->_fh, $fields);
     }
@@ -72,7 +73,8 @@ class Vernacular extends DCAExporterAbstract implements DCA_Interface
             $this->language, 
             $this->countryCode, 
             $this->locality, 
-            $this->source
+            $this->source,
+            $this->_rights
         );
         
         $this->_writeLine($this->_fh, $fields);

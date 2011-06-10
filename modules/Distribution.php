@@ -33,7 +33,8 @@ class Distribution extends DCAExporterAbstract implements DCA_Interface
             'occurrenceStatus', 
             'locationID', 
             'locality', 
-            'establishmentMeans'
+            'establishmentMeans',
+            'rights'
         );
         $this->_writeLine($this->_fh, $fields);
     }
@@ -45,7 +46,8 @@ class Distribution extends DCAExporterAbstract implements DCA_Interface
             $this->occurrenceStatus, 
             $this->locationID, 
             $this->locality, 
-            $this->establishmentMeans
+            $this->establishmentMeans,
+            $this->_rights
         );
         $this->_writeLine($this->_fh, $fields);
     }

@@ -5,6 +5,7 @@ abstract class DCAExporterAbstract
     protected $_dir;
     protected $_del;
     protected $_sep;
+    protected $_rights;
 
     public function __construct ($dbh, $dir, $del, $sep)
     {
@@ -12,15 +13,7 @@ abstract class DCAExporterAbstract
         $this->_dir = $dir;
         $this->_del = $del;
         $this->_sep = $sep;
-    }
-
-    public function decorate (array $row)
-    {
-        foreach ($row as $p => $v) {
-            if (property_exists($this, $p)) {
-                $this->$p = $v;
-            }
-        }
+        $this->_rights = $this->_getRights();
     }
 
     private function _cleanString ($str)
@@ -34,6 +27,11 @@ abstract class DCAExporterAbstract
             "\t"
         );
         return str_replace($space, ' ', str_replace($delete, '', $str));
+    }
+    
+    protected function _getRights() {
+        $ini = parse_ini_file('config/settings.ini', true);
+        return $ini['credits']['string'];
     }
 
     protected function _createTextFile ($fileName)
@@ -69,6 +67,15 @@ abstract class DCAExporterAbstract
     {
         //fputcsv($fh, $fields, $this->_del, $this->_sep);
         $this->fputcsv2($fh, $fields, $this->_del, $this->_sep);
+    }
+
+    public function decorate (array $row)
+    {
+        foreach ($row as $p => $v) {
+            if (property_exists($this, $p)) {
+                $this->$p = $v;
+            }
+        }
     }
 
     /*

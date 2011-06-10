@@ -35,7 +35,8 @@ class Reference extends DCAExporterAbstract implements DCA_Interface
             'creator', 
             'date', 
             'description', 
-            'identifier'
+            'identifier',
+            'rights'
         );
         $this->_writeLine($this->_fh, $fields);
     }
@@ -48,7 +49,8 @@ class Reference extends DCAExporterAbstract implements DCA_Interface
             $this->creator, 
             $this->date, 
             $this->description, 
-            $this->identifier
+            $this->identifier,
+            $this->_rights
         );
         $this->_writeLine($this->_fh, $fields);
     }

@@ -23,8 +23,7 @@ class Bootstrap
             $this->_sep = $this->_validateSep($sep);
             $this->_sc = $this->_validateSc($sc);
             $this->_bl = $this->_validateBl($bl);
-            
-            $this->_setInternalCodingToUTF8();
+            $this->_setInternalCodingToUtf8();
             
             // Text files used to write to are created on the fly when the objects are created
             if (empty(
@@ -39,8 +38,9 @@ class Bootstrap
             }
         }
     }
-    
-    private function _setInternalCodingToUTF8 () {
+
+    private function _setInternalCodingToUtf8 ()
+    {
         if (mb_internal_encoding() != 'UTF-8') {
             mb_internal_encoding("UTF-8");
         }
@@ -59,16 +59,6 @@ class Bootstrap
             }
             DbHandler::createInstance($name, $config, $dbOptions);
         }
-    }
-
-    public function getDbHandler ()
-    {
-        return $this->_dbh;
-    }
-
-    public function getErrors ()
-    {
-        return $this->_errors;
     }
 
     // Create text files
@@ -141,4 +131,13 @@ class Bootstrap
         return $bl;
     }
 
+    public function getDbHandler ()
+    {
+        return $this->_dbh;
+    }
+
+    public function getErrors ()
+    {
+        return $this->_errors;
+    }
 }

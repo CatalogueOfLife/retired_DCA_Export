@@ -29,6 +29,7 @@
     <field index='19' term='http://rs.tdwg.org/dwc/terms/scientificNameAuthorship'/>
     <field index='20' term='http://rs.tdwg.org/dwc/terms/nameAccordingTo'/>    
     <field index='21' term='http://purl.org/dc/terms/modified'/>
+    <field index='22' term='http://purl.org/dc/terms/rights'/>
   </core>
 
   <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Distribution'>
@@ -40,6 +41,7 @@
     <field index='2' term='http://rs.tdwg.org/dwc/terms/locationID'/>
     <field index='3' term='http://rs.tdwg.org/dwc/terms/locality'/>             
     <field index='4' term='http://rs.tdwg.org/dwc/terms/establishmentMeans'/>
+    <field index='5' term='http://purl.org/dc/terms/rights'/>
   </extension>
   
   <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Description'>
@@ -49,6 +51,7 @@
     <coreid index='0' />
     <field index='1' term='http://purl.org/dc/terms/type'/>
     <field index='2' term='http://purl.org/dc/terms/description'/>
+    <field index='3' term='http://purl.org/dc/terms/rights'/>
   </extension>
   
   <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Reference'>
@@ -61,6 +64,7 @@
     <field index='3' term='http://purl.org/dc/terms/date'/>
     <field index='4' term='http://purl.org/dc/terms/description'/>
     <field index='5' term='http://purl.org/dc/terms/identifier'/>
+    <field index='6' term='http://purl.org/dc/terms/rights'/>
   </extension>
   
    <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/SpeciesProfile'>
@@ -69,6 +73,7 @@
      </files>
      <coreid index='0' />
      <field index='1' term='http://rs.tdwg.org/dwc/terms/habitat'/>
+     <field index='2' term='http://purl.org/dc/terms/rights'/>
    </extension>  
    
    <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/VernacularName'>
@@ -81,6 +86,7 @@
      <field index='3' term='http://rs.tdwg.org/dwc/terms/countryCode'/>
      <field index='4' term='http://rs.tdwg.org/dwc/terms/locality'/>
      <field index='5' term='http://purl.org/dc/terms/source'/>
+     <field index='6' term='http://purl.org/dc/terms/rights'/>
    </extension>         
                              
 </archive>
