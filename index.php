@@ -1,14 +1,7 @@
 <?php
 require_once 'DCAExporter.php';
-
-// Always flush page
-@ini_set('zlib.output_compression', 0);
-@ini_set('implicit_flush', 1);
-for ($i = 0; $i < ob_get_level(); $i++) {
-    ob_end_flush();
-}
-ob_implicit_flush(1);
-set_time_limit(0);
+$ini = DCAExporter::getExportSettings();
+alwaysFlush();
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -20,14 +13,13 @@ Darwin Core Archive Export</title>
 <body style="font: 12px verdana; width: 800px;">
 <img src="images/i4life_logo_sm.jpg" width="150" height="62"
     style="right: 0; float: right; padding: 0 10px;" alt="i4Life">
-<h3>i4Life WP4 Enhanced Download Service of the Catalogue of Life:<br>
+<h3>i4Life WP4 Enhanced Download Service of
+the Catalogue of Life:<br>
 Darwin Core Archive Export</h3>
 <?php
-echo '<p style="font-size: 11px; margin-bottom: 30px;">Version '.DCAExporter::getVersion()."</p>\n";
-?>
+echo '<p style="font-size: 11px; margin-bottom: 30px;">Version ' . DCAExporter::getVersion() . "</p>\n";
 
-<?php
-if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !empty($_GET['taxon'])) {
+if (formIsSubmitted()) {
     // $_GET input is validated in application
     $rank = $_GET['rank'];
     $taxon = $_GET['taxon'];
@@ -71,13 +63,8 @@ if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !e
     }
     
     // Construct download url and calculate file size
-    $ini = DCAExporter::getExportSettings();
     $url = $ini['zip_archive'] . "-$rank-$taxon-bl$block.zip";
-    $sizeKb = filesize(dirname(__FILE__) . '/' . $url) / 1024;
-    $size = round($sizeKb, 1) . ' KB';
-    if ($sizeKb > 999) {
-        $size = round($sizeKb / 1024, 1) . ' MB';
-    }
+    $size = setDownloadSize($url);
     echo "<p>Ready! <a href='$url'>Download the zip archive</a> ($size).</p>
         <p><a href='index.php'>Back to the index</a></p>";
 }
@@ -102,6 +89,35 @@ else {
         $_SERVER['PHP_SELF'], 
         $select
     ), $intro);
+}
+
+function alwaysFlush ()
+{
+    @ini_set('zlib.output_compression', 0);
+    @ini_set('implicit_flush', 1);
+    for ($i = 0; $i < ob_get_level(); $i++) {
+        ob_end_flush();
+    }
+    ob_implicit_flush(1);
+    set_time_limit(0);
+}
+
+function formIsSubmitted ()
+{
+    if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !empty($_GET['taxon'])) {
+        return true;
+    }
+    return false;
+}
+
+function setDownloadSize ($url)
+{
+    $sizeKb = filesize(dirname(__FILE__) . '/' . $url) / 1024;
+    $size = round($sizeKb, 1) . ' KB';
+    if ($sizeKb > 999) {
+        $size = round($sizeKb / 1024, 1) . ' MB';
+    }
+    return $size;
 }
 ?>
 </body>
