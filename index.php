@@ -37,97 +37,97 @@ if (formIsSubmitted()) {
                 $_GET['taxon']) . ".</p>\n";
         }
         else {
-            echo "<p>No results found for $rank " . ucfirst($taxon) . '. 
-                <a href="index.php">Back to the index</a></p>';
-            exit();
-        }
-        echo '<p>Creating meta.xml...<br>';
-        $dcaExporter->createMetaXml();
-        echo 'Writing data to text files...<br>';
-        $dcaExporter->writeData();
-        echo '<br>Compressing to zip archive...<br>';
-        $dcaExporter->zipArchive();
-        echo "</p>\n";
+            echo '<p>No results found for ' . $_GET['rank'] . ' ' . ucfirst($_GET['taxon']) .
+                 '. <a href="index.php">Back to the index</a></p>';
+        exit();
     }
-    $url = setDownloadUrl();
-    $size = setDownloadSize($url);
-    echo "<p>Ready! <a href='$url'>Download the zip archive</a> ($size).</p>
+    echo '<p>Creating meta.xml...<br>';
+    $dcaExporter->createMetaXml();
+    echo 'Writing data to text files...<br>';
+    $dcaExporter->writeData();
+    echo '<br>Compressing to zip archive...<br>';
+    $dcaExporter->zipArchive();
+    echo "</p>\n";
+}
+$url = setDownloadUrl();
+$size = setDownloadSize($url);
+echo "<p>Ready! <a href='$url'>Download the zip archive</a> ($size).</p>
         <p><a href='index.php'>Back to the index</a></p>";
 }
 else {
-    $select = setSelect();
-    $intro = file_get_contents('templates/intro.tpl');
-    echo str_replace(array(
-        '[action]', 
-        '[select]'
-    ), array(
-        $_SERVER['PHP_SELF'], 
-        $select
-    ), $intro);
+$select = setSelect();
+$intro = file_get_contents('templates/intro.tpl');
+echo str_replace(array(
+    '[action]', 
+    '[select]'
+), array(
+    $_SERVER['PHP_SELF'], 
+    $select
+), $intro);
 }
 
 function alwaysFlush ()
 {
-    @ini_set('zlib.output_compression', 0);
-    @ini_set('implicit_flush', 1);
-    for ($i = 0; $i < ob_get_level(); $i++) {
-        ob_end_flush();
-    }
-    ob_implicit_flush(1);
-    set_time_limit(0);
+@ini_set('zlib.output_compression', 0);
+@ini_set('implicit_flush', 1);
+for ($i = 0; $i < ob_get_level(); $i++) {
+    ob_end_flush();
+}
+ob_implicit_flush(1);
+set_time_limit(0);
 }
 
 function formIsSubmitted ()
 {
-    if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !empty($_GET['taxon'])) {
-        return true;
-    }
-    return false;
+if (isset($_GET['rank']) && !empty($_GET['rank']) && isset($_GET['taxon']) && !empty($_GET['taxon'])) {
+    return true;
+}
+return false;
 }
 
 function printErrors ($errors)
 {
-    echo '<p><span style="color: red; font-weight: bold;">Error!</span><br>';
-    foreach ($errors as $error) {
-        echo $error . '<br>';
-    }
-    echo "</p>\n<p><a href='index.php'>Back to the index</a></p>";
+echo '<p><span style="color: red; font-weight: bold;">Error!</span><br>';
+foreach ($errors as $error) {
+    echo $error . '<br>';
+}
+echo "</p>\n<p><a href='index.php'>Back to the index</a></p>";
 }
 
 function setDownloadUrl ()
 {
-    $ini = DCAExporter::getExportSettings();
-    $url = $ini['zip_archive'] . '-' . $_GET['rank'] . '-' . $_GET['taxon'] . '-bl' . $_GET['block'] . '.zip';
-    if ($_GET['taxon'] == '[all]') {
-        $url = $ini['zip_archive'] . '-complete.zip';
-    }
-    return $url;
+$ini = DCAExporter::getExportSettings();
+$url = $ini['zip_archive'] . '-' . $_GET['rank'] . '-' . $_GET['taxon'] . '-bl' . $_GET['block'] . '.zip';
+if ($_GET['taxon'] == '[all]') {
+    $url = $ini['zip_archive'] . '-complete.zip';
+}
+return $url;
 }
 
 function setDownloadSize ($url)
 {
-    $sizeKb = filesize(dirname(__FILE__) . '/' . $url) / 1024;
-    $size = round($sizeKb, 1) . ' KB';
-    if ($sizeKb > 999) {
-        $size = round($sizeKb / 1024, 1) . ' MB';
-    }
-    return $size;
+$sizeKb = filesize(dirname(__FILE__) . '/' . $url) / 1024;
+$size = round($sizeKb, 1) . ' KB';
+if ($sizeKb > 999) {
+    $size = round($sizeKb / 1024, 1) . ' MB';
+}
+return $size;
 }
 
 function setSelect ()
 {
-    $ranks = Taxon::$higherTaxa;
-    // Omit rank subgenus as this is not available yet in AC
-    $nrRanks = count($ranks) - 1;
-    $select = $selected = '';
-    for ($i = 0; $i < $nrRanks; $i++) {
-        if ($i == ($nrRanks - 1)) {
-            // Automatically select genus from popup
-            $selected = 'selected';
-        }
-        $select .= "<option value='$ranks[$i]' $selected>" . ucfirst($ranks[$i]) . "</option>\n";
+$ranks = Taxon::$higherTaxa;
+// Omit rank subgenus as this is not available yet in AC
+$nrRanks = count($ranks) - 1;
+$select = $selected = '';
+for ($i = 0; $i < $nrRanks; $i++) {
+    if ($i == ($nrRanks - 1)) {
+        // Automatically select genus from popup
+        $selected = 'selected';
     }
-    return $select;
+    $select .= "<option value='$ranks[$i]' $selected>" . ucfirst($ranks[$i]) . "</option>\n";
+}
+return $select;
 }
 ?>
 </body>
