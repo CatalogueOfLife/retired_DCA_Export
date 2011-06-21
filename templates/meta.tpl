@@ -23,13 +23,13 @@
     <field index='12' term='http://rs.tdwg.org/dwc/terms/order'/>
     <field index='13' term='http://rs.tdwg.org/dwc/terms/family'/>
     <field index='14' term='http://rs.tdwg.org/dwc/terms/genus'/>
-    <field index='16' term='http://rs.tdwg.org/dwc/terms/subgenus'/>
-    <field index='17' term='http://rs.tdwg.org/dwc/terms/specificEpithet'/>
-    <field index='18' term='http://rs.tdwg.org/dwc/terms/infraspecificEpithet'/>
-    <field index='19' term='http://rs.tdwg.org/dwc/terms/scientificNameAuthorship'/>
-    <field index='20' term='http://rs.tdwg.org/dwc/terms/nameAccordingTo'/>    
-    <field index='21' term='http://purl.org/dc/terms/modified'/>
-    <field index='22' term='http://purl.org/dc/terms/rights'/>
+    <field index='15' term='http://rs.tdwg.org/dwc/terms/subgenus'/>
+    <field index='16' term='http://rs.tdwg.org/dwc/terms/specificEpithet'/>
+    <field index='17' term='http://rs.tdwg.org/dwc/terms/infraspecificEpithet'/>
+    <field index='18' term='http://rs.tdwg.org/dwc/terms/scientificNameAuthorship'/>
+    <field index='19' term='http://rs.tdwg.org/dwc/terms/nameAccordingTo'/>    
+    <field index='20' term='http://purl.org/dc/terms/modified'/>
+    <field index='21' term='http://purl.org/dc/terms/rights'/>
   </core>
 
   <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Distribution'>
