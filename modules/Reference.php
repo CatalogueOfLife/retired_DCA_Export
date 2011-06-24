@@ -9,6 +9,15 @@ class Reference extends DCAExporterAbstract implements DCA_Interface
     public $description;
     public $identifier;
     
+    public $fields = array(
+        'taxonID', 
+        'title', 
+        'creator', 
+        'date', 
+        'description', 
+        'identifier'
+    );
+
     const FILE = 'reference.txt';
 
     public function __construct (PDO $dbh, $dir, $del, $sep)
@@ -27,20 +36,6 @@ class Reference extends DCAExporterAbstract implements DCA_Interface
         $this->_createTextFile(self::FILE);
     }
 
-    public function writeHeader ()
-    {
-        $fields = array(
-            'taxonID', 
-            'title', 
-            'creator', 
-            'date', 
-            'description', 
-            'identifier',
-            'rights'
-        );
-        $this->_writeLine($this->_fh, $fields);
-    }
-
     public function writeModel ()
     {
         $fields = array(
@@ -49,8 +44,7 @@ class Reference extends DCAExporterAbstract implements DCA_Interface
             $this->creator, 
             $this->date, 
             $this->description, 
-            $this->identifier,
-            $this->_rights
+            $this->identifier
         );
         $this->_writeLine($this->_fh, $fields);
     }

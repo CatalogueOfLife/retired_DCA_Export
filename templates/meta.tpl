@@ -11,7 +11,7 @@
     <!-- identifier contains the LSID -->
     <field index="1" term="http://purl.org/dc/terms/identifier"/>
     <field index="2" term="http://rs.tdwg.org/dwc/terms/datasetID"/>
-		<field index="3" term="http://rs.tdwg.org/dwc/terms/datasetName"/>
+    <field index="3" term="http://rs.tdwg.org/dwc/terms/datasetName"/>
     <field index='4' term='http://rs.tdwg.org/dwc/terms/acceptedNameUsageID'/>
     <field index='5' term='http://rs.tdwg.org/dwc/terms/parentNameUsageID'/>
     <field index='6' term='http://rs.tdwg.org/dwc/terms/taxonomicStatus'/> 
@@ -88,5 +88,5 @@
      <field index='5' term='http://purl.org/dc/terms/source'/>
      <field index='6' term='http://purl.org/dc/terms/rights'/>
    </extension>         
-                             
+
 </archive>

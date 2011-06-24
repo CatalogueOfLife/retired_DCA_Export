@@ -23,7 +23,31 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
     public $scientificNameAuthorship;
     public $nameAccordingTo; // scrutiny, separate
     public $modified; // scrutiny date, separate
-
+    
+    public $fields = array(
+        'taxonID', 
+        'identifier', 
+        'datasetID', 
+        'datasetName', 
+        'acceptedNameUsageID', 
+        'parentNameUsageID', 
+        'taxonomicStatus', 
+        'taxonRank', 
+        'scientificName', 
+        'kingdom', 
+        'phylum', 
+        'class', 
+        'order', 
+        'family', 
+        'genus', 
+        'subgenus', 
+        'specificEpithet', 
+        'infraspecificEpithet', 
+        'scientificNameAuthorship', 
+        'nameAccordingTo', 
+        'modified'
+    );
+    
     // Derived values
     public $status;
     public $isHigherTaxon = false;
@@ -176,42 +200,13 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
         }
     }
 
-    public function writeHeader ()
-    {
-        $fields = array(
-            'taxonID', 
-            'identifier', 
-            'datasetID', 
-            'datasetName', 
-            'acceptedNameUsageID', 
-            'parentNameUsageID', 
-            'taxonomicStatus', 
-            'taxonRank', 
-            'scientificName', 
-            'kingdom', 
-            'phylum', 
-            'class', 
-            'order', 
-            'family', 
-            'genus', 
-            'subgenus', 
-            'specificEpithet', 
-            'infraspecificEpithet', 
-            'scientificNameAuthorship', 
-            'nameAccordingTo', 
-            'modified',
-            'rights'
-        );
-        $this->_writeLine($this->_fh, $fields);
-    }
-
     public function writeModel ()
     {
         $fields = array(
             $this->taxonID, 
             $this->identifier, 
             $this->datasetID, 
-            $this->datasetName, 
+            $this->datasetName . ' in ' . $this->_getCredits(), 
             $this->acceptedNameUsageID, 
             $this->parentNameUsageID, 
             $this->taxonomicStatus, 
@@ -228,8 +223,7 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
             $this->infraspecificEpithet, 
             $this->scientificNameAuthorship, 
             $this->nameAccordingTo, 
-            $this->modified,
-            $this->_rights
+            $this->modified
         );
         $this->_writeLine($this->_fh, $fields);
     }

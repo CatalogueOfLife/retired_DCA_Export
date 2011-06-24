@@ -9,6 +9,15 @@ class Vernacular extends DCAExporterAbstract implements DCA_Interface
     public $locality;
     public $source;
     
+    public $fields = array(
+        'taxonID', 
+        'vernacularName', 
+        'language', 
+        'countryCode', 
+        'locality', 
+        'source'
+    );
+
     // Derived properties
     public $authors;
     public $year;
@@ -51,20 +60,6 @@ class Vernacular extends DCAExporterAbstract implements DCA_Interface
         return $this->source;
     }
 
-    public function writeHeader ()
-    {
-        $fields = array(
-            'taxonID', 
-            'vernacularName', 
-            'language', 
-            'countryCode', 
-            'locality', 
-            'source', 
-            'rights'
-        );
-        $this->_writeLine($this->_fh, $fields);
-    }
-
     public function writeModel ()
     {
         $fields = array(
@@ -73,8 +68,7 @@ class Vernacular extends DCAExporterAbstract implements DCA_Interface
             $this->language, 
             $this->countryCode, 
             $this->locality, 
-            $this->source,
-            $this->_rights
+            $this->source
         );
         
         $this->_writeLine($this->_fh, $fields);

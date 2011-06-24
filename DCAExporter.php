@@ -9,13 +9,38 @@ require_once 'modules/Taxon.php';
 require_once 'modules/Vernacular.php';
 require_once 'modules/Distribution.php';
 require_once 'modules/Reference.php';
+require_once 'modules/SourceDatabase.php';
 
 class DCAExporter
 {
+    // Export directory
+    public static $dir = 'export/';
+    // Path to and name of meta.xml template
+    public static $meta = '/templates/meta.tpl';
+    // Path to and base name of zip archive
+    public static $zip = 'zip/archive';
+    // Metadata for Annual Checklist itself is not stored in the database
+    // Set credits in this array
+    public static $species2000Metadata = array(
+        'id' => 'species_2000', 
+        'name' => 'Species 2000', 
+        'abbreviatedName' => 'Species 2000', 
+        'groupName' => 'tbd', 
+        'authorsEditors' => 'tbd', 
+        'organisation' => 'tbd', 
+        'contactPerson' => 'tbd', 
+        'version' => 'tbd', 
+        'releaseDate' => 'tbd', 
+        'abstract' => 'tbd', 
+        'numberOfSpecies' => 'tbd', 
+        'numberOfInfraspecies' => 'tbd', 
+        'numberOfSynonyms' => 'tbd', 
+        'numberOfCommonNames' => 'tbd', 
+        'totalNumber' => 'tbd'
+    );
+    
     // Database handler
     private $_dbh;
-    // Export directory
-    private $_dir;
     // Text file delimiter
     private $_del;
     // Text file separator
@@ -25,21 +50,24 @@ class DCAExporter
     // Block level; determines amount of data returned
     private $_bl;
     
-    public $ini;
-    public $startUpErrors;
+    // Storage array to determine if an eml file has already been written 
+    private $_savedEmls = array();
+    // Indicator to show progress
     private $_indicator;
+    
+    // Collects bootstrap errors
+    public $startUpErrors;
 
     public function __construct ($sc, $bl)
     {
-        $this->ini = parse_ini_file('config/settings.ini', true);
-        $this->_dir = $this->ini['export']['export_dir'];
-        $this->_del = $this->ini['export']['delimiter'];
-        $this->_sep = $this->ini['export']['separator'];
+        $ini = parse_ini_file('config/settings.ini', true);
+        $this->_del = $ini['export']['delimiter'];
+        $this->_sep = $ini['export']['separator'];
         $this->_sc = $sc;
         $this->_bl = $bl;
         $this->_setDefaults();
         
-        $bootstrap = new Bootstrap($this->_dir, $this->_del, $this->_sep, $this->_sc, $this->_bl);
+        $bootstrap = new Bootstrap(self::$dir, $this->_del, $this->_sep, $this->_sc, $this->_bl);
         $this->startUpErrors = $bootstrap->getErrors();
         $this->_dbh = $bootstrap->getDbHandler();
         unset($bootstrap);
@@ -57,12 +85,14 @@ class DCAExporter
         return $ini['settings']['version'] . ' [r' . $ini['settings']['revision'] . ']';
     }
 
-    public function archiveExists ()
+    private function _addEml ($srcDbId)
     {
-        if (file_exists($this->_getZipArchiveName())) {
-            return true;
-        }
-        return false;
+        $this->_savedEmls[] = $srcDbId;
+    }
+
+    private function _emlExists ($srcDbId)
+    {
+        return in_array($srcDbId, $this->_savedEmls) ? true : false;
     }
 
     private function _setDefaults ()
@@ -87,10 +117,10 @@ class DCAExporter
         }
     }
 
-    private function _initModel ($model, $data, $taxonId = null)
+    private function _initModel ($model, array $data, $taxonId = null)
     {
         try {
-            $model = new $model($this->_dbh, $this->_dir, $this->_del, $this->_sep);
+            $model = new $model($this->_dbh, self::$dir, $this->_del, $this->_sep);
             if ($taxonId) {
                 $model->taxonID = $taxonId;
             }
@@ -110,7 +140,7 @@ class DCAExporter
         if ($taxon == '[all]') {
             $file = 'complete.zip';
         }
-        return dirname(__FILE__) . '/' . $this->ini['export']['zip_archive'] . '-' . $file;
+        return dirname(__FILE__) . '/' . self::$zip . '-' . $file;
     }
 
     private function _getTaxa ($limit, $offset)
@@ -118,7 +148,7 @@ class DCAExporter
         $query = 'SELECT `id` AS taxonID,
                           IF (`source_database_id` > 0,
                               `source_database_id`,
-                              "") AS datasetID,
+                              "Species 2000") AS datasetID,
                           IF (`source_database_name` != "", 
                               `source_database_name`, 
                               "Catalogue of Life") AS datasetName,
@@ -236,6 +266,34 @@ class DCAExporter
         return $res ? $res : array();
     }
 
+    private function _getSourceDatabaseMetadata ($source_database_id)
+    {
+        $query = 'SELECT t1.`id`,
+                    t1.`name` AS name,
+                    t1.`abbreviated_name` AS abbreviatedName,
+                    t1.`group_name_in_english` AS groupName,
+                    t1.`authors_and_editors` AS authorsEditors,
+                    t1.`version` AS version,
+                    t1.`release_date` AS releaseDate,
+                    t1.`abstract` AS abstract,
+                    t1.`organisation` AS organisation,
+                    t1.`contact_person` AS contactPerson,
+                    t2.`number_of_species` AS numberOfSpecies,
+                    t2.`number_of_infraspecific_taxon` AS numberOfInfraspecies,
+                    t2.`number_of_synonyms` AS numberOfSynonyms,
+                    t2.`number_of_common_names` AS numberOfCommonNames,
+                    t2.`total_number` AS totalNumber
+                  FROM `source_database` t1
+                  LEFT JOIN `_source_database_details` AS t2 ON t1.`id` = t2.`id`
+                  WHERE t1.`id` = ?';
+        $stmt = $this->_dbh->prepare($query);
+        $stmt->execute(array(
+            $source_database_id
+        ));
+        $res = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $res ? $res : array();
+    }
+
     public function getStartUpErrors ()
     {
         return $this->startUpErrors;
@@ -283,6 +341,16 @@ class DCAExporter
                 $taxon->setParentId();
                 $taxon->setScrutiny();
                 $taxon->writeModel();
+                
+                if (!$this->_emlExists($taxon->datasetID)) {
+                    $sourceDatabase = new SourceDatabase(
+                        $this->_dbh, 
+                        self::$dir, 
+                        $this->_getSourceDatabaseMetadata(
+                            $taxon->datasetID));
+                    $sourceDatabase->writeEml();
+                    $this->_addEml($taxon->datasetID);
+                }
                 
                 // Remaing data is exported only for (infra)species
                 // and for Block levels II and III
@@ -344,8 +412,8 @@ class DCAExporter
 
     public function createMetaXml ()
     {
-        $src = dirname(__FILE__) . '/templates/meta.tpl';
-        $dest = dirname(__FILE__) . '/' . $this->_dir;
+        $src = dirname(__FILE__) . self::$meta;
+        $dest = dirname(__FILE__) . '/' . self::$dir;
         
         $template = new Template($src, $dest);
         $template->setDelimiter($this->_del);
@@ -358,11 +426,19 @@ class DCAExporter
 
     public function zipArchive ()
     {
-        $src = dirname(__FILE__) . '/' . $this->_dir;
+        $src = dirname(__FILE__) . '/' . self::$dir;
         // Default name of archive is archive-rank-taxon.zip
         $dest = $this->_getZipArchiveName();
         $zip = new Zip();
         $zip->createArchive($src, $dest);
         unset($zip);
+    }
+
+    public function archiveExists ()
+    {
+        if (file_exists($this->_getZipArchiveName())) {
+            return true;
+        }
+        return false;
     }
 }

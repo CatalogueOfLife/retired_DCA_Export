@@ -8,6 +8,14 @@ class Distribution extends DCAExporterAbstract implements DCA_Interface
     public $locality;
     public $establishmentMeans;
     
+    public $fields = array(
+        'taxonID', 
+        'occurrenceStatus', 
+        'locationID', 
+        'locality', 
+        'establishmentMeans'
+    );
+    
     const FILE = 'distribution.txt';
 
     public function __construct (PDO $dbh, $dir, $del, $sep)
@@ -26,19 +34,6 @@ class Distribution extends DCAExporterAbstract implements DCA_Interface
         $this->_createTextFile(self::FILE);
     }
 
-    public function writeHeader ()
-    {
-        $fields = array(
-            'taxonID', 
-            'occurrenceStatus', 
-            'locationID', 
-            'locality', 
-            'establishmentMeans',
-            'rights'
-        );
-        $this->_writeLine($this->_fh, $fields);
-    }
-
     public function writeModel ()
     {
         $fields = array(
@@ -46,8 +41,7 @@ class Distribution extends DCAExporterAbstract implements DCA_Interface
             $this->occurrenceStatus, 
             $this->locationID, 
             $this->locality, 
-            $this->establishmentMeans,
-            $this->_rights
+            $this->establishmentMeans
         );
         $this->_writeLine($this->_fh, $fields);
     }

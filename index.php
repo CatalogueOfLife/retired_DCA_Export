@@ -97,7 +97,7 @@ function printErrors ($errors)
 function setDownloadUrl ()
 {
     $ini = DCAExporter::getExportSettings();
-    $url = $ini['zip_archive'] . '-' . $_GET['rank'] . '-' . $_GET['taxon'] . '-bl' . $_GET['block'] . '.zip';
+    $url = DCAExporter::$zip . '-' . $_GET['rank'] . '-' . $_GET['taxon'] . '-bl' . $_GET['block'] . '.zip';
     if ($_GET['taxon'] == '[all]') {
         $url = $ini['zip_archive'] . '-complete.zip';
     }
