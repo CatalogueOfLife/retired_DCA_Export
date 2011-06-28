@@ -1,0 +1,205 @@
+﻿taxonID	title	creator	date	description	identifier
+6848846			1996	database, NODC Taxonomic Code	
+6848846			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848846		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848846		Banks, R. C., R. W. McDiarmid, A. L. Gardner, and W. C. Starnes	2003	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	
+6848846	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	Banks, R. C., R. W. McDiarmid, and A. L. Gardner	1987	Resource Publication, no. 166	
+6991578			1996	database, NODC Taxonomic Code	
+6991576			1996	database, NODC Taxonomic Code	
+6991577			1996	database, NODC Taxonomic Code	
+6868213			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6868213		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6868214			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6868214		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848853			1996	database, NODC Taxonomic Code	
+6848853			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848853		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848853		Banks, R. C., R. W. McDiarmid, A. L. Gardner, and W. C. Starnes	2003	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	
+6848853	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	Banks, R. C., R. W. McDiarmid, and A. L. Gardner	1987	Resource Publication, no. 166	
+6848858			1996	database, NODC Taxonomic Code	
+6848858			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848858		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848859			1996	database, NODC Taxonomic Code	
+6848859			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848859		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848859			2005	website, AOU Check-List (07-2005)	
+6848859		Banks, R. C., R. W. McDiarmid, A. L. Gardner, and W. C. Starnes	2003	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	
+6848859	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	Banks, R. C., R. W. McDiarmid, and A. L. Gardner	1987	Resource Publication, no. 166	
+6848860			1996	database, NODC Taxonomic Code	
+6848862			1996	database, NODC Taxonomic Code	
+6848862			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848862		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848863			1996	database, NODC Taxonomic Code	
+6848863			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848863		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6863814			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6863814		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6863814			2005	website, AOU Check-List (07-2005)	
+6863814		Banks, R. C., R. W. McDiarmid, A. L. Gardner, and W. C. Starnes	2003	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	
+6848848			1996	database, NODC Taxonomic Code	
+6848848			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848848		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848848		Banks, R. C., R. W. McDiarmid, A. L. Gardner, and W. C. Starnes	2003	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	
+6848848	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	Banks, R. C., R. W. McDiarmid, and A. L. Gardner	1987	Resource Publication, no. 166	
+6848851			1996	database, NODC Taxonomic Code	
+6848851			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848851		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848851		Banks, R. C., R. W. McDiarmid, A. L. Gardner, and W. C. Starnes	2003	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	
+6848851	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	Banks, R. C., R. W. McDiarmid, and A. L. Gardner	1987	Resource Publication, no. 166	
+6991580			1996	database, NODC Taxonomic Code	
+6991579			1996	database, NODC Taxonomic Code	
+6848864			1996	database, NODC Taxonomic Code	
+6848864			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848864		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848864			2005	website, AOU Check-List (07-2005)	
+6848850			1996	database, NODC Taxonomic Code	
+6848850			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848850		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848850			2005	website, AOU Check-List (07-2005)	
+6848850		Banks, R. C., R. W. McDiarmid, A. L. Gardner, and W. C. Starnes	2003	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	
+6848849			1996	database, NODC Taxonomic Code	
+6848849			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848849		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848849		Banks, R. C., R. W. McDiarmid, A. L. Gardner, and W. C. Starnes	2003	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	
+6848849	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	Banks, R. C., R. W. McDiarmid, and A. L. Gardner	1987	Resource Publication, no. 166	
+6848865			1996	database, NODC Taxonomic Code	
+6848865			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848865		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848865			2005	website, AOU Check-List (07-2005)	
+6848866			1996	database, NODC Taxonomic Code	
+6848868			1996	database, NODC Taxonomic Code	
+6848868			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848868		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848845			1996	database, NODC Taxonomic Code	
+6848845			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848845		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848845		Banks, R. C., R. W. McDiarmid, A. L. Gardner, and W. C. Starnes	2003	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	
+6848845	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	Banks, R. C., R. W. McDiarmid, and A. L. Gardner	1987	Resource Publication, no. 166	
+6991575			1996	database, NODC Taxonomic Code	
+6991574			1996	database, NODC Taxonomic Code	
+6848869			1996	database, NODC Taxonomic Code	
+6848869			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848869		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848841			1996	database, NODC Taxonomic Code	
+6848841			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848841		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848841		Banks, R. C., R. W. McDiarmid, A. L. Gardner, and W. C. Starnes	2003	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	
+6848841	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	Banks, R. C., R. W. McDiarmid, and A. L. Gardner	1987	Resource Publication, no. 166	
+6848840			1996	database, NODC Taxonomic Code	
+6848840			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848840		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848840		Banks, R. C., R. W. McDiarmid, A. L. Gardner, and W. C. Starnes	2003	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	
+6848840	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	Banks, R. C., R. W. McDiarmid, and A. L. Gardner	1987	Resource Publication, no. 166	
+6991569			1996	database, NODC Taxonomic Code	
+6991570			1996	database, NODC Taxonomic Code	
+6868215			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6868215		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848857			1996	database, NODC Taxonomic Code	
+6848857			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848857		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848857		Banks, R. C., R. W. McDiarmid, A. L. Gardner, and W. C. Starnes	2003	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	
+6848857	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	Banks, R. C., R. W. McDiarmid, and A. L. Gardner	1987	Resource Publication, no. 166	
+6848870			1996	database, NODC Taxonomic Code	
+6848870			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848870		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848839			1996	database, NODC Taxonomic Code	
+6848839			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848839		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848839		Banks, R. C., R. W. McDiarmid, A. L. Gardner, and W. C. Starnes	2003	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	
+6848839	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	Banks, R. C., R. W. McDiarmid, and A. L. Gardner	1987	Resource Publication, no. 166	
+6993230			1996	database, NODC Taxonomic Code	
+6993229			1996	database, NODC Taxonomic Code	
+6848871			1996	database, NODC Taxonomic Code	
+6848871			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848871		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848872			1996	database, NODC Taxonomic Code	
+6848872			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848872		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848888			1996	database, NODC Taxonomic Code	
+6848888			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848888		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848888		Banks, R. C., R. W. McDiarmid, A. L. Gardner, and W. C. Starnes	2003	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	
+6848888	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	Banks, R. C., R. W. McDiarmid, and A. L. Gardner	1987	Resource Publication, no. 166	
+6848873			1996	database, NODC Taxonomic Code	
+6848873			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848873		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848842			1996	database, NODC Taxonomic Code	
+6848842			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848842		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848842		Banks, R. C., R. W. McDiarmid, A. L. Gardner, and W. C. Starnes	2003	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	
+6848842	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	Banks, R. C., R. W. McDiarmid, and A. L. Gardner	1987	Resource Publication, no. 166	
+6848874			1996	database, NODC Taxonomic Code	
+6848874			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848874		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848856			1996	database, NODC Taxonomic Code	
+6848856			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848856		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848856		Banks, R. C., R. W. McDiarmid, A. L. Gardner, and W. C. Starnes	2003	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	
+6848856	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	Banks, R. C., R. W. McDiarmid, and A. L. Gardner	1987	Resource Publication, no. 166	
+6848875			1996	database, NODC Taxonomic Code	
+6848875			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848875		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848875			2005	website, AOU Check-List (07-2005)	
+6848876			1996	database, NODC Taxonomic Code	
+6848876			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848876		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848844			1996	database, NODC Taxonomic Code	
+6848844			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848844		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848844		Banks, R. C., R. W. McDiarmid, A. L. Gardner, and W. C. Starnes	2003	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	
+6848844	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	Banks, R. C., R. W. McDiarmid, and A. L. Gardner	1987	Resource Publication, no. 166	
+6991573			1996	database, NODC Taxonomic Code	
+6991571			1996	database, NODC Taxonomic Code	
+6991572			1996	database, NODC Taxonomic Code	
+6848877			1996	database, NODC Taxonomic Code	
+6848877			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848877		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848855			1996	database, NODC Taxonomic Code	
+6848855			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848855		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848855		Banks, R. C., R. W. McDiarmid, A. L. Gardner, and W. C. Starnes	2003	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	
+6848855	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	Banks, R. C., R. W. McDiarmid, and A. L. Gardner	1987	Resource Publication, no. 166	
+6848854			1996	database, NODC Taxonomic Code	
+6848854			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848854		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848854		Banks, R. C., R. W. McDiarmid, A. L. Gardner, and W. C. Starnes	2003	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	
+6848854	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	Banks, R. C., R. W. McDiarmid, and A. L. Gardner	1987	Resource Publication, no. 166	
+6848878			1996	database, NODC Taxonomic Code	
+6848878			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848878		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848878			1996	database, U. S. Dept. Interior	
+6848852			1996	database, NODC Taxonomic Code	
+6848852			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848852		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848852		Banks, R. C., R. W. McDiarmid, A. L. Gardner, and W. C. Starnes	2003	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	
+6848852	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	Banks, R. C., R. W. McDiarmid, and A. L. Gardner	1987	Resource Publication, no. 166	
+6991581			1996	database, NODC Taxonomic Code	
+6848879			1996	database, NODC Taxonomic Code	
+6848881			1996	database, NODC Taxonomic Code	
+6991582			1996	database, NODC Taxonomic Code	
+6991583			1996	database, NODC Taxonomic Code	
+6848883			1996	database, NODC Taxonomic Code	
+6848883			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848883		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848843			1996	database, NODC Taxonomic Code	
+6848843			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848843		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848843		Banks, R. C., R. W. McDiarmid, A. L. Gardner, and W. C. Starnes	2003	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	
+6848843	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	Banks, R. C., R. W. McDiarmid, and A. L. Gardner	1987	Resource Publication, no. 166	
+6868216			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6868216		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848884			1996	database, NODC Taxonomic Code	
+6848884			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848885			1996	database, NODC Taxonomic Code	
+6848885			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848885		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848847			1996	database, NODC Taxonomic Code	
+6848847			1998	website, Zoonomen - Zoological Nomenclature Resource	
+6848847		Gill, Frank, and Minturn Wright	2006	Birds of the World: Recommended English Names	
+6848847		Dickinson, Edward C., ed.	2003	The Howard and Moore Complete Checklist of the Birds of the World, 3rd edition	
+6848847		Banks, R. C., R. W. McDiarmid, A. L. Gardner, and W. C. Starnes	2003	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	
+6848847	Checklist of Vertebrates of the United States, the U.S. Territories, and Canada	Banks, R. C., R. W. McDiarmid, and A. L. Gardner	1987	Resource Publication, no. 166	
+6848847	Thirty-second Supplement to the American Ornithologists' Union Check-list of North American Birds	American Ornithologists' Union	1973	The Auk, vol. 90, no. 2	
+6848886			1996	database, NODC Taxonomic Code	
+6991585			1996	database, NODC Taxonomic Code	
+6991584			1996	database, NODC Taxonomic Code	

@@ -21,22 +21,28 @@ class DCAExporter
     public static $zip = 'zip/archive';
     // Metadata for Annual Checklist itself is not stored in the database
     // Set credits in this array
+    // TODO: get proper data for this!
     public static $species2000Metadata = array(
-        'id' => 'species_2000', 
-        'name' => 'Species 2000', 
-        'abbreviatedName' => 'Species 2000', 
-        'groupName' => 'tbd', 
-        'authorsEditors' => 'tbd', 
-        'organisation' => 'tbd', 
-        'contactPerson' => 'tbd', 
-        'version' => 'tbd', 
-        'releaseDate' => 'tbd', 
-        'abstract' => 'tbd', 
-        'numberOfSpecies' => 'tbd', 
-        'numberOfInfraspecies' => 'tbd', 
-        'numberOfSynonyms' => 'tbd', 
-        'numberOfCommonNames' => 'tbd', 
-        'totalNumber' => 'tbd'
+        'id' => 'col', 
+        'title' => 'Catalogue of Life', 
+        'abbreviatedName' => 'Catalogue of Life', 
+        'groupName' => '', 
+        'authorsEditors' => '', 
+        'organizationName' => '', 
+        'contact' => '', 
+        'version' => '', 
+        'pubDate' => '', 
+        'abstract' => '', 
+        'sourceUrl' => '',
+        'taxonomicCoverage' => '',
+        'contactCountry' => 'GB',
+        'contactCity' => 'Reading',
+        'numberOfSpecies' => '', 
+        'numberOfInfraspecies' => '', 
+        'numberOfSynonyms' => '', 
+        'numberOfCommonNames' => '', 
+        'totalNumber' => '',
+        'resourceLogoUrl' => '',
     );
     
     // Database handler
@@ -85,7 +91,7 @@ class DCAExporter
         return $ini['settings']['version'] . ' [r' . $ini['settings']['revision'] . ']';
     }
 
-    private function _addEml ($srcDbId)
+    private function _addSavedEml ($srcDbId)
     {
         $this->_savedEmls[] = $srcDbId;
     }
@@ -269,20 +275,25 @@ class DCAExporter
     private function _getSourceDatabaseMetadata ($source_database_id)
     {
         $query = 'SELECT t1.`id`,
-                    t1.`name` AS name,
-                    t1.`abbreviated_name` AS abbreviatedName,
+                    t1.`name` AS title,
+                    t1.`abbreviated_name` AS abbreviatedName, 
                     t1.`group_name_in_english` AS groupName,
                     t1.`authors_and_editors` AS authorsEditors,
                     t1.`version` AS version,
-                    t1.`release_date` AS releaseDate,
+                    t1.`release_date` AS pubDate,
                     t1.`abstract` AS abstract,
-                    t1.`organisation` AS organisation,
-                    t1.`contact_person` AS contactPerson,
+                    t1.`organisation` AS organizationName,
+                    t1.`contact_person` AS contact,
                     t2.`number_of_species` AS numberOfSpecies,
                     t2.`number_of_infraspecific_taxon` AS numberOfInfraspecies,
                     t2.`number_of_synonyms` AS numberOfSynonyms,
                     t2.`number_of_common_names` AS numberOfCommonNames,
-                    t2.`total_number` AS totalNumber
+                    t2.`total_number` AS totalNumber,
+                    "" AS sourceUrl,
+                    "" AS contactCity,
+                    "" AS contactCountry,
+                    "" AS resourceLogoUrl,
+                    "" AS taxonomicCoverage
                   FROM `source_database` t1
                   LEFT JOIN `_source_database_details` AS t2 ON t1.`id` = t2.`id`
                   WHERE t1.`id` = ?';
@@ -292,6 +303,17 @@ class DCAExporter
         ));
         $res = $stmt->fetch(PDO::FETCH_ASSOC);
         return $res ? $res : array();
+    }
+
+    private function _initEml ()
+    {
+        // Initialize with Sp2000 metadata, so archive always contains this EML file
+        $sp2000 = new SourceDatabase($this->_dbh, self::$dir);
+        // Clear dir from previous export first
+        $sp2000->resetEmlDir();
+        // Write EML
+        $sp2000->writeEml();
+        unset($sp2000);
     }
 
     public function getStartUpErrors ()
@@ -328,6 +350,7 @@ class DCAExporter
     {
         $total = $this->getTotalNumberOfTaxa();
         $this->_indicator ? $this->_indicator->init($total, 75, 50) : '';
+        $this->_initEml();
         
         for ($limit = 1000, $offset = 0; $offset < $total; $offset += $limit) {
             $taxa = $this->_getTaxa($limit, $offset);
@@ -349,7 +372,8 @@ class DCAExporter
                         $this->_getSourceDatabaseMetadata(
                             $taxon->datasetID));
                     $sourceDatabase->writeEml();
-                    $this->_addEml($taxon->datasetID);
+                    unset($sourceDatabase);
+                    $this->_addSavedEml($taxon->datasetID);
                 }
                 
                 // Remaing data is exported only for (infra)species

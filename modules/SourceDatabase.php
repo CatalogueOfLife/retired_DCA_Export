@@ -14,40 +14,57 @@ class SourceDatabase
     private $_fileName;
     private $_keys = array(
         'id', 
-        'name', 
-        'abbreviatedName', 
+        'title', 
         'groupName', 
         'authorsEditors', 
-        'organisation', 
-        'contactPerson', 
+        'organizationName', 
+        'contact', 
         'version', 
-        'releaseDate', 
+        'pubDate', 
         'abstract', 
         'numberOfSpecies', 
         'numberOfInfraspecies', 
         'numberOfSynonyms', 
         'numberOfCommonNames', 
-        'totalNumber'
+        'totalNumber',
+        'sourceUrl',
+        'taxonomicCoverage',
+        'contactCountry',
+        'contactCity',
+        'resourceLogoUrl'
     );
     private $_fields;
     private $_src;
     private $_dest;
+    private $_taxonomicCoverageTemplate = 
+                '<taxonomicClassification>
+                    <taxonRankName>
+                        [taxonRankName]
+                    </taxonRankName>
+                    <taxonRankValue>
+                        [taxonRankValue]
+                    </taxonRankValue>
+                    <commonName>
+                        [commonName]
+                    </commonName>
+                </taxonomicClassification>';
 
-    public function __construct (PDO $dbh, $dir, array $fields)
+    public function __construct (PDO $dbh, $dir, $fields = array())
     {
         $this->_dir = $dir;
         $this->_fields = $this->_setFields($fields);
         $this->_fileName = $this->_setFileName();
         $this->_src = $this->_setSource();
         $this->_dest = $this->_setDestination();
-        $this->_resetEmlDir();
     }
 
-    private function _setFields ($fields)
+    private function _setFields (array $fields)
     {
         // No source database metadata available; return Species 2000 metadata
         if (empty($fields)) {
-            return DCAExporter::$species2000Metadata;
+            $fields = DCAExporter::$species2000Metadata;
+            $fields['dateStamp'] = date("c");
+            return $fields;
         }
         // Input array contains unexpected keys; throw exception;
         $diff = array_diff($this->_keys, array_keys($fields));
@@ -56,15 +73,19 @@ class SourceDatabase
                 'Input array for EML file is incomplete or invalid!' . print_r(
                     $diff));
         }
+        // Using fake data as taxonomic coverage is not yet available in 1.6
+        // See _getTaxonomicCoverage method
+        $fields['taxonomicCoverage'] = $this->_getTaxonomicCoverage($fields['groupName']);
+        $fields['dateStamp'] = date("c"); 
         return $fields;
     }
 
     private function _setFileName ()
     {
         if ($this->_fields['id'] != DCAExporter::$species2000Metadata['id']) {
-            return 'src_db_' . $this->_fields['id'] . '.eml';
+            return $this->_fields['id'] . '.xml';
         }
-        return 'species_2000_src_db.eml';
+        return 'col.xml';
     }
 
     private function _setSource ()
@@ -74,11 +95,10 @@ class SourceDatabase
 
     private function _setDestination ()
     {
-        return dirname(__FILE__) . '/../' . $this->_dir . 'eml/';
-        ;
+        return dirname(__FILE__) . '/../' . $this->_dir . 'dataset/';
     }
 
-    private function _resetEmlDir ()
+    public function resetEmlDir ()
     {
         $this->_removeDir($this->_dest);
         mkdir($this->_dest);
@@ -100,7 +120,36 @@ class SourceDatabase
             reset($objects); 
             rmdir($dir); 
         } 
-    } 
+    }
+    
+    // Decorates [placeholders] in taxonomic coverage template _taxonomicCoverageTemplate
+    private function _decorateTaxonomicCoverage (array $data)
+    {
+        $lines = count($data);
+        $output = '';
+        for ($i = 0; $i < $lines; $i++) {
+            $output .= Template::decorateString(
+                $this->_taxonomicCoverageTemplate, $data[$i]);
+        }
+        return $output;
+    }
+    
+    private function _getTaxonomicCoverage ($id) 
+    {
+        // In v1.7 his function should get the points of attachment with a separate query
+        // Currently in 1.6 all we have is the group name in English...
+        // Therefore we use a mockup to set the group name and fake the group name
+        // by passing it as the id
+        // TODO: change ASAP when 1.7 is final!
+       $mockup = array(
+            array(
+                'taxonRankName' => '',
+                'taxonRankValue' => '',
+                'commonName' => $id
+            )
+        );
+        return $this->_decorateTaxonomicCoverage($mockup);
+    }
 
     public function writeEml ()
     {

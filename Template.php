@@ -19,8 +19,7 @@ class Template
             '.xml'
         ), 
         'eml' => array(
-            'src_db', 
-            '.eml'
+            '.xml'
         )
     );
 
@@ -34,6 +33,15 @@ class Template
         }
     }
 
+    // Decorates [placeholders] in string; static version of decorate for external use
+    public static function decorateString ($str, array $data)
+    {
+        foreach ($data as $placeholder => $text) {
+            $str = str_replace("[$placeholder]", $text, $str);
+        }
+        return $str;
+    }
+    
     private function _validateFileName (array $required, $fileName)
     {
         foreach ($required as $str) {
@@ -77,4 +85,5 @@ class Template
             $this->_file = str_replace("[$placeholder]", $text, $this->_file);
         }
     }
+
 }
