@@ -66,8 +66,8 @@ class SourceDatabase
             $fields['dateStamp'] = date("c");
             return $fields;
         }
-        // Input array contains unexpected keys; throw exception;
         $diff = array_diff($this->_keys, array_keys($fields));
+        // Input array contains unexpected keys; throw exception;
         if (!empty($diff)) {
             throw new Exception(
                 'Input array for EML file is incomplete or invalid!' . print_r(
