@@ -307,11 +307,10 @@ class DCAExporter
 
     private function _initEml ()
     {
-        // Initialize with Sp2000 metadata, so archive always contains this EML file
+        // Initialize with CoL metadata, so archive always contains this EML file
         $sp2000 = new SourceDatabase($this->_dbh, self::$dir);
         // Clear dir from previous export first
         $sp2000->resetEmlDir();
-        // Write EML
         $sp2000->writeEml();
         unset($sp2000);
     }

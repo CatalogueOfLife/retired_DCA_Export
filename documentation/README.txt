@@ -19,8 +19,10 @@ Compile PHP 5.2 with zip support by using the --enable-zip configure option.
 CONFIGURATION
 
 Configure the application by modifying config/settings.ini. The database should be a base schema database that 
-contains the '_search_scientific' denormalized table. Make sure that 'export_dir' and 'zip_archive', 
-the directories used to store the xml and text files, are writable by the web server.
+contains the '_search_scientific' and '_source_database_details' denormalized tables. 
+
+Make sure that 'export' and 'zip', the directories used to store the xml and text files, are writable by the web server.
+The application automatically creates the 'dataset'
 
 
 INTERFACE
@@ -30,8 +32,9 @@ e.g. all members of a particular family. The user can restrict the amount of dat
 lower the Block level, the fewer data is created. After entering the rank and taxon name, the application...
 
 1. creates the meta.xml document from a template,
-2. writes the data for each taxon to the appropriate text files,
-3. zips the xml and text files into a downloadable archive.
+2. writes the data for each taxon to the appropriate Darwin Core Archive text files in the directory 'export',
+3. writes the metadata for each taxon's source database to an GBIF EML file in the subdirectory 'dataset',
+4. zips the xml and text files into a downloadable archive in the directory 'zip'.
 
 The zip file is labelled 'archive-[rank]-[taxon]-bl[block level].zip'.
 
