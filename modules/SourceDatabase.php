@@ -98,12 +98,6 @@ class SourceDatabase
         return dirname(__FILE__) . '/../' . $this->_dir . 'dataset/';
     }
 
-    public function resetEmlDir ()
-    {
-        $this->_removeDir($this->_dest);
-        mkdir($this->_dest);
-    }
-    
     private function _removeDir ($dir) 
     { 
         if (is_dir($dir)) { 
@@ -151,6 +145,12 @@ class SourceDatabase
         return $this->_decorateTaxonomicCoverage($mockup);
     }
 
+    public function resetEmlDir ()
+    {
+        $this->_removeDir($this->_dest);
+        mkdir($this->_dest);
+    }
+    
     public function writeEml ()
     {
         $template = new Template($this->_src, $this->_dest);

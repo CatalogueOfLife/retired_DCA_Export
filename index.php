@@ -50,20 +50,25 @@ if (formIsSubmitted()) {
         echo "</p>\n";
     }
     $url = setDownloadUrl();
-    $size = setDownloadSize($url);
+    $size = getDownloadSize($url);
     echo "<p>Ready! <a href='$url'>Download the zip archive</a> ($size).</p>
         <p><a href='index.php'>Back to the index</a></p>";
 }
 else {
-    $select = setSelect();
     $intro = file_get_contents('templates/intro.tpl');
-    echo str_replace(array(
-        '[action]', 
-        '[select]'
-    ), array(
-        $_SERVER['PHP_SELF'], 
-        $select
-    ), $intro);
+    $select = setSelect();
+    $downloadUrl = '/zip-fixed/archive-complete.zip';
+    $downloadComplete = '';
+    if (file_exists(dirname(__FILE__) . $downloadUrl)) {
+        $downloadComplete = '<p>Download a Darwin Core Archive for the 
+            <a href="zip-fixed/archive-complete.zip">complete Catalogue of Life</a> ('.
+            getDownloadSize ($downloadUrl).').</p>';
+    }
+    echo Template::decorateString($intro, array(
+        'action' => $_SERVER['PHP_SELF'],
+        'select' => $select,
+        'downloadComplete' => $downloadComplete
+    ));
 }
 
 function alwaysFlush ()
@@ -104,7 +109,7 @@ function setDownloadUrl ()
     return $url;
 }
 
-function setDownloadSize ($url)
+function getDownloadSize ($url)
 {
     $sizeKb = filesize(dirname(__FILE__) . '/' . $url) / 1024;
     $size = round($sizeKb, 1) . ' KB';

@@ -7,10 +7,11 @@ This is the so-called &lsquo;naked checklist&rsquo;, plus common names (Block II
 See the &lsquo;Download and Piping Tools Specifications, Deliverable 2.1&rsquo; (28 April 2011) document 
 for more information or <a href="documentation/blocks.rtf">read the block definition</a>.</p>
 
-<p>Download a Darwin Core Archive for the <a href="zip-fixed/archive-complete.zip">complete Catalogue of Life</a> 
-(140 MB), or select a rank from the popup menu and enter a taxon name to start the export. 
+<p>Select a rank from the popup menu and enter a taxon name to start the export. 
 The name should match exactly, wildcards are not allowed. Note that the higher the rank, 
 the longer the export process will take.</p>
+
+[downloadComplete]
 
 <form style="margin-top: 30px;" action="[action]" method="get">
 <div id="popup">
