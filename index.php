@@ -99,7 +99,7 @@ function setDownloadUrl ()
     $ini = DCAExporter::getExportSettings();
     $url = DCAExporter::$zip . '-' . $_GET['rank'] . '-' . $_GET['taxon'] . '-bl' . $_GET['block'] . '.zip';
     if ($_GET['taxon'] == '[all]') {
-        $url = $ini['zip_archive'] . '-complete.zip';
+        $url = DCAExporter::$zip . '-complete.zip';
     }
     return $url;
 }
