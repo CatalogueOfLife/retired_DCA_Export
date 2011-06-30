@@ -57,7 +57,7 @@ if (formIsSubmitted()) {
 else {
     $intro = file_get_contents('templates/intro.tpl');
     $select = setSelect();
-    $downloadUrl = '/zip-fixed/archive-complete.zip';
+    $downloadUrl = 'zip-fixed/archive-complete.zip';
     $downloadComplete = '';
     if (file_exists(dirname(__FILE__) . '/' . $downloadUrl)) {
         $downloadComplete = '<p>Download a Darwin Core Archive for the 
