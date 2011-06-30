@@ -59,10 +59,10 @@ else {
     $select = setSelect();
     $downloadUrl = '/zip-fixed/archive-complete.zip';
     $downloadComplete = '';
-    if (file_exists(dirname(__FILE__) . $downloadUrl)) {
+    if (file_exists(dirname(__FILE__) . '/' . $downloadUrl)) {
         $downloadComplete = '<p>Download a Darwin Core Archive for the 
-            <a href="zip-fixed/archive-complete.zip">complete Catalogue of Life</a> 
-            (' . getDownloadSize ($downloadUrl) . ").</p>\n";
+            <a href="' . $downloadUrl . '">complete Catalogue of Life</a> 
+            (' . getDownloadSize ('/' . $downloadUrl) . ").</p>\n";
     }
     echo Template::decorateString($intro, array(
         'action' => $_SERVER['PHP_SELF'],
