@@ -66,7 +66,7 @@
             <location>distribution.txt</location>
         </files>
         <coreid index='0' />
-        <!-- Original id prefixed with the standard, e.g. tdwg4:AGE-BA; eez:polish; fao:18, iso3166-1-alhpa-2:SN
+        <!-- Original id prefixed with the standard, e.g. tdwg:AGE-BA; eez:polish; fao:18, iso3166-1-alhpa-2:SN
              Is left empty in case distribution is taken from free text string -->
         <field index='1' term='http://rs.tdwg.org/dwc/terms/locationID'/>
         <!-- Locality as verbatim string -->

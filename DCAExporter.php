@@ -362,7 +362,6 @@ class DCAExporter
                 $taxon->setNameStatus();
                 $taxon->setParentId();
                 $taxon->setScrutiny();
-                $taxon->writeModel();
                 
                 if (!$this->_emlExists($taxon->datasetID)) {
                     $sourceDatabase = new SourceDatabase(
@@ -376,7 +375,7 @@ class DCAExporter
                 }
                 
                 // Remaing data is exported only for (infra)species
-                // and for Block levels II and III
+                // and for Block levels II to IV
                 if (!$taxon->isHigherTaxon &&
                      $this->_bl > 1) {
                         // Vernaculars
@@ -423,11 +422,17 @@ class DCAExporter
                                 $rowDs, 
                                 $taxon->taxonID);
                             $distribution->writeModel();
-                            unset(
-                                $distribution);
+                            unset($distribution);
                         }
                     }
+                    
+                    // Block IV only adds additional data to the taxon
+                    if ($this->_bl == 4) {
+                        $taxon->setDescription();
+                    }
                 }
+                
+                $taxon->writeModel();
                 unset($taxon);
             }
         }

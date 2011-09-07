@@ -23,6 +23,7 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
     public $scientificNameAuthorship;
     public $nameAccordingTo; // scrutiny, separate
     public $modified; // scrutiny date, separate
+    public $description; // additional data, separate
     
     public $fields = array(
         'taxonID', 
@@ -45,7 +46,8 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
         'infraspecificEpithet', 
         'scientificNameAuthorship', 
         'nameAccordingTo', 
-        'modified'
+        'modified',
+        'description'
     );
     
     // Derived values
@@ -199,6 +201,23 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
             return false;
         }
     }
+    
+    public function setDescription () {
+        if (!$this->isHigherTaxon) {
+            $query = 'SELECT `additional_data` AS description
+                      FROM `taxon_detail` 
+                      WHERE `taxon_id` = ?';
+            $stmt = $this->_dbh->prepare($query);
+            $stmt->execute(array(
+                $this->taxonID
+            ));
+            if ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $this->decorate($res);
+                return true;
+            }
+            return false;
+        }
+    }
 
     public function writeModel ()
     {
@@ -223,7 +242,8 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
             $this->infraspecificEpithet, 
             $this->scientificNameAuthorship, 
             $this->nameAccordingTo, 
-            $this->modified
+            $this->modified,
+            $this->description
         );
         $this->_writeLine($this->_fh, $fields);
     }

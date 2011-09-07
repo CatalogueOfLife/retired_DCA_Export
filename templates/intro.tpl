@@ -25,9 +25,9 @@ the longer the export process will take.</p>
 <label for="block1">Block I (&lsquo;Naked checklist&rsquo;)</label><br />
 <input type="radio" name="block" value="2" id="block2" />
 <label for="block2">Block II (Block I plus common names)</label><br />
-<input type="radio" name="block" value="3" id="block3" checked />
+<input type="radio" name="block" value="3" id="block3"  />
 <label for="block3">Block III (Block II plus distribution)</label><br />
-<input type="radio" name="block" value="4" id="block4" disabled />
+<input type="radio" name="block" value="4" id="block4" checked />
 <label for="block4">Block IV (All checklist fields: Block III plus additional data)</label><br />
 </div>
 </form>

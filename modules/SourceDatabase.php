@@ -105,7 +105,7 @@ class SourceDatabase
             foreach ($objects as $object) { 
                 if ($object != "." && $object != "..") { 
                     if (filetype($dir."/".$object) == "dir") {
-                        _removeDir($dir."/".$object); 
+                        $this->_removeDir($dir."/".$object); 
                     } else {
                         unlink($dir."/".$object);
                     }

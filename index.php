@@ -22,7 +22,7 @@ if (formIsSubmitted()) {
     $dcaExporter = new DCAExporter(array(
         $_GET['rank'] => $_GET['taxon']
     ), $_GET['block']);
-    // Check if archive already exits; if it does skip export
+    // Check if archive already exists; if it does skip export
     if (!$dcaExporter->archiveExists()) {
         $dcaExporter->useIndicator();
         $errors = $dcaExporter->getStartUpErrors();
