@@ -1,13 +1,12 @@
 i4Life WP4 ENHANCED DOWNLOAD SERVICE OF THE CATALOGUE OF LIFE: DARWIN CORE ARCHIVE EXPORT
-v0.4, 01-06-11
+v1.0, 08-09-11
 
 
 INTRODUCTION
 
 This is a demo version of the DCA export application. The DCA_export class connects to a Base Scheme database and 
 exports taxa in the DCA format. The application is not yet complete, but the current framework is easily extended 
-once the export format is finalized. Currently, taxa, vernacular names, references and distributions can be exported; 
-in the future this should be extended with descriptions and habitats.
+once the export format is finalized.
 
 
 REQUIREMENTS
@@ -22,12 +21,12 @@ Configure the application by modifying config/settings.ini. The database should 
 contains the '_search_scientific' and '_source_database_details' denormalized tables. 
 
 Make sure that 'export' and 'zip', the directories used to store the xml and text files, are writable by the web server.
-The application automatically creates the 'dataset'
+The application automatically creates the 'dataset' directory within the 'export' directory.
 
 
 INTERFACE
 
-The demo features a very basic interface that allows the user to select all taxa within a given taxon to be selected, 
+The demo features a basic interface that allows the user to select all taxa within a given taxon to be selected, 
 e.g. all members of a particular family. The user can restrict the amount of data returned by selecting a Block level. The
 lower the Block level, the fewer data is created. After entering the rank and taxon name, the application...
 
@@ -41,12 +40,6 @@ The zip file is labelled 'archive-[rank]-[taxon]-bl[block level].zip'.
 If an archive for this configuration is already present on the server, the export is skipped. Instead, the user 
 is offered the option to directly download the existing archive.
 
-
-DEMO-ONLY
-
-As the standard has not yet been finalized, only a subset of the available data is exported in this demo. 
-This obviates the need to rewrite the export classes in the future. When the standard has been fixed, 
-writing the remaining export modules is a matter of a few days.
 
 Please submit bugs and suggestions to:
 http://dev.4d4life.eu:8081/browse/DS
