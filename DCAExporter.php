@@ -143,7 +143,7 @@ class DCAExporter
         $rank = array_shift(array_keys($this->_sc));
         $taxon = array_shift(array_values($this->_sc));
         $file = $rank . '-' . $taxon . '-bl' . $this->_bl . '.zip';
-        if ($taxon == '[all]') {
+        if ($taxon == '%') {
             $file = 'complete.zip';
         }
         return dirname(__FILE__) . '/' . self::$zip . '-' . $file;
