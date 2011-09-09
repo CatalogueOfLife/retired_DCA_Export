@@ -10,7 +10,8 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
     public $parentNameUsageID; // separate
     public $taxonomicStatus; // separate
     public $taxonRank; // separate
-    public $scientificName;
+    public $verbatimTaxonRank;
+    public $scientificName; // separate
     public $kingdom;
     public $phylum;
     public $class;
@@ -21,6 +22,8 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
     public $specificEpithet;
     public $infraspecificEpithet;
     public $scientificNameAuthorship;
+    public $source;
+    public $namePublishedIn;
     public $nameAccordingTo; // scrutiny, separate
     public $modified; // scrutiny date, separate
     public $description; // additional data, separate
@@ -34,6 +37,7 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
         'parentNameUsageID', 
         'taxonomicStatus', 
         'taxonRank', 
+        'verbatimTaxonRank',
         'scientificName', 
         'kingdom', 
         'phylum', 
@@ -45,6 +49,8 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
         'specificEpithet', 
         'infraspecificEpithet', 
         'scientificNameAuthorship', 
+        'source',
+        'namePublishedIn',
         'nameAccordingTo', 
         'modified',
         'description'
@@ -97,25 +103,22 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
     {
         if (!empty($this->infraspecificEpithet)) {
             $this->taxonRank = 'infraspecies';
-            return $this->taxonRank;
+            return;
         }
-        ;
         if (!empty($this->specificEpithet)) {
             $this->taxonRank = 'species';
-            return $this->taxonRank;
+            return;
         }
-        ;
         $ranks = array_reverse(self::$higherTaxa);
         foreach ($ranks as $rank) {
             if (!empty($this->$rank)) {
                 $this->taxonRank = $rank;
                 $this->isHigherTaxon = true;
-                return $this->taxonRank;
+                return;
             }
         }
-        return false;
     }
-
+    
     public function setScientificName ()
     {
         if ($this->isHigherTaxon) {
@@ -123,6 +126,9 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
             return $this->scientificName;
         }
         $this->scientificName = $this->genus . ' ' . $this->specificEpithet;
+        if (!empty($this->verbatimTaxonRank)) {
+            $this->scientificName .= ' ' . $this->verbatimTaxonRank;
+        }
         if (!empty($this->infraspecificEpithet)) {
             $this->scientificName .= ' ' . $this->infraspecificEpithet;
         }
@@ -230,6 +236,7 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
             $this->parentNameUsageID, 
             $this->taxonomicStatus, 
             $this->taxonRank, 
+            $this->verbatimTaxonRank, 
             $this->scientificName, 
             $this->kingdom, 
             $this->phylum, 
@@ -241,6 +248,8 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
             $this->specificEpithet, 
             $this->infraspecificEpithet, 
             $this->scientificNameAuthorship, 
+            $this->source,
+            $this->namePublishedIn,
             $this->nameAccordingTo, 
             $this->modified,
             $this->description

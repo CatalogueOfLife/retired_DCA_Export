@@ -171,6 +171,7 @@ class DCAExporter
                          `subgenus`,
                          `species` AS specificEpithet,
                          `infraspecies` AS infraspecificEpithet,
+                         `infraspecific_marker` AS verbatimTaxonRank,
                          `author` AS scientificNameAuthorship
                   FROM `_search_scientific` ';
         // @TODO: extend this for other search criteria!
