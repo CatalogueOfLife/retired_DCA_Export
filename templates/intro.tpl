@@ -1,5 +1,4 @@
-<p>This page offers an interface on the application that, in this demo, exports data from the 
-Catalogue of Life v1.6 (the 2011 DVD editon) in the 
+<p>This page offers an interface on the application that exports data from the Catalogue of Life in the 
 <a href="http://code.google.com/p/gbif-ecat/wiki/DwCArchive">Darwin Core Archive format</a>.</p>
 
 <p>This service can be used to create a Block level I, II, III or IV download of the Catalogue of Life Dataset. 

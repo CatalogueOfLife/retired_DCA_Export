@@ -7,7 +7,7 @@ class Vernacular extends DCAExporterAbstract implements DCA_Interface
     public $language;
     public $countryCode;
     public $locality;
-    public $source;
+    public $transliteration;
     
     public $fields = array(
         'taxonID', 
@@ -15,7 +15,7 @@ class Vernacular extends DCAExporterAbstract implements DCA_Interface
         'language', 
         'countryCode', 
         'locality', 
-        'source'
+        'transliteration'
     );
 
     // Derived properties
@@ -68,7 +68,7 @@ class Vernacular extends DCAExporterAbstract implements DCA_Interface
             $this->language, 
             $this->countryCode, 
             $this->locality, 
-            $this->source
+            $this->transliteration
         );
         
         $this->_writeLine($this->_fh, $fields);

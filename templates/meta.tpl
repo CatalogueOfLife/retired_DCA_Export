@@ -55,7 +55,7 @@
     <field index='21' term='http://rs.tdwg.org/dwc/terms/namePublishedIn'/>
     <!-- Taxon scrutinized by -->
     <field index='22' term='http://rs.tdwg.org/dwc/terms/nameAccordingTo'/> 
-    <!-- Scrutiny date -->
+    <!-- Scrutiny date; may be text string -->
     <field index='23' term='http://purl.org/dc/terms/modified'/>
     <!-- Additional data for the taxon -->
     <field index='24' term='http://purl.org/dc/terms/description'/>
