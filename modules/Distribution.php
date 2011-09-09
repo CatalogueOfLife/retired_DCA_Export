@@ -3,16 +3,16 @@ require_once 'Interface.php';
 class Distribution extends DCAExporterAbstract implements DCA_Interface
 {
     public $taxonID;
-    public $occurrenceStatus;
     public $locationID;
     public $locality;
+    public $occurrenceStatus;
     public $establishmentMeans;
     
     public $fields = array(
         'taxonID', 
-        'occurrenceStatus', 
         'locationID', 
         'locality', 
+        'occurrenceStatus', 
         'establishmentMeans'
     );
     
@@ -38,9 +38,9 @@ class Distribution extends DCAExporterAbstract implements DCA_Interface
     {
         $fields = array(
             $this->taxonID, 
-            $this->occurrenceStatus, 
             $this->locationID, 
             $this->locality, 
+            $this->occurrenceStatus, 
             $this->establishmentMeans
         );
         $this->_writeLine($this->_fh, $fields);

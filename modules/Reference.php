@@ -3,19 +3,21 @@ require_once 'Interface.php';
 class Reference extends DCAExporterAbstract implements DCA_Interface
 {
     public $taxonID;
-    public $title;
     public $creator;
     public $date;
+    public $title;
     public $description;
     public $identifier;
+    public $type;
     
     public $fields = array(
         'taxonID', 
-        'title', 
         'creator', 
         'date', 
+        'title', 
         'description', 
-        'identifier'
+        'identifier',
+        'type'
     );
 
     const FILE = 'reference.txt';
@@ -40,11 +42,12 @@ class Reference extends DCAExporterAbstract implements DCA_Interface
     {
         $fields = array(
             $this->taxonID, 
-            $this->title, 
             $this->creator, 
             $this->date, 
+            $this->title, 
             $this->description, 
-            $this->identifier
+            $this->identifier,
+            $this->type
         );
         $this->_writeLine($this->_fh, $fields);
     }

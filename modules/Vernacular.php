@@ -8,6 +8,7 @@ class Vernacular extends DCAExporterAbstract implements DCA_Interface
     public $countryCode;
     public $locality;
     public $transliteration;
+    public $vernacularID; // use to store associated references
     
     public $fields = array(
         'taxonID', 

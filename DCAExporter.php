@@ -33,16 +33,16 @@ class DCAExporter
         'version' => '', 
         'pubDate' => '', 
         'abstract' => '', 
-        'sourceUrl' => '',
-        'taxonomicCoverage' => '',
-        'contactCountry' => 'GB',
-        'contactCity' => 'Reading',
+        'sourceUrl' => '', 
+        'taxonomicCoverage' => '', 
+        'contactCountry' => 'GB', 
+        'contactCity' => 'Reading', 
         'numberOfSpecies' => '', 
         'numberOfInfraspecies' => '', 
         'numberOfSynonyms' => '', 
         'numberOfCommonNames' => '', 
-        'totalNumber' => '',
-        'resourceLogoUrl' => '',
+        'totalNumber' => '', 
+        'resourceLogoUrl' => ''
     );
     
     // Database handler
@@ -205,7 +205,8 @@ class DCAExporter
                           t5.`authors`, 
                           t5.`year`, 
                           t5.`title`, 
-                          t5.`text` 
+                          t5.`text`,
+                          t1.`id` as vernacularID
                    FROM `common_name` t1 
                    LEFT JOIN `language` AS t2 ON t2.`iso` = t1.`language_iso` 
                    LEFT JOIN `common_name_element` AS t3 ON t3.`id` = t1.`common_name_element_id` 
@@ -220,25 +221,30 @@ class DCAExporter
         $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $res ? $res : array();
     }
-
-    private function _getReferences ($taxon_id, $isSynonym = false)
+    
+    private function _getReferences ($id, $type)
     {
-        $type = 'taxon';
-        if ($isSynonym) {
-            $type = 'synonym';
+        if (!in_array($type, array(
+            'taxon', 
+            'synonym', 
+            'common_name'
+        ))) {
+            throw new Exception('Incorrect reference type: ' . $type);
         }
+        $type == 'common_name' ? $printType = 'vernacular' : $printType = $type;
         $query = 'SELECT t1.`title`,
                          t1.`authors` AS creator,
                          t1.`year` AS date,
                          t1.`text` AS description,
-                         t2.`resource_identifier` AS identifier
+                         t2.`resource_identifier` AS identifier,
+                         "' . $printType . '" AS type
                   FROM `reference` t1 
                   LEFT JOIN `uri` AS t2 ON t1.`uri_id` = t2.`id`
                   LEFT JOIN `reference_to_' . $type . '` AS t3 ON t1.`id` = t3.`reference_id` 
                   WHERE t3.`' . $type . '_id` = ?';
         $stmt = $this->_dbh->prepare($query);
         $stmt->execute(array(
-            $taxon_id
+            $id
         ));
         $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $res ? $res : array();
@@ -375,13 +381,11 @@ class DCAExporter
                     $this->_addSavedEml($taxon->datasetID);
                 }
                 
-                // Remaing data is exported only for (infra)species
+                // Remaining data is exported only for (infra)species
                 // and for Block levels II to IV
-                if (!$taxon->isHigherTaxon &&
-                     $this->_bl > 1) {
-                        // Vernaculars
-                        $vernaculars = $this->_getVernaculars(
-                            $taxon->taxonID);
+                if (!$taxon->isHigherTaxon && $this->_bl > 1) {
+                    // Vernaculars
+                    $vernaculars = $this->_getVernaculars($taxon->taxonID);
                     foreach ($vernaculars as $iVn => $rowVn) {
                         $vernacular = $this->_initModel(
                             'Vernacular', 
@@ -389,12 +393,26 @@ class DCAExporter
                             $taxon->taxonID);
                         $vernacular->setSource();
                         $vernacular->writeModel();
+                        // Vernacular references
+                        $references = $this->_getReferences(
+                            $vernacular->vernacularID, 
+                            'common_name');
+                        foreach ($references as $iRf => $rowRf) {
+                            $reference = $this->_initModel(
+                                'Reference', 
+                                $rowRf, 
+                                $taxon->taxonID);
+                            $reference->writeModel();
+                            unset($reference);
+                        }
                         unset($vernacular);
                     }
-                    // References
+                    
+                    // Taxon/ synonym references
+                    !$taxon->isSynonym ? $type = 'taxon' : $type = 'synonym';
                     $references = $this->_getReferences(
                         $taxon->taxonID, 
-                        $taxon->isSynonym);
+                        $type);
                     foreach ($references as $iRf => $rowRf) {
                         $reference = $this->_initModel(
                             'Reference', 
@@ -407,10 +425,9 @@ class DCAExporter
                     // Data can be stored in distribution or distribution_free_text tables
                     // Try distribution first; if empty do second query on distribution_free_text
                     // Export only if Block level III has been selected
-                    if ($this->_bl >
-                         2) {
-                            $distributions = $this->_getDistributions(
-                                $taxon->taxonID);
+                    if ($this->_bl > 2) {
+                        $distributions = $this->_getDistributions(
+                            $taxon->taxonID);
                         if (empty(
                             $distributions)) {
                             $distributions = $this->_getDistributions(
@@ -423,13 +440,15 @@ class DCAExporter
                                 $rowDs, 
                                 $taxon->taxonID);
                             $distribution->writeModel();
-                            unset($distribution);
+                            unset(
+                                $distribution);
                         }
                     }
                     
                     // Block IV only adds additional data to the taxon
-                    if ($this->_bl == 4) {
-                        $taxon->setDescription();
+                    if ($this->_bl ==
+                         4) {
+                            $taxon->setDescription();
                     }
                 }
                 
