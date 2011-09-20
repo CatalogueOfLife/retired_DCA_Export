@@ -4,9 +4,10 @@ v1.0, 08-09-11
 
 INTRODUCTION
 
-This is a demo version of the DCA export application. The DCA_export class connects to a Base Scheme database and 
-exports taxa in the DCA format. The application is not yet complete, but the current framework is easily extended 
-once the export format is finalized.
+This application exports the contents of a Catalogue of Life Annual Checklist to Darwin Core Archive format. 
+The DCA_export class connects to a Base Scheme database and exports taxon data to text files, 'interconnected'
+by the meta.xml XML file. After export, the directory containing the export files is automatically zipped and 
+ready for download. See comments in the meta.xml file for the matching between CoL fields and DCA terms.
 
 
 REQUIREMENTS
@@ -26,7 +27,7 @@ The application automatically creates the 'dataset' directory within the 'export
 
 INTERFACE
 
-The demo features a basic interface that allows the user to select all taxa within a given taxon to be selected, 
+v1.0 features a basic interface that allows the user to select all children of a given taxon to be exported, 
 e.g. all members of a particular family. The user can restrict the amount of data returned by selecting a Block level. The
 lower the Block level, the fewer data is created. After entering the rank and taxon name, the application...
 
