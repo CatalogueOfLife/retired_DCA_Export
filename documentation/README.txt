@@ -38,6 +38,9 @@ lower the Block level, the fewer data is created. After entering the rank and ta
 
 The zip file is labelled 'archive-[rank]-[taxon]-bl[block level].zip'.
 
+A hidden is feature is the option to create a complete dump. Use [all] (including square the brackets) as the taxon name.
+After the export has completedly, move the zip file to the zip-fixed directory.
+
 If an archive for this configuration is already present on the server, the export is skipped. Instead, the user 
 is offered the option to directly download the existing archive.
 

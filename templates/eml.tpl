@@ -16,7 +16,7 @@
         </title>
         <creator>
             <organizationName>
-                Catalog Of Life Secretariat
+                Catalog Of Life secretariat
             </organizationName>
             <address>
                 <city>
@@ -32,7 +32,7 @@
         </creator>
         <metadataProvider>
             <organizationName>
-                Catalog Of Life Secretariat
+                Catalog Of Life secretariat
             </organizationName>
             <address>
                 <city>
