@@ -15,6 +15,8 @@ separator =                         ; leave empty for default double quote; if t
 [credits]
 ; Credits string appears for each record in each individual text file
 string = "Species 2000 & ITIS Catalogue of Life: 2011 Annual Checklist"
+; Release date used in GSD EML files; format as YYYY-MM-DD
+release_date = ""
 
 [settings]
 version = @APP.VERSION@

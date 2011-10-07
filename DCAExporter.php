@@ -281,8 +281,8 @@ class DCAExporter
 
     private function _getSourceDatabaseMetadata ($source_database_id)
     {
-        $query = 'SELECT t1.`id`,
-                    t1.`name` AS title,
+        /* $query = 'SELECT t1.`id`,
+                    CONCAT(t1.`name`, " in the Catalogue of Life") AS title,
                     t1.`abbreviated_name` AS abbreviatedName, 
                     t1.`group_name_in_english` AS groupName,
                     t1.`authors_and_editors` AS authorsEditors,
@@ -303,6 +303,20 @@ class DCAExporter
                     "" AS taxonomicCoverage
                   FROM `source_database` t1
                   LEFT JOIN `_source_database_details` AS t2 ON t1.`id` = t2.`id`
+                  WHERE t1.`id` = ?'; */
+        $query = 'SELECT t1.`id`,
+                    CONCAT(t1.`name`, " in the Catalogue of Life") AS title,
+                    t1.`abbreviated_name` AS abbreviatedName, 
+                    t1.`group_name_in_english` AS groupName,
+                    t1.`authors_and_editors` AS authorsEditors,
+                    t1.`version` AS version,
+                    t1.`release_date` AS pubDate,
+                    t1.`contact_person` AS contact,
+                    "" AS sourceUrl,
+                    "" AS contactCity,
+                    "" AS contactCountry,
+                    "" AS resourceLogoUrl
+                  FROM `source_database` t1
                   WHERE t1.`id` = ?';
         $stmt = $this->_dbh->prepare($query);
         $stmt->execute(array(

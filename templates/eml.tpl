@@ -16,7 +16,7 @@
         </title>
         <creator>
             <organizationName>
-                Catalog Of Life secretariat
+                Catalog Of Life
             </organizationName>
             <address>
                 <city>
@@ -32,7 +32,7 @@
         </creator>
         <metadataProvider>
             <organizationName>
-                Catalog Of Life secretariat
+                Species 2000 Secretariat
             </organizationName>
             <address>
                 <city>
@@ -43,7 +43,7 @@
                 </country>
             </address>
             <onlineUrl>
-                http://www.catalogueoflife.org
+                http://www.sp2000.org/
             </onlineUrl>
         </metadataProvider>
         <pubDate>
@@ -52,11 +52,6 @@
         <language>
             eng
         </language>
-        <abstract>
-            <para>
-                [abstract]
-            </para>
-        </abstract>
         <distribution scope="document">
             <online>
                 <url function="information">
@@ -64,26 +59,21 @@
                 </url>
             </online>
         </distribution>
-        <coverage>
-            <taxonomicCoverage>
-                [taxonomicCoverage]
-            </taxonomicCoverage>
-        </coverage>
         <contact>
             <individualName>
                 <surName>
-                    [contact]
+                    
                 </surName>
             </individualName>
             <organizationName>
-                [organizationName] 
+                Species 2000 Secretariat, Harborne Building, The University of Reading
             </organizationName>
             <address>
                 <city>
-                    [contactCity]
+                    Reading
                 </city>
                 <country>
-                    [contactCountry]
+                    GB
                 </country>
             </address>
         </contact>
@@ -112,23 +102,6 @@
                     [version]
                 </version>
             </sourceDatabase>
-            <statistics>
-                <numberOfSpecies>
-                    [numberOfSpecies]
-                </numberOfSpecies>
-                <numberOfInfraspecies>
-                    [numberOfInfraspecies]
-                </numberOfInfraspecies>
-                <numberOfSynonyms>
-                    [numberOfSynonyms]
-                </numberOfSynonyms>
-                <numberOfCommonNames>
-                    [numberOfCommonNames]
-                </numberOfCommonNames>
-                <totalNumber>
-                    [totalNumber]
-                </totalNumber>
-            </statistics>
         </metadata>
     </additionalMetadata>
 </eml:eml>

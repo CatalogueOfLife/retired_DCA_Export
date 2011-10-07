@@ -17,18 +17,10 @@ class SourceDatabase
         'title', 
         'groupName', 
         'authorsEditors', 
-        'organizationName', 
         'contact', 
         'version', 
         'pubDate', 
-        'abstract', 
-        'numberOfSpecies', 
-        'numberOfInfraspecies', 
-        'numberOfSynonyms', 
-        'numberOfCommonNames', 
-        'totalNumber',
         'sourceUrl',
-        'taxonomicCoverage',
         'contactCountry',
         'contactCity',
         'resourceLogoUrl'
@@ -36,18 +28,6 @@ class SourceDatabase
     private $_fields;
     private $_src;
     private $_dest;
-    private $_taxonomicCoverageTemplate = 
-                '<taxonomicClassification>
-                    <taxonRankName>
-                        [taxonRankName]
-                    </taxonRankName>
-                    <taxonRankValue>
-                        [taxonRankValue]
-                    </taxonRankValue>
-                    <commonName>
-                        [commonName]
-                    </commonName>
-                </taxonomicClassification>';
 
     public function __construct (PDO $dbh, $dir, $fields = array())
     {
@@ -73,13 +53,20 @@ class SourceDatabase
                 'Input array for EML file is incomplete or invalid!' . print_r(
                     $diff));
         }
-        // Using fake data as taxonomic coverage is not yet available in 1.6
-        // See _getTaxonomicCoverage method
-        $fields['taxonomicCoverage'] = $this->_getTaxonomicCoverage($fields['groupName']);
         $fields['dateStamp'] = date("c"); 
+        $fields['pubDate'] = $this->_getReleaseDate();
         return $fields;
     }
 
+    private function _getReleaseDate() {
+        $ini = parse_ini_file('config/settings.ini', true);
+        if (isset($ini['credits']['release_date'])) {
+            return $ini['credits']['release_date'];
+        }
+        return false;
+    }
+
+        
     private function _setFileName ()
     {
         if ($this->_fields['id'] != DCAExporter::$species2000Metadata['id']) {
@@ -116,35 +103,6 @@ class SourceDatabase
         } 
     }
     
-    // Decorates [placeholders] in taxonomic coverage template _taxonomicCoverageTemplate
-    private function _decorateTaxonomicCoverage (array $data)
-    {
-        $lines = count($data);
-        $output = '';
-        for ($i = 0; $i < $lines; $i++) {
-            $output .= Template::decorateString(
-                $this->_taxonomicCoverageTemplate, $data[$i]);
-        }
-        return $output;
-    }
-    
-    private function _getTaxonomicCoverage ($id) 
-    {
-        // In v1.7 his function should get the points of attachment with a separate query
-        // Currently in 1.6 all we have is the group name in English...
-        // Therefore we use a mockup to set the group name and fake the group name
-        // by passing it as the id
-        // TODO: change ASAP when 1.7 is final!
-       $mockup = array(
-            array(
-                'taxonRankName' => '',
-                'taxonRankValue' => '',
-                'commonName' => $id
-            )
-        );
-        return $this->_decorateTaxonomicCoverage($mockup);
-    }
-
     public function resetEmlDir ()
     {
         $this->_removeDir($this->_dest);
@@ -154,7 +112,7 @@ class SourceDatabase
     public function writeEml ()
     {
         $template = new Template($this->_src, $this->_dest);
-        $template->decorate($this->_fields);
+        $template->decorate($this->_fields, 'xml');
         $template->writeFile($this->_fileName, 'eml');
         unset($template);
     }

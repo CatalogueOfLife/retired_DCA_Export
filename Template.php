@@ -41,7 +41,7 @@ class Template
         }
         return $str;
     }
-    
+
     private function _validateFileName (array $required, $fileName)
     {
         foreach ($required as $str) {
@@ -79,10 +79,11 @@ class Template
     }
 
     // Decorates [placeholders] in template file
-    public function decorate (array $data)
+    public function decorate (array $data, $xml = false)
     {
         foreach ($data as $placeholder => $text) {
-            $this->_file = str_replace("[$placeholder]", $text, $this->_file);
+            $this->_file = str_replace("[$placeholder]", 
+                $xml ? htmlspecialchars($text) : $text, $this->_file);
         }
     }
 
