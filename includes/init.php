@@ -3,14 +3,15 @@ session_start();
 require_once 'includes/library.php';
 require_once 'DCAExporter.php';
 alwaysFlush();
-foreach (Taxon::$higherTaxa as $rank) {
-    if (isset($_POST[$rank]) && !empty($_POST[$rank])) {
-        $$rank = $_POST[$rank];
-    } else if (isset($_SESSION[$rank]) && !empty($_SESSION[$rank])) {
-        $$rank = $_SESSION[$rank];
+$vars = setVars();
+foreach ($vars as $var) {
+    if (isset($_POST[$var]) && !empty($_POST[$var])) {
+        $$var = $_POST[$var];
+    } else if (isset($_SESSION[$var]) && !empty($_SESSION[$var])) {
+        $$var = $_SESSION[$var];
     } else {
-        $$rank = '';
+        $$var = '';
     }
-    echo $rank .' = '.$$rank.'<br>';
+    echo $var .' = '.$$var.'<br>';
 }
 ?>

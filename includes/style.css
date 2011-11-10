@@ -40,18 +40,22 @@ p {
 }
 
 #classification p label {
-	width: 125px;
+	width: 100px;
 	text-align: right;
 	padding-right: 10px;
 }
 
 #classification input[type=text] {
-	width: 200px;
+	width: 190px;
 	height: 20px;
 	margin-right: 3px;
 }
 
-#classification #text,#classification #radio,#classification #buttons {
+#classification #text {
+	margin-left: 75px;
+}
+
+#classification #radio,#classification #buttons {
 	float: right;
 	clear: both;
 }
