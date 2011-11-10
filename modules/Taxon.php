@@ -69,10 +69,10 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
         'kingdom', 
         'phylum', 
         'class', 
-        'order', 
+        'order',
+        'superfamily',
         'family', 
-        'genus', 
-        'subgenus'
+        'genus'
     );
     
     public static $scientificNameStatus = array(
