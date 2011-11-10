@@ -24,6 +24,10 @@ $(function() {
 	$('#radio').buttonset();
 	$('#classification #reset').click(function() {
 		$('input:text', '#classification').val('');
+		$('input:radio[name="block"]')
+			.filter('[value="4"]')
+			.attr('checked', true)
+			.button("refresh");
 		return false;
 	})
 

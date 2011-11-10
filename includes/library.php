@@ -9,12 +9,6 @@ function alwaysFlush ()
     ob_implicit_flush(1);
     set_time_limit(0);
 }
-function setVars () 
-{
-    $vars = Taxon::$higherTaxa;
-    $vars[] = 'block';
-    return $vars;
-}
 
 function formSubmitted ()
 {
