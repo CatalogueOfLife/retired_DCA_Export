@@ -105,18 +105,21 @@ class Bootstrap
         return $sep;
     }
 
-    // @TODO: refine input filter
     private function _validateSc ($sc)
     {
+        $filteredSc = array();
         foreach ($sc as $rank => $taxon) {
+            if (empty($taxon)) {
+                continue;
+            }
             if (!in_array($rank, Taxon::$higherTaxa)) {
                 $this->_errors[] = 'Rank <b>' . $rank . '</b> is invalid.';
             }
-            if ($taxon != '%' && !ereg("[a-zA-Z]+", $taxon)) {
+            if ($taxon != '%' && !preg_match('/^[a-z]+$/i', $taxon)) {
                 $this->_errors[] = 'Name <b>' . $taxon . '</b> contains invalid characters.';
             }
         }
-        return $sc;
+        return $filteredSc;
     }
 
     private function _validateBl ($bl)

@@ -69,7 +69,7 @@ class DCAExporter
         $ini = parse_ini_file('config/settings.ini', true);
         $this->_del = $ini['export']['delimiter'];
         $this->_sep = $ini['export']['separator'];
-        $this->_sc = $sc;
+        $this->_sc = self::filterSc($sc);
         $this->_bl = $bl;
         $this->_setDefaults();
         
@@ -91,6 +91,31 @@ class DCAExporter
         return $ini['settings']['version'] . ' [r' . $ini['settings']['revision'] . ']';
     }
 
+    public static function filterSc ($sc)
+    {
+        $filteredSc = array();
+        foreach ($sc as $rank => $taxon) {
+            if (in_array($rank, Taxon::$higherTaxa) && $taxon != '') {
+                $filteredSc[$rank] = $taxon;
+            }
+        }
+        return $filteredSc;
+    }
+    
+    public static function getZipArchiveName ()
+    {
+        $sc = self::filterSc($_POST);
+        $url = self::$zip . '-';
+        if (in_array('[all]', $sc)) {
+            return $url . 'complete.zip';
+        }
+        foreach ($sc as $rank => $taxon) {
+            $url .= $rank . '-' . $taxon . '-';
+        }
+        $url .= 'bl' . $_POST['block'] . '.zip';
+        return $url;
+    }
+    
     private function _addSavedEml ($srcDbId)
     {
         $this->_savedEmls[] = $srcDbId;
@@ -137,7 +162,7 @@ class DCAExporter
         }
         return $model;
     }
-
+/*
     private function _getZipArchiveName ()
     {
         $rank = array_shift(array_keys($this->_sc));
@@ -148,7 +173,7 @@ class DCAExporter
         }
         return dirname(__FILE__) . '/' . self::$zip . '-' . $file;
     }
-
+*/
     private function _getTaxa ($limit, $offset)
     {
         $query = 'SELECT `id` AS taxonID,
@@ -166,9 +191,9 @@ class DCAExporter
                          `phylum`,
                          `class`,
                          `order`,
+                         `superfamily`,
                          `family`,
                          `genus`,
-                         `subgenus`,
                          `species` AS specificEpithet,
                          `infraspecies` AS infraspecificEpithet,
                          `infraspecific_marker` AS verbatimTaxonRank,
@@ -186,7 +211,7 @@ class DCAExporter
         $stmt = $this->_dbh->prepare($query);
         if (!empty($this->_sc)) {
             foreach ($this->_sc as $field => $value) {
-                $stmt->bindValue(':' . $field, $value);
+                $stmt->bindValue(':' . $field, $value . '%');
             }
         }
         $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
@@ -281,29 +306,6 @@ class DCAExporter
 
     private function _getSourceDatabaseMetadata ($source_database_id)
     {
-        /* $query = 'SELECT t1.`id`,
-                    CONCAT(t1.`name`, " in the Catalogue of Life") AS title,
-                    t1.`abbreviated_name` AS abbreviatedName, 
-                    t1.`group_name_in_english` AS groupName,
-                    t1.`authors_and_editors` AS authorsEditors,
-                    t1.`version` AS version,
-                    t1.`release_date` AS pubDate,
-                    t1.`abstract` AS abstract,
-                    t1.`organisation` AS organizationName,
-                    t1.`contact_person` AS contact,
-                    t2.`number_of_species` AS numberOfSpecies,
-                    t2.`number_of_infraspecific_taxon` AS numberOfInfraspecies,
-                    t2.`number_of_synonyms` AS numberOfSynonyms,
-                    t2.`number_of_common_names` AS numberOfCommonNames,
-                    t2.`total_number` AS totalNumber,
-                    "" AS sourceUrl,
-                    "" AS contactCity,
-                    "" AS contactCountry,
-                    "" AS resourceLogoUrl,
-                    "" AS taxonomicCoverage
-                  FROM `source_database` t1
-                  LEFT JOIN `_source_database_details` AS t2 ON t1.`id` = t2.`id`
-                  WHERE t1.`id` = ?'; */
         $query = 'SELECT t1.`id`,
                     CONCAT(t1.`name`, " in the Catalogue of Life") AS title,
                     t1.`abbreviated_name` AS abbreviatedName, 
@@ -340,18 +342,17 @@ class DCAExporter
     {
         return $this->startUpErrors;
     }
-
+        
     public function getTotalNumberOfTaxa ()
     {
         $params = array();
         $query = 'SELECT COUNT(`id`)
                   FROM `_search_scientific` ';
-        // @TODO: extend this for other search criteria!
         if (!empty($this->_sc)) {
             $query .= 'WHERE ';
             foreach ($this->_sc as $field => $value) {
                 $query .= "`$field` LIKE ? AND ";
-                $params[] = $value;
+                $params[] = $value.'%';
             }
             $query = substr($query, 0, -4);
         }
@@ -489,8 +490,7 @@ class DCAExporter
     public function zipArchive ()
     {
         $src = dirname(__FILE__) . '/' . self::$dir;
-        // Default name of archive is archive-rank-taxon.zip
-        $dest = $this->_getZipArchiveName();
+        $dest = dirname(__FILE__) . '/' . self::getZipArchiveName();
         $zip = new Zip();
         $zip->createArchive($src, $dest);
         unset($zip);
@@ -498,7 +498,7 @@ class DCAExporter
 
     public function archiveExists ()
     {
-        if (file_exists($this->_getZipArchiveName())) {
+        if (file_exists(dirname(__FILE__) . '/' . self::getZipArchiveName())) {
             return true;
         }
         return false;

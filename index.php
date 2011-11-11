@@ -17,10 +17,10 @@
 Darwin Core Archive Export</h3>
 <?php
     echo '<p class="version">Version ' . DCAExporter::getVersion() . "</p>\n";
-    /*if (formSubmitted()) {
+    if (formSubmitted()) {
         include 'includes/export.php';
     }
-    else */ {
+    else {
         $intro = file_get_contents('templates/intro.tpl');
         $downloadUrl = '../zip-fixed/archive-complete.zip';
         $downloadComplete = '';

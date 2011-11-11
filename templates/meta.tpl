@@ -37,12 +37,12 @@
     <field index='12' term='http://rs.tdwg.org/dwc/terms/class'/>
     <!-- Order in which the taxon has been classified -->
     <field index='13' term='http://rs.tdwg.org/dwc/terms/order'/>
+    <!-- Superfamily in which the taxon has been classified -->
+    <field index='14' term='http://rs.tdwg.org/dwc/terms/superfamily'/>
     <!-- Family in which the taxon has been classified -->
-    <field index='14' term='http://rs.tdwg.org/dwc/terms/family'/>
+    <field index='15' term='http://rs.tdwg.org/dwc/terms/family'/>
     <!-- Genus in which the taxon has been classified -->
-    <field index='15' term='http://rs.tdwg.org/dwc/terms/genus'/>
-    <!-- Subgenus in which the taxon has been classified -->
-    <field index='16' term='http://rs.tdwg.org/dwc/terms/subgenus'/>
+    <field index='16' term='http://rs.tdwg.org/dwc/terms/genus'/>
     <!-- Specific epithet; for hybrids, the multiplication symbol is included in the epithet -->
     <field index='17' term='http://rs.tdwg.org/dwc/terms/specificEpithet'/>
     <!-- Infraspecific epithet -->

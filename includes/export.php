@@ -1,8 +1,6 @@
 <?php
-// $_GET input is validated in application!
-$dcaExporter = new DCAExporter(array(
-    $_GET['rank'] => $_GET['taxon']
-), $_GET['block']);
+// POST data is filtered/verified in class!
+$dcaExporter = new DCAExporter(DCAExporter::filterSc($_POST), $_POST['block']);
 // Check if archive already exists; if it does skip export
 if (!$dcaExporter->archiveExists()) {
     $dcaExporter->useIndicator();
@@ -14,10 +12,10 @@ if (!$dcaExporter->archiveExists()) {
     // No errors, ready to go!
     $total = $dcaExporter->getTotalNumberOfTaxa();
     if ($total > 0) {
-        echo "<p>Creating export for $total taxa in " . $_GET['rank'] . ' ' . ucfirst($_GET['taxon']) . ".</p>\n";
+        echo "<p>Creating export for $total taxa.</p>\n";
     }
     else {
-        echo '<p>No results found for ' . $_GET['rank'] . ' ' . ucfirst($_GET['taxon']) . '. <a href="index.php">Back to the index</a></p>';
+        echo '<p>No results found, please <a href="index.php">adjust your search criteria</a></p>';
         exit();
     }
     echo '<p>Creating meta.xml...<br>';
@@ -28,7 +26,7 @@ if (!$dcaExporter->archiveExists()) {
     $dcaExporter->zipArchive();
     echo "</p>\n";
 }
-$url = setDownloadUrl();
+$url = DCAExporter::getZipArchiveName();
 $size = getDownloadSize($url);
 echo "<p>Ready! <a href='$url'>Download the zip archive</a> ($size).</p>
         <p><a href='index.php'>Back to the index</a></p>";

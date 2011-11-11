@@ -28,20 +28,25 @@ function printErrors ($errors)
     }
     echo "</p>\n<p><a href='index.php'>Back to the index</a></p>";
 }
-
+/*
 function setDownloadUrl ()
 {
+    $sc = DCAExporter::filterSc($_POST);
     $ini = DCAExporter::getExportSettings();
-    $url = DCAExporter::$zip . '-' . $_GET['rank'] . '-' . $_GET['taxon'] . '-bl' . $_GET['block'] . '.zip';
-    if ($_GET['taxon'] == '[all]') {
+    $url = DCAExporter::$zip . '-';
+    foreach ($sc as $rank => $taxon) {
+        $url .= $rank . '-' . $taxon . '-';
+    }
+    $url .= 'bl' . $_POST['block'] . '.zip';
+    if (in_array('[all]', $sc)) {
         $url = DCAExporter::$zip . '-complete.zip';
     }
     return $url;
 }
-
+*/
 function getDownloadSize ($url)
 {
-    $sizeKb = filesize(dirname(__FILE__) . '/' . $url) / 1024;
+    $sizeKb = filesize(dirname(__FILE__) . '/../' . $url) / 1024;
     $size = round($sizeKb, 1) . ' KB';
     if ($sizeKb > 999) {
         $size = round($sizeKb / 1024, 1) . ' MB';
