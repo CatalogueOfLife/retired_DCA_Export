@@ -24,7 +24,7 @@ Darwin Core Archive Export</h3>
         $intro = file_get_contents('templates/intro.tpl');
         $downloadUrl = '../zip-fixed/archive-complete.zip';
         $downloadComplete = '';
-        if (file_exists(dirname(__FILE__) . '/' . $downloadUrl)) {
+        if (file_exists(DCAExporter::basePath() . '/' . $downloadUrl)) {
             $downloadComplete = '<p>Download a Darwin Core Archive for the 
                 <a href="' . $downloadUrl . '">complete Catalogue of Life</a> 
                 (' . getDownloadSize('/' . $downloadUrl) . ").</p>\n";

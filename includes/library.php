@@ -46,7 +46,7 @@ function setDownloadUrl ()
 */
 function getDownloadSize ($url)
 {
-    $sizeKb = filesize(dirname(__FILE__) . '/../' . $url) / 1024;
+    $sizeKb = filesize(DCAExporter::basePath() . '/' . $url) / 1024;
     $size = round($sizeKb, 1) . ' KB';
     if ($sizeKb > 999) {
         $size = round($sizeKb / 1024, 1) . ' MB';

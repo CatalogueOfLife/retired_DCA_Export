@@ -77,12 +77,12 @@ class SourceDatabase
 
     private function _setSource ()
     {
-        return dirname(__FILE__) . '/../templates/eml.tpl';
+        return DCAExporter::basePath() . '/templates/eml.tpl';
     }
 
     private function _setDestination ()
     {
-        return dirname(__FILE__) . '/../' . $this->_dir . 'dataset/';
+        return DCAExporter::basePath() . '/' . $this->_dir . 'dataset/';
     }
 
     private function _removeDir ($dir) 

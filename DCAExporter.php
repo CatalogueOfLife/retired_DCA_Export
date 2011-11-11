@@ -116,6 +116,12 @@ class DCAExporter
         return $url;
     }
     
+    public static function basePath ()
+    {
+        return dirname(__FILE__);
+        
+    }
+    
     private function _addSavedEml ($srcDbId)
     {
         $this->_savedEmls[] = $srcDbId;
@@ -162,18 +168,7 @@ class DCAExporter
         }
         return $model;
     }
-/*
-    private function _getZipArchiveName ()
-    {
-        $rank = array_shift(array_keys($this->_sc));
-        $taxon = array_shift(array_values($this->_sc));
-        $file = $rank . '-' . $taxon . '-bl' . $this->_bl . '.zip';
-        if ($taxon == '%') {
-            $file = 'complete.zip';
-        }
-        return dirname(__FILE__) . '/' . self::$zip . '-' . $file;
-    }
-*/
+
     private function _getTaxa ($limit, $offset)
     {
         $query = 'SELECT `id` AS taxonID,
@@ -475,8 +470,8 @@ class DCAExporter
 
     public function createMetaXml ()
     {
-        $src = dirname(__FILE__) . self::$meta;
-        $dest = dirname(__FILE__) . '/' . self::$dir;
+        $src = DCAExporter::basePath() . self::$meta;
+        $dest = DCAExporter::basePath() . '/' . self::$dir;
         
         $template = new Template($src, $dest);
         $template->setDelimiter($this->_del);
@@ -489,8 +484,8 @@ class DCAExporter
 
     public function zipArchive ()
     {
-        $src = dirname(__FILE__) . '/' . self::$dir;
-        $dest = dirname(__FILE__) . '/' . self::getZipArchiveName();
+        $src = DCAExporter::basePath() . '/' . self::$dir;
+        $dest = DCAExporter::basePath() . '/' . self::getZipArchiveName();
         $zip = new Zip();
         $zip->createArchive($src, $dest);
         unset($zip);
@@ -498,7 +493,7 @@ class DCAExporter
 
     public function archiveExists ()
     {
-        if (file_exists(dirname(__FILE__) . '/' . self::getZipArchiveName())) {
+        if (file_exists(DCAExporter::basePath() . '/' . self::getZipArchiveName())) {
             return true;
         }
         return false;
