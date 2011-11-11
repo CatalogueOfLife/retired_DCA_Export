@@ -10,7 +10,7 @@ class Bootstrap
     
     private $_errors = array();
 
-    public function __construct ($dir, $del, $sep, $sc, $bl)
+    public function __construct ($dir, $zip, $del, $sep, $sc, $bl)
     {
         $this->_createDbInstance('db');
         $this->_dbh = DbHandler::getInstance('db');
@@ -19,6 +19,7 @@ class Bootstrap
         }
         else {
             $this->_dir = $this->_validateDir($dir);
+            $this->_validateDir($zip);
             $this->_del = $this->_validateDel($del);
             $this->_sep = $this->_validateSep($sep);
             $this->_sc = $this->_validateSc($sc);
@@ -76,7 +77,7 @@ class Bootstrap
     private function _validateDir ($dir)
     {
         if (!is_writable($dir)) {
-            $this->_errors[] = 'Export directory "' . $dir . '" is not writable.';
+            $this->_errors[] = 'Directory "' . $dir . '" is not writable.';
         }
         return $dir;
     }

@@ -18,7 +18,7 @@ class DCAExporter
     // Path to and name of meta.xml template
     public static $meta = '/templates/meta.tpl';
     // Path to and base name of zip archive
-    public static $zip = 'zip/archive';
+    public static $zip = 'zip/';
     // Metadata for Annual Checklist itself is not stored in the database
     // Set credits in this array
     // TODO: get proper data for this!
@@ -73,7 +73,7 @@ class DCAExporter
         $this->_bl = $bl;
         $this->_setDefaults();
         
-        $bootstrap = new Bootstrap(self::$dir, $this->_del, $this->_sep, $this->_sc, $this->_bl);
+        $bootstrap = new Bootstrap(self::$dir, self::$zip, $this->_del, $this->_sep, $this->_sc, $this->_bl);
         $this->startUpErrors = $bootstrap->getErrors();
         $this->_dbh = $bootstrap->getDbHandler();
         unset($bootstrap);
@@ -105,7 +105,7 @@ class DCAExporter
     public static function getZipArchiveName ()
     {
         $sc = self::filterSc($_POST);
-        $url = self::$zip . '-';
+        $url = self::$zip . 'archive-';
         if (in_array('[all]', $sc)) {
             return $url . 'complete.zip';
         }
