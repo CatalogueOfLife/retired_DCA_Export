@@ -27,16 +27,16 @@ The application automatically creates the 'dataset' directory within the 'export
 
 INTERFACE
 
-v1.0 features a basic interface that allows the user to select all children of a given taxon to be exported, 
-e.g. all members of a particular family. The user can restrict the amount of data returned by selecting a Block level. The
-lower the Block level, the fewer data is created. After entering the rank and taxon name, the application...
+v1.1 features an interface similar to the taxonomic browser in the Catalogue of Life Annual Checklist. 
+The user can further restrict the amount of data returned by selecting a Block level: the lower the Block level, 
+the fewer data is created. After entering the rank and taxon name, the application...
 
 1. creates the meta.xml document from a template,
 2. writes the data for each taxon to the appropriate Darwin Core Archive text files in the directory 'export',
 3. writes the metadata for each taxon's source database to an GBIF EML file in the subdirectory 'dataset',
 4. zips the xml and text files into a downloadable archive in the directory 'zip'.
 
-The zip file is labelled 'archive-[rank]-[taxon]-bl[block level].zip'.
+The zip file is labelled 'archive-[rank]-[taxon]-([rank2]-[taxon2] etc)-bl[block level].zip'.
 
 A hidden is feature is the option to create a complete dump. Use [all] (including square the brackets) as the taxon name.
 After the export has completedly, move the zip file to the zip-fixed directory.
