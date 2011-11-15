@@ -16,19 +16,13 @@ $(function() {
 		minLength : 0
 	});
 	$('.showall').click(function() {
-		var rankId = '#' + this.previousElementSibling.id;
-		$(rankId).focus();
-		$(rankId).autocomplete("search", "");
+		$(this).prev().focus().autocomplete("search", "");
 	});
 	$('span, button', '#classification').button();
 	$('#radio').buttonset();
 	$('#classification #reset').click(function() {
 		$('input:text', '#classification').val('');
-		$('input:radio[name="block"]')
-			.filter('[value="4"]')
-			.attr('checked', true)
-			.button("refresh");
+		$('input:radio[name="block"]').filter('[value="4"]').attr('checked', true).button('refresh');
 		return false;
 	})
-
 });
