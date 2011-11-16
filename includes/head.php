@@ -7,7 +7,10 @@ Darwin Core Archive Export</title>
 <script type="text/javascript" src="jquery-ui/js/jquery-1.6.2.min.js"></script>
 <script type="text/javascript"
     src="jquery-ui/js/jquery-ui-1.8.16.custom.min.js"></script>
-<script type="text/javascript"
-    src="includes/form.js"></script>
+<script type="text/javascript" src="includes/form.js"></script>
 <link href="includes/style.css" rel="stylesheet" type="text/css"
     media="all">
+<!--[if lte IE 7]>
+    <link href="includes/style-ie7.css" rel="stylesheet" type="text/css"
+        media="all">
+<![endif]-->

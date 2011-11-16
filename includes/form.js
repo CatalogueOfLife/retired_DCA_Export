@@ -3,7 +3,7 @@ $(function() {
 		source : function(request, response) {
 			var currentRank = this.element.context.id;
 			var url = 'includes/ajax_search.php?rank=' + currentRank;
-			$('input').each(function() {
+			$('input:text').each(function() {
 				var id = $(this).attr('id');
 				var val = $(this).val();
 				url += '&' + id + '=' + val;

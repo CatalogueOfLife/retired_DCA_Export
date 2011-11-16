@@ -17,10 +17,13 @@
 			$parameters[] = $$field.'%';
 		}
 	}
-	// If query string is empty (= show all button), pass wildcard for selected rank
+	// Show all is clicked when another taxon has already been selected
+	if (empty($$rank)) {
+	    $query .= '`'.$rank.'` != "" AND ';
+	}
+	// Show all is clicked when nothing else has been selected
 	if (empty($parameters)) {
-		$query .= '`'.$rank.'` LIKE ? AND ';
-		$parameters[] = '%';
+		$query .= '`'.$rank.'` != "" AND ';
 	}
 	$query = substr($query, 0, -4).' GROUP BY `'.$rank.'`';
 	$dbh = createDbInstance('db');

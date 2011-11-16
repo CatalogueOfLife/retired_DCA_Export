@@ -47,7 +47,7 @@
 <label for="block4">Block IV</label>
 </div>
 
- <div id="buttons">
+<div id="buttons">
 <button id="reset">Clear</button>
 <button type="submit">Download</button>
 </div>

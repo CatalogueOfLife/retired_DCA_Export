@@ -34,7 +34,7 @@ p {
 	width: 400px;
 }
 
-#classification label,#classification input[type=text] {
+#classification label,#classification input[type=text], #classification p span {
 	display: block;
 	float: left;
 }
@@ -47,19 +47,26 @@ p {
 
 #classification input[type=text] {
 	width: 190px;
-	height: 20px;
-	margin-right: 3px;
+	height: 15px;
+	margin: 0 3px 4px 0;
 }
 
-#classification #text {
-	margin-left: 75px;
-}
-
-#classification #radio,#classification #buttons {
+#classification #text,#classification #radio,#classification #buttons {
 	float: right;
 	clear: both;
 }
 
+#classification #radio,#classification #buttons {
+	display: inline-block;
+	float: right;
+}
+
 #classification #radio {
-	margin: 12px 0 30px 0;
+	margin: 12px 5px 30px 0;
+}
+
+#reset, #submit {
+	float: left;
+	margin-right: 2px;
+	display: inline-block;
 }
