@@ -1,4 +1,4 @@
-<span id="blah">click me</span>
+<span id="blah"><span id="dialog">Blah!</span>mouseover</span>
 
 <div class="ui-widget" id="classification">
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
