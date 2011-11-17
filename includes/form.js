@@ -24,5 +24,15 @@ $(function() {
 		$('input:text', '#classification').val('');
 		$('input:radio[name="block"]').filter('[value="4"]').attr('checked', true).button('refresh');
 		return false;
-	})
+	});
+
+	$("#blah").mouseover(function() {
+		var width = 250;
+		var height = 270;
+		var posX = $(this).offset().left - $(document).scrollLeft() - width + $(this).outerWidth();
+		var posY = $(this).offset().top - $(document).scrollTop() + $(this).outerHeight();
+		$("#dialog").dialog({width:width, height:height ,position:[posX, posY]});
+	});
+
 });
+

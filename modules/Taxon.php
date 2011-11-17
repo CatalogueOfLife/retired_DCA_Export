@@ -19,6 +19,7 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
     public $superfamily;
     public $family;
     public $genus;
+    public $subgenus;
     public $specificEpithet;
     public $infraspecificEpithet;
     public $scientificNameAuthorship;
@@ -46,6 +47,7 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
         'superfamily', 
         'family', 
         'genus', 
+        'subgenus', 
         'specificEpithet', 
         'infraspecificEpithet', 
         'scientificNameAuthorship', 
@@ -245,6 +247,7 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
             $this->superfamily, 
             $this->family, 
             $this->genus, 
+            $this->subgenus, 
             $this->specificEpithet, 
             $this->infraspecificEpithet, 
             $this->scientificNameAuthorship, 

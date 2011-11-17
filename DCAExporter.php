@@ -168,7 +168,7 @@ class DCAExporter
         }
         return $model;
     }
-
+/*
     private function _getTaxa ($limit, $offset)
     {
         $query = 'SELECT `id` AS taxonID,
@@ -189,12 +189,12 @@ class DCAExporter
                          `superfamily`,
                          `family`,
                          `genus`,
+                         `subgenus` AS "",
                          `species` AS specificEpithet,
                          `infraspecies` AS infraspecificEpithet,
                          `infraspecific_marker` AS verbatimTaxonRank,
                          `author` AS scientificNameAuthorship
                   FROM `_search_scientific` ';
-        // @TODO: extend this for other search criteria!
         if (!empty($this->_sc)) {
             $query .= 'WHERE ';
             foreach ($this->_sc as $field => $value) {
@@ -215,7 +215,71 @@ class DCAExporter
         $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $res ? $res : array();
     }
-
+*/
+    private function _getTaxa ($limit, $offset)
+    {
+        $query = 'SELECT `id` AS taxonID,
+                          IF (`source_database_id` > 0,
+                              `source_database_id`,
+                              "Species 2000") AS datasetID,
+                          IF (`source_database_name` != "", 
+                              `source_database_name`, 
+                              "Catalogue of Life") AS datasetName,
+                         `kingdom`,
+                         `phylum`,
+                         `class`,
+                         `order`,
+                         `superfamily`,
+                         `family`,
+                         `genus`,';
+        // Split query based on block level; level 1 only exports classification up to genus
+        if ($this->_bl == 1) {
+            $query .= 
+                 '"" AS acceptedNameUsageID,
+                  "" AS status,
+                  "" AS subgenus,
+                  "" AS specificEpithet,
+                  "" AS infraspecificEpithet,
+                  "" AS verbatimTaxonRank,
+                  "" AS scientificNameAuthorship ';
+        } else {
+            $query .= 
+                 'IF (`accepted_species_id` > 0,
+                      `accepted_species_id`,
+                      "") AS acceptedNameUsageID,
+                 `status`,
+                  "" AS subgenus,
+                 `species` AS specificEpithet,
+                 `infraspecies` AS infraspecificEpithet,
+                 `infraspecific_marker` AS verbatimTaxonRank,
+                 `author` AS scientificNameAuthorship ';
+        }
+        $query .= ' FROM `_search_scientific` ';
+        if (!empty($this->_sc)) {
+            $query .= 'WHERE ';
+            foreach ($this->_sc as $field => $value) {
+                $query .= "`$field` LIKE :$field AND ";
+            }
+            // Omit (infra)species for level 1
+            if ($this->_bl == 1) {
+                $query .= ' `species` = "" AND `infraspecies` = "" AND ';
+            }
+            $query = substr($query, 0, -4);
+        }
+        $query .= ' LIMIT :limit OFFSET :offset';
+        $stmt = $this->_dbh->prepare($query);
+        if (!empty($this->_sc)) {
+            foreach ($this->_sc as $field => $value) {
+                $stmt->bindValue(':' . $field, $value . '%');
+            }
+        }
+        $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $res ? $res : array();
+    }
+    
     private function _getVernaculars ($taxon_id)
     {
         $query = 'SELECT t3.`name` as vernacularName, 
@@ -349,6 +413,9 @@ class DCAExporter
                 $query .= "`$field` LIKE ? AND ";
                 $params[] = $value.'%';
             }
+            if ($this->_bl == 1) {
+                $query .= ' `species` = "" AND `infraspecies` = "" AND ';
+            }
             $query = substr($query, 0, -4);
         }
         $stmt = $this->_dbh->prepare($query);
@@ -453,6 +520,7 @@ class DCAExporter
                             unset(
                                 $distribution);
                         }
+                            $taxon->setDescription();
                     }
                     
                     // Block IV only adds additional data to the taxon

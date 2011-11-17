@@ -1,3 +1,5 @@
+<span id="blah">click me</span>
+
 <div class="ui-widget" id="classification">
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 
@@ -35,16 +37,13 @@
 <div id="radio">
 <input type="radio" name="block" value="1" id="block1" 
     <?php echo ($block == 1 ? 'checked' : ''); ?> />
-<label for="block1">Block I</label>
+<label for="block1">Classification only</label>
 <input type="radio" name="block" value="2" id="block2" 
     <?php echo ($block == 2 ? 'checked' : ''); ?> />
-<label for="block2">Block II</label>
+<label for="block2">Taxonomic index</label>
 <input type="radio" name="block" value="3" id="block3" 
-    <?php echo ($block == 3 ? 'checked' : ''); ?> />
-<label for="block3">Block III</label>
-<input type="radio" name="block" value="4" id="block4" 
-    <?php echo (!in_array($block, array(1,2,3)) ? 'checked' : ''); ?>  />
-<label for="block4">Block IV</label>
+    <?php echo (!in_array($block, array(1,2)) ? 'checked' : ''); ?>  />
+<label for="block3">Complete data</label>
 </div>
 
 <div id="buttons">

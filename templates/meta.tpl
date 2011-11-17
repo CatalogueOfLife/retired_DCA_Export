@@ -43,22 +43,24 @@
     <field index='15' term='http://rs.tdwg.org/dwc/terms/family'/>
     <!-- Genus in which the taxon has been classified -->
     <field index='16' term='http://rs.tdwg.org/dwc/terms/genus'/>
+    <!-- Subgenus in which the taxon has been classified (currently not yet implemented, reserved for future edition) -->
+    <field index='17' term='http://rs.tdwg.org/dwc/terms/subgenus'/>
     <!-- Specific epithet; for hybrids, the multiplication symbol is included in the epithet -->
-    <field index='17' term='http://rs.tdwg.org/dwc/terms/specificEpithet'/>
+    <field index='18' term='http://rs.tdwg.org/dwc/terms/specificEpithet'/>
     <!-- Infraspecific epithet -->
-    <field index='18' term='http://rs.tdwg.org/dwc/terms/infraspecificEpithet'/>
+    <field index='19' term='http://rs.tdwg.org/dwc/terms/infraspecificEpithet'/>
     <!-- Authorship -->
-    <field index='19' term='http://rs.tdwg.org/dwc/terms/scientificNameAuthorship'/>
+    <field index='20' term='http://rs.tdwg.org/dwc/terms/scientificNameAuthorship'/>
     <!-- Acceptance status published in -->
-    <field index='20' term='http://purl.org/dc/terms/source'/>
+    <field index='21' term='http://purl.org/dc/terms/source'/>
     <!-- Reference in which the scientific name was first published -->
-    <field index='21' term='http://rs.tdwg.org/dwc/terms/namePublishedIn'/>
+    <field index='22' term='http://rs.tdwg.org/dwc/terms/namePublishedIn'/>
     <!-- Taxon scrutinized by -->
-    <field index='22' term='http://rs.tdwg.org/dwc/terms/nameAccordingTo'/>
+    <field index='23' term='http://rs.tdwg.org/dwc/terms/nameAccordingTo'/>
     <!-- Scrutiny date; may be text string -->
-    <field index='23' term='http://purl.org/dc/terms/modified'/>
+    <field index='24' term='http://purl.org/dc/terms/modified'/>
     <!-- Additional data for the taxon -->
-    <field index='24' term='http://purl.org/dc/terms/description'/>
+    <field index='25' term='http://purl.org/dc/terms/description'/>
     </core>
     
     <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Distribution'>
@@ -87,13 +89,13 @@
         <!-- Year -->
         <field index='2' term='http://purl.org/dc/terms/date'/>
         <!-- Title -->
-        <field index='4' term='http://purl.org/dc/terms/title'/>
+        <field index='3' term='http://purl.org/dc/terms/title'/>
         <!-- Published in -->
-        <field index='3' term='http://purl.org/dc/terms/description'/>
+        <field index='4' term='http://purl.org/dc/terms/description'/>
         <!-- Uri -->
         <field index='5' term='http://purl.org/dc/terms/identifier'/>
         <!-- Type of reference; pertaining to taxon, synonym or vernacular name -->
-        <field index='5' term='http://purl.org/dc/terms/type'/>
+        <field index='6' term='http://purl.org/dc/terms/type'/>
     </extension>
   
     <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/SpeciesProfile'>
