@@ -26,13 +26,11 @@ $(function() {
 		return false;
 	});
 
-	$("#blah").mouseover(function() {
-		var width = 250;
-		var height = 270;
-		var posX = $(this).offset().left - $(document).scrollLeft() - width + $(this).outerWidth();
-		var posY = $(this).offset().top - $(document).scrollTop() + $(this).outerHeight();
-		$("#dialog").dialog({width:width, height:height ,position:[posX, posY]});
+	$("#radio label").tooltip({
+		position: "bottom center",
+		offset: [10, 0],
+		effect: "fade",
+		opacity: 0.8
 	});
-
 });
 

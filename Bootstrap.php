@@ -128,10 +128,9 @@ class Bootstrap
         if (!in_array($bl, array(
             1, 
             2, 
-            3,
-            4
+            3
         ))) {
-            $this->_errors[] = 'Incorrect Block level "' . $bl . '".';
+            $this->_errors[] = 'Incorrect block level "' . $bl . '".';
         }
         return $bl;
     }
