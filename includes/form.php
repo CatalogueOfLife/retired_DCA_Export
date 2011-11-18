@@ -6,7 +6,7 @@
         synonym(s) linked to reference(s), latest taxonomic scrutiny, 
         source database and Catalogue of Life edition, 
         classification above genus and LSID.';
-    $tip3 = 'Exports fields as defined under \'Taxonomic index\', plus 
+    $tip3 = 'Exports fields as defined under \'Limited data\', plus 
         common name(s) linked to reference(s),  distribution, life zone 
         and additional data.';
 ?>
