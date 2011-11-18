@@ -10,6 +10,7 @@
         common name(s) linked to reference(s),  distribution, life zone 
         and additional data.';
 ?>
+
 <div class="ui-widget" id="classification">
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 
