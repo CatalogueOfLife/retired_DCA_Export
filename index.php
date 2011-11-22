@@ -33,6 +33,7 @@ Darwin Core Archive Export</h3>
         echo Template::decorateString($intro, 
             array(
                 'action' => $_SERVER['PHP_SELF'], 
+                'colEdition' => DCAExporter::getEdition(),
                 'downloadComplete' => $downloadComplete
             ));
         include 'includes/form.php';

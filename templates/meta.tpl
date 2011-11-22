@@ -61,6 +61,8 @@
     <field index='24' term='http://purl.org/dc/terms/modified'/>
     <!-- Additional data for the taxon -->
     <field index='25' term='http://purl.org/dc/terms/description'/>
+    <!-- Original id/code for taxon in provider's database; currently original CoL name code -->
+    <field index='26' term='http://rs.gbif.org/extension/gbif/1.0/identifier.xml'/ title='Original source identifier used by CoL provider' subject='gsd; sourceid'>
     </core>
     
     <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Distribution'>

@@ -91,6 +91,12 @@ class DCAExporter
         return $ini['settings']['version'] . ' [r' . $ini['settings']['revision'] . ']';
     }
 
+    public static function getEdition ()
+    {
+        $ini = parse_ini_file('config/settings.ini', true);
+        return $ini['credits']['string'] . ' (' . $ini['credits']['release_date'] . ')';
+    }
+
     public static function filterSc ($sc)
     {
         $filteredSc = array();
@@ -440,12 +446,8 @@ class DCAExporter
             foreach ($taxa as $iTx => $rowTx) {
                 $this->_indicator ? $this->_indicator->iterate() : '';
                 $taxon = $this->_initModel('Taxon', $rowTx);
-                $taxon->setRank();
                 $taxon->setLsid();
-                $taxon->setScientificName();
-                $taxon->setNameStatus();
                 $taxon->setParentId();
-                $taxon->setScrutiny();
                 
                 if (!$this->_emlExists($taxon->datasetID)) {
                     $sourceDatabase = new SourceDatabase(
@@ -461,6 +463,9 @@ class DCAExporter
                 // Remaining data is exported only for (infra)species
                 // and for Block levels II to IV
                 if (!$taxon->isHigherTaxon && $this->_bl > 1) {
+                    $taxon->setScrutiny();
+                    $taxon->setOriginalID();
+                    
                     // Vernaculars
                     $vernaculars = $this->_getVernaculars($taxon->taxonID);
                     foreach ($vernaculars as $iVn => $rowVn) {

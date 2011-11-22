@@ -28,6 +28,7 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
     public $nameAccordingTo; // scrutiny, separate
     public $modified; // scrutiny date, separate
     public $description; // additional data, separate
+    public $originalID; // original GSD id (currently name code), separate
     
     public $fields = array(
         'taxonID', 
@@ -55,13 +56,14 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
         'namePublishedIn',
         'nameAccordingTo', 
         'modified',
-        'description'
+        'description',
+        'originalID'
     );
     
     // Derived values
     public $status;
-    public $isHigherTaxon = false;
-    public $isSynonym = false;
+    public $isHigherTaxon = false; // set in __construct
+    public $isSynonym = false; // set in __construct
     
     // Export settings
     const FILE = 'taxa.txt';
@@ -89,6 +91,9 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
     {
         parent::__construct($dbh, $dir, $sep, $del);
         $this->_fh = $this->_openFileHandler(self::FILE);
+        $this->setRank();
+        $this->setNameStatus();
+        $this->setScientificName();
     }
 
     public function __destruct ()
@@ -172,7 +177,7 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
         }
         return $this->taxonomicStatus;
     }
-
+    
     public function setParentId ()
     {
         $query = 'SELECT `parent_id` 
@@ -210,7 +215,8 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
         }
     }
     
-    public function setDescription () {
+    public function setDescription () 
+    {
         if (!$this->isHigherTaxon) {
             $query = 'SELECT `additional_data` AS description
                       FROM `taxon_detail` 
@@ -225,6 +231,24 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
             }
             return false;
         }
+    }
+    
+    public function setOriginalID ()
+    {
+        $this->isSynonym ? $table = 'synonym' : $table = 'taxon';
+        $this->isSynonym ? $field = 'taxon_id' : $field = 'id';
+        $query = 'SELECT `original_id` AS originalID
+                  FROM `' . $table . '` 
+                  WHERE `' . $field . '` = ?';
+        $stmt = $this->_dbh->prepare($query);
+        $stmt->execute(array(
+            $this->taxonID
+        ));
+        if ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $this->decorate($res);
+            return true;
+        }
+        return false;
     }
 
     public function writeModel ()
@@ -255,7 +279,8 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
             $this->namePublishedIn,
             $this->nameAccordingTo, 
             $this->modified,
-            $this->description
+            $this->description,
+            $this->originalID
         );
         $this->_writeLine($this->_fh, $fields);
     }
