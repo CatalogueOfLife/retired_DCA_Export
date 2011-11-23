@@ -23,7 +23,7 @@ Darwin Core Archive Export</h3>
     }
     else {
         $intro = file_get_contents('templates/intro.tpl');
-        $downloadUrl = '../zip-fixed/archive-complete.zip';
+        $downloadUrl = 'zip-fixed/archive-complete.zip';
         $downloadComplete = '';
         if (file_exists(DCAExporter::basePath() . '/' . $downloadUrl)) {
             $downloadComplete = '<p>Download a Darwin Core Archive for the 
