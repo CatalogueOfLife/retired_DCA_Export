@@ -174,54 +174,7 @@ class DCAExporter
         }
         return $model;
     }
-/*
-    private function _getTaxa ($limit, $offset)
-    {
-        $query = 'SELECT `id` AS taxonID,
-                          IF (`source_database_id` > 0,
-                              `source_database_id`,
-                              "Species 2000") AS datasetID,
-                          IF (`source_database_name` != "", 
-                              `source_database_name`, 
-                              "Catalogue of Life") AS datasetName,
-                          IF (`accepted_species_id` > 0,
-                              `accepted_species_id`,
-                              "") AS acceptedNameUsageID,
-                         `status`,
-                         `kingdom`,
-                         `phylum`,
-                         `class`,
-                         `order`,
-                         `superfamily`,
-                         `family`,
-                         `genus`,
-                         `subgenus` AS "",
-                         `species` AS specificEpithet,
-                         `infraspecies` AS infraspecificEpithet,
-                         `infraspecific_marker` AS verbatimTaxonRank,
-                         `author` AS scientificNameAuthorship
-                  FROM `_search_scientific` ';
-        if (!empty($this->_sc)) {
-            $query .= 'WHERE ';
-            foreach ($this->_sc as $field => $value) {
-                $query .= "`$field` LIKE :$field AND ";
-            }
-            $query = substr($query, 0, -4);
-        }
-        $query .= 'LIMIT :limit OFFSET :offset';
-        $stmt = $this->_dbh->prepare($query);
-        if (!empty($this->_sc)) {
-            foreach ($this->_sc as $field => $value) {
-                $stmt->bindValue(':' . $field, $value . '%');
-            }
-        }
-        $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
-        $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
-        $stmt->execute();
-        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $res ? $res : array();
-    }
-*/
+
     private function _getTaxa ($limit, $offset)
     {
         $query = 'SELECT `id` AS taxonID,
@@ -446,6 +399,9 @@ class DCAExporter
             foreach ($taxa as $iTx => $rowTx) {
                 $this->_indicator ? $this->_indicator->iterate() : '';
                 $taxon = $this->_initModel('Taxon', $rowTx);
+                $taxon->setRank();
+                $taxon->setNameStatus();
+                $taxon->setScientificName();
                 $taxon->setLsid();
                 $taxon->setParentId();
                 
@@ -464,7 +420,7 @@ class DCAExporter
                 // and for Block levels II to IV
                 if (!$taxon->isHigherTaxon && $this->_bl > 1) {
                     $taxon->setScrutiny();
-                    $taxon->setOriginalID();
+                    $taxon->setGsdNameGuid();
                     
                     // Vernaculars
                     $vernaculars = $this->_getVernaculars($taxon->taxonID);

@@ -28,7 +28,8 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
     public $nameAccordingTo; // scrutiny, separate
     public $modified; // scrutiny date, separate
     public $description; // additional data, separate
-    public $originalID; // original GSD id (currently name code), separate
+    public $taxonConceptID; // GSDTaxonGUID, separate
+    public $scientificNameID; // GSDNameGUID, separate
     
     public $fields = array(
         'taxonID', 
@@ -57,7 +58,8 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
         'nameAccordingTo', 
         'modified',
         'description',
-        'originalID'
+        'taxonConceptID',
+        'scientificNameID'
     );
     
     // Derived values
@@ -91,9 +93,6 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
     {
         parent::__construct($dbh, $dir, $sep, $del);
         $this->_fh = $this->_openFileHandler(self::FILE);
-        $this->setRank();
-        $this->setNameStatus();
-        $this->setScientificName();
     }
 
     public function __destruct ()
@@ -233,13 +232,12 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
         }
     }
     
-    public function setOriginalID ()
+    public function setGsdNameGuid ()
     {
         $this->isSynonym ? $table = 'synonym' : $table = 'taxon';
-        $this->isSynonym ? $field = 'taxon_id' : $field = 'id';
-        $query = 'SELECT `original_id` AS originalID
+        $query = 'SELECT `original_id` AS scientificNameID
                   FROM `' . $table . '` 
-                  WHERE `' . $field . '` = ?';
+                  WHERE `id` = ?';
         $stmt = $this->_dbh->prepare($query);
         $stmt->execute(array(
             $this->taxonID
@@ -280,7 +278,8 @@ class Taxon extends DCAExporterAbstract implements DCA_Interface
             $this->nameAccordingTo, 
             $this->modified,
             $this->description,
-            $this->originalID
+            $this->taxonConceptID,
+            $this->scientificNameID
         );
         $this->_writeLine($this->_fh, $fields);
     }
