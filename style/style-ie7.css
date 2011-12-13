@@ -1,17 +1,17 @@
 @CHARSET "UTF-8";
 
 #classification #radio,#classification #buttons {
-	float: none;
+    float: none;
 }
 
 #classification #radio {
-	margin-left: 105px;
+    margin-left: 13px;
 }
 
 #classification #buttons {
-	margin-left: 257px;
+    margin-left: 257px;
 }
 
 #classification #radio .ui-button {
-	width: 75px;
+    width: 130px;
 }
