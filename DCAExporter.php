@@ -55,6 +55,8 @@ class DCAExporter
     private $_sc;
     // Block level; determines amount of data returned
     private $_bl;
+    // Directory to save files to
+    private $_dir;
     
     // Storage array to determine if an eml file has already been written 
     private $_savedEmls = array();
@@ -71,12 +73,18 @@ class DCAExporter
         $this->_sep = $ini['export']['separator'];
         $this->_sc = self::filterSc($sc);
         $this->_bl = $bl;
+        $this->_dir = self::$dir . md5(self::getZipArchiveName()) . '/';
         $this->_setDefaults();
         
-        $bootstrap = new Bootstrap(self::$dir, self::$zip, $this->_del, $this->_sep, $this->_sc, $this->_bl);
+        $bootstrap = new Bootstrap($this->_dir, self::$zip, $this->_del, $this->_sep, $this->_sc, $this->_bl);
         $this->startUpErrors = $bootstrap->getErrors();
         $this->_dbh = $bootstrap->getDbHandler();
         unset($bootstrap);
+    }
+    
+    public function __destruct ()
+    {
+        $this->deleteTempDir();
     }
 
     public static function getExportSettings ()
@@ -108,6 +116,24 @@ class DCAExporter
         return $filteredSc;
     }
     
+    public static function removeDir ($dir) 
+    { 
+        if (is_dir($dir)) { 
+            $objects = scandir($dir); 
+            foreach ($objects as $object) { 
+                if ($object != "." && $object != "..") { 
+                    if (filetype($dir."/".$object) == "dir") {
+                        self::removeDir($dir."/".$object); 
+                    } else {
+                        unlink($dir."/".$object);
+                    }
+                } 
+            } 
+            reset($objects); 
+            rmdir($dir);
+        } 
+    }
+    
     public static function getZipArchiveName ()
     {
         $sc = self::filterSc($_POST);
@@ -132,12 +158,12 @@ class DCAExporter
     {
         $this->_savedEmls[] = $srcDbId;
     }
-
+    
     private function _emlExists ($srcDbId)
     {
         return in_array($srcDbId, $this->_savedEmls) ? true : false;
     }
-
+    
     private function _setDefaults ()
     {
         if (empty($this->_del)) {
@@ -163,7 +189,7 @@ class DCAExporter
     private function _initModel ($model, array $data, $taxonId = null)
     {
         try {
-            $model = new $model($this->_dbh, self::$dir, $this->_del, $this->_sep);
+            $model = new $model($this->_dbh, $this->_dir, $this->_del, $this->_sep);
             if ($taxonId) {
                 $model->taxonID = $taxonId;
             }
@@ -349,7 +375,7 @@ class DCAExporter
     private function _initEml ()
     {
         // Initialize with CoL metadata, so archive always contains this EML file
-        $sp2000 = new SourceDatabase($this->_dbh, self::$dir);
+        $sp2000 = new SourceDatabase($this->_dbh, $this->_dir);
         // Clear dir from previous export first
         $sp2000->resetEmlDir();
         $sp2000->writeEml();
@@ -361,6 +387,17 @@ class DCAExporter
         return $this->startUpErrors;
     }
         
+    public function deleteTempDir ()
+    {
+        // Do NOT remove temporary directory if another export process
+        // is still running! Error code = 3
+        // Full path to temporary directory should be given 
+        // as this method is called in __destruct
+        if (!isset($this->startUpErrors[3])) {
+            self::removeDir(DCAExporter::basePath() . '/' . $this->_dir);
+        }
+    }
+
     public function getTotalNumberOfTaxa ()
     {
         $params = array();
@@ -408,7 +445,7 @@ class DCAExporter
                 if (!$this->_emlExists($taxon->datasetID)) {
                     $sourceDatabase = new SourceDatabase(
                         $this->_dbh, 
-                        self::$dir, 
+                        $this->_dir, 
                         $this->_getSourceDatabaseMetadata(
                             $taxon->datasetID));
                     $sourceDatabase->writeEml();
@@ -500,7 +537,7 @@ class DCAExporter
     public function createMetaXml ()
     {
         $src = DCAExporter::basePath() . self::$meta;
-        $dest = DCAExporter::basePath() . '/' . self::$dir;
+        $dest = DCAExporter::basePath() . '/' . $this->_dir;
         
         $template = new Template($src, $dest);
         $template->setDelimiter($this->_del);
@@ -513,7 +550,7 @@ class DCAExporter
 
     public function zipArchive ()
     {
-        $src = DCAExporter::basePath() . '/' . self::$dir;
+        $src = DCAExporter::basePath() . '/' . $this->_dir;
         $dest = DCAExporter::basePath() . '/' . self::getZipArchiveName();
         $zip = new Zip();
         $zip->createArchive($src, $dest);

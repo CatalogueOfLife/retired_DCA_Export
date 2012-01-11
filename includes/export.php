@@ -28,6 +28,8 @@ if (!$dcaExporter->archiveExists()) {
 }
 $url = DCAExporter::getZipArchiveName();
 $size = getDownloadSize($url);
+// Need to destroy the object to allow it to do some house cleaning
+//unset($dcaExporter);
 echo "<p>Ready! <a href='$url'>Download the zip archive</a> ($size).</p>
         <p><a href='index.php'>Back to the index</a></p>";
 ?>

@@ -15,10 +15,10 @@ class Bootstrap
         $this->_createDbInstance('db');
         $this->_dbh = DbHandler::getInstance('db');
         if (!($this->_dbh instanceof PDO)) {
-            $this->_errors[] = 'Could not create database instance; check settings in settings.ini!';
+            $this->_errors[1] = 'Could not create database instance; check settings in settings.ini!';
         }
         else {
-            $this->_dir = $this->_validateDir($dir);
+            $this->_dir = $this->_validateTempDir($dir);
             $this->_validateDir($zip);
             $this->_del = $this->_validateDel($del);
             $this->_sep = $this->_validateSep($sep);
@@ -74,10 +74,28 @@ class Bootstrap
         }
     }
 
+    private function _validateTempDir ($dir)
+    {
+        // First test if base directory is writable
+        if (!is_writable(DCAExporter::$dir)) {
+            $this->_errors[2] = 'Directory "' . DCAExporter::$dir . '" is not writable.';
+        }
+        // Test if temporary directory is present; 
+        // if so, taxon is currently being exported by another user
+        if (file_exists($dir)) {
+            $this->_errors[3] = 'Export already initiated by another user. 
+                Please retry download later.';
+        // ... else create temporary directory to write to
+        } else {
+            mkdir($dir);
+        }
+        return $dir;
+    }
+
     private function _validateDir ($dir)
     {
-        if (!is_writable($dir)) {
-            $this->_errors[] = 'Directory "' . $dir . '" is not writable.';
+         if (!is_writable($dir)) {
+            $this->_errors[4] = 'Directory "' . $dir . '" is not writable.';
         }
         return $dir;
     }
@@ -89,7 +107,7 @@ class Bootstrap
             ';', 
             "\t"
         ))) {
-            $this->_errors[] = 'Delimiter "' . $del . '" is not a valid CSV delimiter.';
+            $this->_errors[5] = 'Delimiter "' . $del . '" is not a valid CSV delimiter.';
         }
         return $del;
     }
@@ -101,7 +119,7 @@ class Bootstrap
             '\'', 
             ''
         ))) {
-            $this->_errors[] = 'Delimiter "' . $sep . '" is not a valid CSV separator.';
+            $this->_errors[6] = 'Delimiter "' . $sep . '" is not a valid CSV separator.';
         }
         return $sep;
     }
@@ -114,10 +132,10 @@ class Bootstrap
                 continue;
             }
             if (!in_array($rank, Taxon::$higherTaxa)) {
-                $this->_errors[] = 'Rank <b>' . $rank . '</b> is invalid.';
+                $this->_errors[7] = 'Rank <b>' . $rank . '</b> is invalid.';
             }
             if ($taxon != '%' && !preg_match('/^[a-z]+$/i', $taxon)) {
-                $this->_errors[] = 'Name <b>' . $taxon . '</b> contains invalid characters.';
+                $this->_errors[8] = 'Name <b>' . $taxon . '</b> contains invalid characters.';
             }
         }
         return $filteredSc;
@@ -130,7 +148,7 @@ class Bootstrap
             2, 
             3
         ))) {
-            $this->_errors[] = 'Incorrect block level "' . $bl . '".';
+            $this->_errors[9] = 'Incorrect block level "' . $bl . '".';
         }
         return $bl;
     }

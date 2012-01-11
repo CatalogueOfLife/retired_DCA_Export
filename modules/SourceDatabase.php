@@ -84,7 +84,7 @@ class SourceDatabase
     {
         return DCAExporter::basePath() . '/' . $this->_dir . 'dataset/';
     }
-
+/*
     private function _removeDir ($dir) 
     { 
         if (is_dir($dir)) { 
@@ -102,10 +102,11 @@ class SourceDatabase
             rmdir($dir); 
         } 
     }
-    
+*/    
     public function resetEmlDir ()
     {
-        $this->_removeDir($this->_dest);
+        //$this->_removeDir($this->_dest);
+        DCAExporter::removeDir($this->_dest);
         mkdir($this->_dest);
     }
     
