@@ -63,7 +63,7 @@ class DCAExporter
     // Indicator to show progress
     private $_indicator;
     // ignore_user_abort() original setting (will be restored)
-    private $_iubSetting;
+    private $_iuaSetting;
     
     // Collects bootstrap errors
     public $startUpErrors;
