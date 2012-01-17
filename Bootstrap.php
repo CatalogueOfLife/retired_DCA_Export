@@ -134,7 +134,7 @@ class DCABootstrap
             if (!in_array($rank, Taxon::$higherTaxa)) {
                 $this->_errors[7] = 'Rank <b>' . $rank . '</b> is invalid.';
             }
-            if ($taxon != '%' && !preg_match('/^[a-z]+$/i', $taxon)) {
+            if ($taxon != '%' && !preg_match('/^[a-z0-9 ]+$/i', $taxon)) {
                 $this->_errors[8] = 'Name <b>' . $taxon . '</b> contains invalid characters.';
             }
         }
