@@ -1,6 +1,6 @@
 <?php
 require_once 'DbHandler.php';
-require_once 'DCABootstrap.php';
+require_once 'Bootstrap.php';
 require_once 'Indicator.php';
 require_once 'Zip.php';
 require_once 'Template.php';
