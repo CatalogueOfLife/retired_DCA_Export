@@ -8,7 +8,6 @@
  * 
  * @author Ruud Altenburg
  */
-require_once 'Template.php';
 class SourceDatabase
 {
     private $_fileName;
@@ -84,25 +83,7 @@ class SourceDatabase
     {
         return DCAExporter::basePath() . '/' . $this->_dir . 'dataset/';
     }
-/*
-    private function _removeDir ($dir) 
-    { 
-        if (is_dir($dir)) { 
-            $objects = scandir($dir); 
-            foreach ($objects as $object) { 
-                if ($object != "." && $object != "..") { 
-                    if (filetype($dir."/".$object) == "dir") {
-                        $this->_removeDir($dir."/".$object); 
-                    } else {
-                        unlink($dir."/".$object);
-                    }
-                } 
-            } 
-            reset($objects); 
-            rmdir($dir); 
-        } 
-    }
-*/    
+
     public function resetEmlDir ()
     {
         //$this->_removeDir($this->_dest);

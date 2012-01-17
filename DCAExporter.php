@@ -1,6 +1,6 @@
 <?php
 require_once 'DbHandler.php';
-require_once 'Bootstrap.php';
+require_once 'DCABootstrap.php';
 require_once 'Indicator.php';
 require_once 'Zip.php';
 require_once 'Template.php';
@@ -62,6 +62,8 @@ class DCAExporter
     private $_savedEmls = array();
     // Indicator to show progress
     private $_indicator;
+    // ignore_user_abort() original setting (will be restored)
+    private $_iubSetting;
     
     // Collects bootstrap errors
     public $startUpErrors;
@@ -75,8 +77,9 @@ class DCAExporter
         $this->_bl = $bl;
         $this->_dir = self::$dir . md5(self::getZipArchiveName()) . '/';
         $this->_setDefaults();
-        
-        $bootstrap = new Bootstrap($this->_dir, self::$zip, $this->_del, $this->_sep, $this->_sc, $this->_bl);
+        $this->_iuaSetting = ignore_user_abort(1);
+
+        $bootstrap = new DCABootstrap($this->_dir, self::$zip, $this->_del, $this->_sep, $this->_sc, $this->_bl);
         $this->startUpErrors = $bootstrap->getErrors();
         $this->_dbh = $bootstrap->getDbHandler();
         unset($bootstrap);
@@ -85,6 +88,10 @@ class DCAExporter
     public function __destruct ()
     {
         $this->deleteTempDir();
+        // Reset ignore_user_abort back to 0 if this was set as such in php.ini
+        if (!$this->_iuaSetting) {
+            ignore_user_abort(0);
+        }
     }
 
     public static function getExportSettings ()

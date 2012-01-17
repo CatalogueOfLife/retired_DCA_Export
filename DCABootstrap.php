@@ -1,5 +1,5 @@
 <?php
-class Bootstrap
+class DCABootstrap
 {
     private $_dbh;
     private $_dir;
