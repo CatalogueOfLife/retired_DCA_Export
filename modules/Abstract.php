@@ -28,7 +28,7 @@ abstract class DCAExporterAbstract
     }
     
     protected function _getCredits() {
-        $ini = parse_ini_file('config/settings.ini', true);
+        $ini = parse_ini_file(DCAExporter::basePath() . '/config/settings.ini', true);
         return $ini['credits']['string'];
     }
 
