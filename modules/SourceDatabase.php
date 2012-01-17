@@ -81,7 +81,7 @@ class SourceDatabase
 
     private function _setDestination ()
     {
-        return DCAExporter::basePath() . '/' . $this->_dir . 'dataset/';
+        return $this->_dir . 'dataset/';
     }
 
     public function resetEmlDir ()

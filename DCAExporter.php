@@ -75,7 +75,7 @@ class DCAExporter
         $this->_sep = $ini['export']['separator'];
         $this->_sc = self::filterSc($sc);
         $this->_bl = $bl;
-        $this->_dir = self::$dir . md5(self::getZipArchiveName()) . '/';
+        $this->_dir = self::basePath() . '/' . self::$dir . md5(self::getZipArchiveName()) . '/';
         $this->_setDefaults();
         $this->_iuaSetting = ignore_user_abort(1);
 
@@ -401,7 +401,7 @@ class DCAExporter
         // Full path to temporary directory should be given 
         // as this method is called in __destruct
         if (!isset($this->startUpErrors[3])) {
-            self::removeDir(DCAExporter::basePath() . '/' . $this->_dir);
+            self::removeDir($this->_dir);
         }
     }
 
@@ -544,7 +544,7 @@ class DCAExporter
     public function createMetaXml ()
     {
         $src = DCAExporter::basePath() . self::$meta;
-        $dest = DCAExporter::basePath() . '/' . $this->_dir;
+        $dest = $this->_dir;
         
         $template = new Template($src, $dest);
         $template->setDelimiter($this->_del);
@@ -557,7 +557,7 @@ class DCAExporter
 
     public function zipArchive ()
     {
-        $src = DCAExporter::basePath() . '/' . $this->_dir;
+        $src = $this->_dir;
         $dest = DCAExporter::basePath() . '/' . self::getZipArchiveName();
         $zip = new Zip();
         $zip->createArchive($src, $dest);
