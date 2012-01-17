@@ -143,7 +143,7 @@ class DCAExporter
     
     public static function getZipArchiveName ()
     {
-        $sc = self::filterSc($_POST);
+        $sc = self::filterSc($_REQUEST);
         $url = self::$zip . 'archive-';
         if (in_array('[all]', $sc)) {
             return $url . 'complete.zip';
@@ -151,7 +151,7 @@ class DCAExporter
         foreach ($sc as $rank => $taxon) {
             $url .= $rank . '-' . $taxon . '-';
         }
-        $url .= 'bl' . $_POST['block'] . '.zip';
+        $url .= 'bl' . $_REQUEST['block'] . '.zip';
         return $url;
     }
     
