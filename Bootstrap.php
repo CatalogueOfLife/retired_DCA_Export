@@ -77,8 +77,8 @@ class DCABootstrap
     private function _validateTempDir ($dir)
     {
         // First test if base directory is writable
-        if (!is_writable(DCAExporter::$dir)) {
-            $this->_errors[2] = 'Directory "' . DCAExporter::$dir . '" is not writable.';
+        if (!is_writable(DCAExporter::basePath().'/'.DCAExporter::$dir)) {
+            $this->_errors[2] = 'Directory "' . DCAExporter::basePath().'/'.DCAExporter::$dir . '" is not writable.';
         }
         // Test if temporary directory is present; 
         // if so, taxon is currently being exported by another user
@@ -94,8 +94,8 @@ class DCABootstrap
 
     private function _validateDir ($dir)
     {
-         if (!is_writable($dir)) {
-            $this->_errors[4] = 'Directory "' . $dir . '" is not writable.';
+         if (!is_writable(DCAExporter::basePath().'/'.$dir)) {
+            $this->_errors[4] = 'Directory "' . DCAExporter::basePath().'/'.$dir . '" is not writable.';
         }
         return $dir;
     }
