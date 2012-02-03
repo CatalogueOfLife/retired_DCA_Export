@@ -15,9 +15,9 @@ class DCAExporter
 {
     // Export directory
     public static $dir = 'export/';
-    // Path to and name of meta.xml template
+    // Name of meta.xml template
     public static $meta = '/templates/meta.tpl';
-    // Path to and base name of zip archive
+    // Base name of zip archive
     public static $zip = 'zip/';
     // Metadata for Annual Checklist itself is not stored in the database
     // Set credits in this array
@@ -55,8 +55,12 @@ class DCAExporter
     private $_sc;
     // Block level; determines amount of data returned
     private $_bl;
-    // Directory to save files to
+    // Path to save files to
     private $_dir;
+    // Path to meta file template
+    private $_meta;
+    // Path to zip archive to
+    private $_zip;
     
     // Storage array to determine if an eml file has already been written 
     private $_savedEmls = array();
@@ -70,18 +74,22 @@ class DCAExporter
 
     public function __construct ($sc, $bl)
     {
+        $this->_createDbInstance('db');
+        $this->_dbh = DbHandler::getInstance('db');
         $ini = parse_ini_file('config/settings.ini', true);
         $this->_del = $ini['export']['delimiter'];
         $this->_sep = $ini['export']['separator'];
         $this->_sc = self::filterSc($sc);
         $this->_bl = $bl;
         $this->_dir = self::basePath() . '/' . self::$dir . md5(self::getZipArchiveName()) . '/';
+        $this->_meta = self::basePath() . '/' . self::$meta;
+        $this->_zip = self::basePath() . '/' . self::$zip;
         $this->_setDefaults();
         $this->_iuaSetting = ignore_user_abort(1);
 
-        $bootstrap = new DCABootstrap($this->_dir, self::$zip, $this->_del, $this->_sep, $this->_sc, $this->_bl);
+        $bootstrap = new DCABootstrap($this->_dbh, $this->_del, $this->_sep, $this->_sc, 
+            $this->_bl, $this->_dir, array($this->_meta, $this->_zip));
         $this->startUpErrors = $bootstrap->getErrors();
-        $this->_dbh = $bootstrap->getDbHandler();
         unset($bootstrap);
     }
     
@@ -93,7 +101,7 @@ class DCAExporter
             ignore_user_abort(0);
         }
     }
-
+    
     public static function getExportSettings ()
     {
         $ini = parse_ini_file('config/settings.ini', true);
@@ -144,7 +152,7 @@ class DCAExporter
     public static function getZipArchiveName ()
     {
         $sc = self::filterSc($_REQUEST);
-        $url = self::$zip . 'archive-';
+        $url = 'archive-';
         if (in_array('[all]', $sc)) {
             return $url . 'complete.zip';
         }
@@ -155,12 +163,32 @@ class DCAExporter
         return $url;
     }
     
+    public static function getZipArchivePath ()
+    {
+        return self::basePath() . '/'. self::$zip . self::getZipArchiveName ();
+    }
+    
     public static function basePath ()
     {
         return dirname(__FILE__);
         
     }
     
+    private function _createDbInstance ($name)
+    {
+        $ini = parse_ini_file('config/settings.ini', true);
+        $config = $ini[$name];
+        $dbOptions = array();
+        if (isset($config["options"])) {
+            $options = explode(",", $config["options"]);
+            foreach ($options as $option) {
+                $pts = explode("=", trim($option));
+                $dbOptions[$pts[0]] = $pts[1];
+            }
+            DbHandler::createInstance($name, $config, $dbOptions);
+        }
+    }
+
     private function _addSavedEml ($srcDbId)
     {
         $this->_savedEmls[] = $srcDbId;
@@ -543,10 +571,7 @@ class DCAExporter
 
     public function createMetaXml ()
     {
-        $src = DCAExporter::basePath() . self::$meta;
-        $dest = $this->_dir;
-        
-        $template = new Template($src, $dest);
+        $template = new Template($this->_meta, $this->_dir);
         $template->setDelimiter($this->_del);
         // Null character is invalid in xml, replace with empty string
         $this->_sep != chr(0) ? $sep = $this->_sep : $sep = '';
@@ -557,16 +582,14 @@ class DCAExporter
 
     public function zipArchive ()
     {
-        $src = $this->_dir;
-        $dest = DCAExporter::basePath() . '/' . self::getZipArchiveName();
         $zip = new Zip();
-        $zip->createArchive($src, $dest);
+        $zip->createArchive($this->_dir, self::getZipArchivePath());
         unset($zip);
     }
 
     public function archiveExists ()
     {
-        if (file_exists(DCAExporter::basePath() . '/' . self::getZipArchiveName())) {
+        if (file_exists(self::getZipArchivePath())) {
             return true;
         }
         return false;

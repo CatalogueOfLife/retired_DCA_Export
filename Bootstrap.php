@@ -10,20 +10,21 @@ class DCABootstrap
     
     private $_errors = array();
 
-    public function __construct ($dir, $zip, $del, $sep, $sc, $bl)
+    public function __construct ($dbh, $del, $sep, $sc, $bl, $dir, $filePaths)
     {
-        $this->_createDbInstance('db');
-        $this->_dbh = DbHandler::getInstance('db');
+        $this->_dbh = $dbh;
         if (!($this->_dbh instanceof PDO)) {
             $this->_errors[1] = 'Could not create database instance; check settings in settings.ini!';
         }
         else {
             $this->_dir = $this->_validateTempDir($dir);
-            $this->_validateDir($zip);
             $this->_del = $this->_validateDel($del);
             $this->_sep = $this->_validateSep($sep);
             $this->_sc = $this->_validateSc($sc);
             $this->_bl = $this->_validateBl($bl);
+            foreach ((array)$filePaths as $path) {
+                $this->_validateDir($path);
+            }
             $this->_setInternalCodingToUtf8();
             
             // Text files used to write to are created on the fly when the objects are created
@@ -44,21 +45,6 @@ class DCABootstrap
     {
         if (mb_internal_encoding() != 'UTF-8') {
             mb_internal_encoding("UTF-8");
-        }
-    }
-
-    private function _createDbInstance ($name)
-    {
-        $ini = parse_ini_file('config/settings.ini', true);
-        $config = $ini['db'];
-        $dbOptions = array();
-        if (isset($config["options"])) {
-            $options = explode(",", $config["options"]);
-            foreach ($options as $option) {
-                $pts = explode("=", trim($option));
-                $dbOptions[$pts[0]] = $pts[1];
-            }
-            DbHandler::createInstance($name, $config, $dbOptions);
         }
     }
 
@@ -94,8 +80,8 @@ class DCABootstrap
 
     private function _validateDir ($dir)
     {
-         if (!is_writable(DCAExporter::basePath().'/'.$dir)) {
-            $this->_errors[4] = 'Directory "' . DCAExporter::basePath().'/'.$dir . '" is not writable.';
+         if (!is_writable($dir)) {
+            $this->_errors[] = 'Directory "' .$dir . '" is not writable.';
         }
         return $dir;
     }
@@ -151,11 +137,6 @@ class DCABootstrap
             $this->_errors[9] = 'Incorrect block level "' . $bl . '".';
         }
         return $bl;
-    }
-
-    public function getDbHandler ()
-    {
-        return $this->_dbh;
     }
 
     public function getErrors ()

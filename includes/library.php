@@ -10,7 +10,22 @@ function alwaysFlush ()
     set_time_limit(0);
 }
 
-function formSubmitted ()
+function createDbInstance ($name)
+{
+    $ini = parse_ini_file('config/settings.ini', true);
+    $config = $ini['db'];
+    $dbOptions = array();
+    if (isset($config["options"])) {
+        $options = explode(",", $config["options"]);
+        foreach ($options as $option) {
+            $pts = explode("=", trim($option));
+            $dbOptions[$pts[0]] = $pts[1];
+        }
+        return DbHandler::createInstance($name, $config, $dbOptions);
+    }
+}
+
+    function formSubmitted ()
 {
     foreach (Taxon::$higherTaxa as $rank) {
         if (isset($_POST[$rank]) && !empty($_POST[$rank])) {
@@ -31,11 +46,12 @@ function printErrors ($errors)
 
 function getDownloadSize ($url)
 {
-    $sizeKb = filesize(DCAExporter::basePath() . '/' . $url) / 1024;
+    $sizeKb = filesize($url) / 1024;
     $size = round($sizeKb, 1) . ' KB';
     if ($sizeKb > 999) {
         $size = round($sizeKb / 1024, 1) . ' MB';
     }
     return $size;
 }
+
 ?>
