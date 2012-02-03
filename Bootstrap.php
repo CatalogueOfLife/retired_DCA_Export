@@ -10,7 +10,7 @@ class DCABootstrap
     
     private $_errors = array();
 
-    public function __construct ($dbh, $del, $sep, $sc, $bl, $dir, $filePaths)
+    public function __construct ($dbh, $del, $sep, $sc, $bl, $dir, $zip)
     {
         $this->_dbh = $dbh;
         if (!($this->_dbh instanceof PDO)) {
@@ -22,9 +22,7 @@ class DCABootstrap
             $this->_sep = $this->_validateSep($sep);
             $this->_sc = $this->_validateSc($sc);
             $this->_bl = $this->_validateBl($bl);
-            foreach ((array)$filePaths as $path) {
-                $this->_validateDir($path);
-            }
+            $this->_validateDir($zip);
             $this->_setInternalCodingToUtf8();
             
             // Text files used to write to are created on the fly when the objects are created
@@ -80,7 +78,7 @@ class DCABootstrap
 
     private function _validateDir ($dir)
     {
-         if (!is_writable($dir)) {
+        if (!is_writable($dir)) {
             $this->_errors[] = 'Directory "' .$dir . '" is not writable.';
         }
         return $dir;

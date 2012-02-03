@@ -16,7 +16,7 @@ class DCAExporter
     // Export directory
     public static $dir = 'export/';
     // Name of meta.xml template
-    public static $meta = '/templates/meta.tpl';
+    public static $meta = 'templates/meta.tpl';
     // Base name of zip archive
     public static $zip = 'zip/';
     // Metadata for Annual Checklist itself is not stored in the database
@@ -88,7 +88,7 @@ class DCAExporter
         $this->_iuaSetting = ignore_user_abort(1);
 
         $bootstrap = new DCABootstrap($this->_dbh, $this->_del, $this->_sep, $this->_sc, 
-            $this->_bl, $this->_dir, array($this->_meta, $this->_zip));
+            $this->_bl, $this->_dir, $this->_zip);
         $this->startUpErrors = $bootstrap->getErrors();
         unset($bootstrap);
     }
