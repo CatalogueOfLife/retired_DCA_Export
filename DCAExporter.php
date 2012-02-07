@@ -124,8 +124,8 @@ class DCAExporter
     {
         $filteredSc = array();
         foreach ($sc as $rank => $taxon) {
-            if (in_array($rank, Taxon::$higherTaxa) && $taxon != '') {
-                $filteredSc[$rank] = $taxon;
+            if (in_array(strtolower($rank), Taxon::$higherTaxa) && $taxon != '') {
+                $filteredSc[strtolower($rank)] = strtolower($taxon);
             }
         }
         return $filteredSc;
@@ -157,7 +157,7 @@ class DCAExporter
             return $url . 'complete.zip';
         }
         foreach ($sc as $rank => $taxon) {
-            $url .= $rank . '-' . $taxon . '-';
+            $url .= strtolower($rank) . '-' . strtolower($taxon) . '-';
         }
         $url .= 'bl' . $_REQUEST['block'] . '.zip';
         return $url;
