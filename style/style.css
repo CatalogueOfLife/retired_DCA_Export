@@ -67,8 +67,8 @@ p {
 }
 
 #reset,#submit {
-	float: left;
-	margin-right: 2px;
+	float: right;
+	margin-left: 2px;
 	display: inline-block;
 }
 

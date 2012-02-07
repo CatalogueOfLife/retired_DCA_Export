@@ -57,8 +57,8 @@
 </div>
 
 <div id="buttons">
+<button id="submit">Download</button>
 <button id="reset">Clear</button>
-<button type="submit">Download</button>
 </div>
 
 </form>
