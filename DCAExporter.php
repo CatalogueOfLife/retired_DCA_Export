@@ -187,7 +187,7 @@ class DCAExporter
                 list($year, $month, $day) = explode('-', $file);
                 $files[] = array(
                     'edition' => date("j F Y", mktime(0, 0, 0, $month, $day, $year)),
-                    'size' => self::getDownloadSize('zip-fixed/' . $file),
+                    'size' => self::getDownloadSize($dir .'/' . $file),
                     'url' => 'http://' . substr($path, 0, -(strlen(basename($path)))). $dir . '/' . $file
                 );
             }
