@@ -196,9 +196,9 @@ class DCAExporter
         return $files;
     }
 
-    public static function getDownloadSize ($url)
+    public static function getDownloadSize ($path)
     {
-        $sizeKb = filesize($url) / 1024;
+        $sizeKb = filesize($path) / 1024;
         $size = round($sizeKb, 1) . ' KB';
         if ($sizeKb > 999) {
             $size = round($sizeKb / 1024, 1) . ' MB';
