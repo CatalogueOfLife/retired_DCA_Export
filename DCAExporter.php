@@ -181,6 +181,7 @@ class DCAExporter
         $files = array();
         $dir = 'zip-fixed';
         $path = $_SERVER['SERVER_NAME'] . $_SERVER['SCRIPT_NAME'];
+        isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] ? $http = 'https://' : $http = 'http://';
         $d = dir($dir);
         while (false !== ($file = $d->read())) {
             if (is_numeric(substr($file, 0, 4)) && !is_dir($file)) {
@@ -188,7 +189,7 @@ class DCAExporter
                 $files[] = array(
                     'edition' => date("j F Y", mktime(0, 0, 0, $month, $day, $year)),
                     'size' => self::getDownloadSize($dir .'/' . $file),
-                    'url' => 'http://' . substr($path, 0, -(strlen(basename($path)))). $dir . '/' . $file
+                    'url' => $http . substr($path, 0, -(strlen(basename($path)))). $dir . '/' . $file
                 );
             }
         }
