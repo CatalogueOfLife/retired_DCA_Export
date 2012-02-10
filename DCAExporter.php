@@ -174,6 +174,37 @@ class DCAExporter
         
     }
     
+    public static function getPreviousEditions ()
+    {
+        $files = array();
+        $dir = 'zip-fixed';
+        $path = $_SERVER['SERVER_NAME'] . $_SERVER['SCRIPT_NAME'];
+        $d = dir($dir);
+        while (false !== ($file = $d->read())) {
+            if (is_numeric(substr($file, 0, 4)) && !is_dir($file)) {
+                // Previous editions are listed as yyyy-mm-dd
+                list($year, $month, $day) = explode('-', $file);
+                $files[] = array(
+                    'edition' => date("j F Y", mktime(0, 0, 0, $month, $day, $year)),
+                    'size' => self::getDownloadSize('zip-fixed/' . $file),
+                    'url' => 'http://' . substr($path, 0, -(strlen(basename($path)))). $dir . '/' . $file
+                );
+            }
+        }
+        $d->close();
+        return $files;
+    }
+
+    public static function getDownloadSize ($url)
+    {
+        $sizeKb = filesize($url) / 1024;
+        $size = round($sizeKb, 1) . ' KB';
+        if ($sizeKb > 999) {
+            $size = round($sizeKb / 1024, 1) . ' MB';
+        }
+        return $size;
+    }
+    
     private function _createDbInstance ($name)
     {
         $ini = parse_ini_file('config/settings.ini', true);

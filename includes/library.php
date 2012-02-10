@@ -1,4 +1,5 @@
 <?php
+
 function alwaysFlush ()
 {
     @ini_set('zlib.output_compression', 0);
@@ -25,7 +26,7 @@ function createDbInstance ($name)
     }
 }
 
-    function formSubmitted ()
+function formSubmitted ()
 {
     foreach (Taxon::$higherTaxa as $rank) {
         if (isset($_POST[$rank]) && !empty($_POST[$rank])) {
@@ -44,14 +45,32 @@ function printErrors ($errors)
     echo "</p>\n<p><a href='index.php'>Back to the index</a></p>";
 }
 
-function getDownloadSize ($url)
+function downloadComplete ()
 {
-    $sizeKb = filesize($url) / 1024;
-    $size = round($sizeKb, 1) . ' KB';
-    if ($sizeKb > 999) {
-        $size = round($sizeKb / 1024, 1) . ' MB';
+    $downloadUrl = 'zip-fixed/archive-complete.zip';
+    if (file_exists(DCAExporter::basePath() . '/' . $downloadUrl)) {
+        $output = '<p>Download a Darwin Core Archive for the 
+            <a href="' . $downloadUrl . '">complete Catalogue of Life</a> 
+            (' . DCAExporter::getDownloadSize($downloadUrl) . ')';
+        if (count(DCAExporter::getPreviousEditions()) > 0) {
+            $output .= ' or <a href="archive.php">download a previous edition</a>';
+        }
+        return $output . ".</p>\n";
     }
-    return $size;
+    return;
 }
 
+function printEditions ()
+{
+    $editions = DCAExporter::getPreviousEditions();
+    if (count($editions) > 0) {
+        $output = "<ul>\n";
+        foreach ($editions as $ed) {
+            $output .= '<li><a href="' . $ed['url'] . '">Catalogue of Life, ' . 
+            $ed['edition'] . '</a> ('.$ed['size'].')</li>' . "\n";
+        }
+        return $output . "</ul>\n";
+    }
+    return;
+}
 ?>

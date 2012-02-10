@@ -30,18 +30,11 @@ Darwin Core Archive Export</h3>
     }
     else {
         $intro = file_get_contents('templates/intro.tpl');
-        $downloadUrl = 'zip-fixed/archive-complete.zip';
-        $downloadComplete = '';
-        if (file_exists(DCAExporter::basePath() . '/' . $downloadUrl)) {
-            $downloadComplete = '<p>Download a Darwin Core Archive for the 
-                <a href="' . $downloadUrl . '">complete Catalogue of Life</a> 
-                (' . getDownloadSize('/' . $downloadUrl) . ").</p>\n";
-        }
         echo Template::decorateString($intro, 
             array(
                 'action' => $_SERVER['PHP_SELF'], 
-                'colEdition' => DCAExporter::getEdition(),
-                'downloadComplete' => $downloadComplete
+                'colEdition' => htmlspecialchars(DCAExporter::getEdition()),
+                'downloadComplete' => downloadComplete()
             ));
         include 'includes/form.php';
     }
