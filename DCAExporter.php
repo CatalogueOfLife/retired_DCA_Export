@@ -176,13 +176,14 @@ class DCAExporter
     
     public static function getPreviousEditions ()
     {
+        // Previous editions should be named yyyy-mm-dd-archive-complete.zip
+        // and stored in the 'zip-fixed' direcotry
         $files = array();
         $dir = 'zip-fixed';
         $path = $_SERVER['SERVER_NAME'] . $_SERVER['SCRIPT_NAME'];
         $d = dir($dir);
         while (false !== ($file = $d->read())) {
             if (is_numeric(substr($file, 0, 4)) && !is_dir($file)) {
-                // Previous editions are listed as yyyy-mm-dd
                 list($year, $month, $day) = explode('-', $file);
                 $files[] = array(
                     'edition' => date("j F Y", mktime(0, 0, 0, $month, $day, $year)),
