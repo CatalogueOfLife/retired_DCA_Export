@@ -179,7 +179,7 @@ class DCAExporter
         // Previous editions should be named yyyy-mm-dd-archive-complete.zip
         // and stored in the 'zip-fixed' directory
         $files = array();
-        $dir = 'zip-fixed';
+        $dir = self::basePath() . '/zip-fixed';
         $path = $_SERVER['SERVER_NAME'] . $_SERVER['SCRIPT_NAME'];
         isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] ? $http = 'https://' : $http = 'http://';
         $d = dir($dir);
