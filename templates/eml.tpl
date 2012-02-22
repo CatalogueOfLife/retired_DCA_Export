@@ -14,7 +14,7 @@
 				<city>Reading</city>
 				<country>UK</country>
 			</address>
-			<onlineUrl>[creatorOnlineUrl]</onlineUrl>
+			<onlineUrl>http://www.catalogueoflife.org</onlineUrl>
 		</creator>
 		<metadataProvider>
 			<organizationName>Species 2000 Secretariat</organizationName>
@@ -27,11 +27,11 @@
 		<pubDate>[pubDate]</pubDate>
 		<language>eng</language>
 		<abstract>
-			<para>[infoPageUrl]</para>
+			<para>http://www.catalogueoflife.org/info/ac</para>
 		</abstract>
 		<distribution scope="document">
 			<online>
-				<url function="information" />
+				<url function="information">[sourceUrl]</url>
 			</online>
 		</distribution>
 		<contact>
