@@ -5,10 +5,10 @@
 -- --------------------------------------------------------
 
 --
--- Table structure for table "Distribution"
+-- Table structure for table "@TABLEPREFIX@Distribution"
 --
 
-CREATE TABLE IF NOT EXISTS "Distribution" (
+CREATE TABLE IF NOT EXISTS "@TABLEPREFIX@Distribution" (
   "taxonID" integer NOT NULL,
   "locationID" varchar(255) default NULL,
   "locality" text,
@@ -19,10 +19,10 @@ CREATE TABLE IF NOT EXISTS "Distribution" (
 -- --------------------------------------------------------
 
 --
--- Table structure for table "Reference"
+-- Table structure for table "@TABLEPREFIX@Reference"
 --
 
-CREATE TABLE IF NOT EXISTS "Reference" (
+CREATE TABLE IF NOT EXISTS "@TABLEPREFIX@Reference" (
   "taxonID" integer NOT NULL,
   "creator" varchar(255) default NULL,
   "date" varchar(255) default NULL,
@@ -35,10 +35,10 @@ CREATE TABLE IF NOT EXISTS "Reference" (
 -- --------------------------------------------------------
 
 --
--- Table structure for table "SpeciesProfile"
+-- Table structure for table "@TABLEPREFIX@SpeciesProfile"
 --
 
-CREATE TABLE IF NOT EXISTS "SpeciesProfile" (
+CREATE TABLE IF NOT EXISTS "@TABLEPREFIX@SpeciesProfile" (
   "taxonID" integer NOT NULL,
   "habitat" varchar(255) default NULL
 )      ;
@@ -46,10 +46,10 @@ CREATE TABLE IF NOT EXISTS "SpeciesProfile" (
 -- --------------------------------------------------------
 
 --
--- Table structure for table "Taxon"
+-- Table structure for table "@TABLEPREFIX@Taxon"
 --
 
-CREATE TABLE IF NOT EXISTS "Taxon" (
+CREATE TABLE IF NOT EXISTS "@TABLEPREFIX@Taxon" (
   "taxonID" integer NOT NULL,
   "identifier" varchar(255) default NULL,
   "datasetID" varchar(255) default NULL,
@@ -83,10 +83,10 @@ CREATE TABLE IF NOT EXISTS "Taxon" (
 -- --------------------------------------------------------
 
 --
--- Table structure for table "VernacularName"
+-- Table structure for table "@TABLEPREFIX@VernacularName"
 --
 
-CREATE TABLE IF NOT EXISTS "VernacularName" (
+CREATE TABLE IF NOT EXISTS "@TABLEPREFIX@VernacularName" (
   "taxonID" integer NOT NULL,
   "vernacularName" varchar(255) NOT NULL,
   "language" varchar(255) NOT NULL,
