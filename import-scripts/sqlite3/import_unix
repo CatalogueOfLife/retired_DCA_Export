@@ -34,8 +34,8 @@ cat /tmp/sqlite3init.cat | sqlite3 $dbName
 
 echo
 echo Removing temporary files:
-# rm /tmp/sqlite3init.cat
-# rm /tmp/sqlite3.sql
+rm /tmp/sqlite3init.cat
+rm /tmp/sqlite3.sql
 
 echo
 echo Import completed.
