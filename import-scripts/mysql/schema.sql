@@ -1,3 +1,8 @@
+DROP TABLE IF EXISTS `@TABLEPREFIX@taxon`;
+DROP TABLE IF EXISTS `@TABLEPREFIX@distribution`;
+DROP TABLE IF EXISTS `@TABLEPREFIX@vernacular`;
+DROP TABLE IF EXISTS `@TABLEPREFIX@reference`;
+
 CREATE TABLE `@TABLEPREFIX@taxon` (
   `taxonID` int NOT NULL,
   `identifier` varchar(255) default NULL,

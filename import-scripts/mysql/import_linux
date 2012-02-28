@@ -46,4 +46,8 @@ then
   exit 1
 fi
 
-sed -e "s/@TABLEPREFIX@/${prefix}/g" "${dir}/schema.sql" > /tmp/_dca_export_mysql_schema.sql
+if [ ${nocreate} = 0 ] 
+then
+	sed -e "s/@TABLEPREFIX@/${prefix}/g" "${dir}/schema.sql" > /tmp/_dca_export_mysql_schema.sql
+	cat /tmp/_dca_export_mysql_schema.sql | mysql -h${host} -u${user} -p${password} ${database}
+fi
