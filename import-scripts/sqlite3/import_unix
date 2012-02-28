@@ -17,7 +17,7 @@ DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # echo $importScript
 # importScript="create table n (id INTEGER PRIMARY KEY,f TEXT,l TEXT);insert into n (f,l) values ('john','smith');"
 
-sed -e "s/@TABLEPREFIX@/${tblPrefix}/g" ${DIR}/sqlite3.sql > /tmp/sqlite3.sql
+sed -e "s/@TABLEPREFIX@/${tblPrefix}/g" "${DIR}/sqlite3.sql" > /tmp/sqlite3.sql
 
 echo
 echo Creating temporary files:
@@ -34,8 +34,8 @@ cat /tmp/sqlite3init.cat | sqlite3 $dbName
 
 echo
 echo Removing temporary files:
-rm /tmp/sqlite3init.cat
-rm /tmp/sqlite3.sql
+# rm /tmp/sqlite3init.cat
+# rm /tmp/sqlite3.sql
 
 echo
 echo Import completed.
