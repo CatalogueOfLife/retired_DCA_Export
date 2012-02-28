@@ -1,0 +1,5 @@
+.mode tabs
+.import "/home/dseijts/import scripts/distribution.txt" Distribution
+.import "/home/dseijts/import scripts/reference.txt" Reference
+.import "/home/dseijts/import scripts/taxa.txt" Taxon
+.import "/home/dseijts/import scripts/vernacular.txt" VernacularName
