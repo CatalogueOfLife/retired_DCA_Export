@@ -48,6 +48,11 @@ fi
 
 if [ ${nocreate} = 0 ] 
 then
-	sed -e "s/@TABLEPREFIX@/${prefix}/g" "${dir}/schema.sql" > /tmp/_dca_export_mysql_schema.sql
+	sed -e "s/@TABLEPREFIX@/${prefix}/g" "${dir}/create.sql" > /tmp/_dca_export_mysql_create.sql
 	cat /tmp/_dca_export_mysql_schema.sql | mysql -h${host} -u${user} -p${password} ${database}
 fi
+
+sed -e "s/@TABLEPREFIX@/${prefix}/g" "${dir}/import.sql" > /tmp/_dca_export_mysql_import_0.sql
+
+sed -e "s/@BASEPATH@/${exportdir}/g" "/tmp/_dca_export_mysql_import_0.sql" > /tmp/_dca_export_mysql_import_1.sql
+
