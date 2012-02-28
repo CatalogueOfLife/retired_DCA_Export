@@ -1,0 +1,49 @@
+#! /bin/bash
+
+function usage {
+	echo "USAGE:"
+	echo "${0} -u <user> -d <db> [-h <host>] [-p <password>] [-x <prefix>] [-e <export_dir>] [-n]"
+	echo "OR:"
+	echo "${0} -user <user> -database <db> [-host <host>] [-password <password>] [-prefix <prefix>] [-exportdir <export_dir>] [-nocreate]"
+}
+
+dir=$(pwd)
+
+
+host="localhost"
+user=""
+password=""
+database=""
+prefix=""
+exportdir=$(pwd)
+nocreate=0
+
+while [ $# -gt 0 ]
+do
+    case "$1" in
+	    -h|-host)
+	    	host="$2"; shift;;
+	    -u|-user)
+	    	user="$2"; shift;;
+	    -p|-password)
+	    	password="$2"; shift;;
+	    -d|-database)
+	    	database="$2"; shift;;
+	    -x|-prefix)
+	    	prefix="$2"; shift;;
+	    -e|-exportdir)
+	    	exportdir="$2"; shift;;
+	    -n|-nocreate)
+	    	nocreate=1; shift;;
+		*) usage; exit 1;;
+    esac
+    shift
+done
+
+if [ ! "${user}" -o ! "${database}" ]
+then
+  usage
+  exit 1
+fi
+
+sed -e "s/@TABLEPREFIX@/${prefix}/g" "${dir}/schema.sql" > /tmp/_dca_export_mysql_schema.sql
