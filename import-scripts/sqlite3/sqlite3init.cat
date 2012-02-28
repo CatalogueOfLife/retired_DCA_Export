@@ -1,5 +1,0 @@
-.mode tabs
-.import /home/dseijts/tmp_import_tool_scripts/distribution.txt Distribution
-.import /home/dseijts/tmp_import_tool_scripts/reference.txt Reference
-.import /home/dseijts/tmp_import_tool_scripts/taxa.txt Taxon
-.import /home/dseijts/tmp_import_tool_scripts/vernacular.txt VernacularName
