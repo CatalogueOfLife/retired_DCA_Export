@@ -18,11 +18,11 @@ basepath=$PWD
 
 sqlite3 $dbName "$importScript";
 
-echo ".mode tabs" > sqlite3init.cat
-echo ".import $importPath/distribution.txt Distribution" >> sqlite3init.cat
-echo ".import $importPath/reference.txt Reference" >> sqlite3init.cat
-echo ".import $importPath/taxa.txt Taxon" >> sqlite3init.cat
-echo ".import $importPath/vernacular.txt VernacularName" >> sqlite3init.cat
+ echo ".mode tabs" > sqlite3init.cat
+ echo ".import \"$importPath/distribution.txt\" Distribution" >> sqlite3init.cat
+ echo ".import \"$importPath/reference.txt\" Reference" >> sqlite3init.cat
+ echo ".import \"$importPath/taxa.txt\" Taxon" >> sqlite3init.cat
+ echo ".import \"$importPath/vernacular.txt\" VernacularName" >> sqlite3init.cat
 
 cat sqlite3init.cat | sqlite3 $dbName 
 
