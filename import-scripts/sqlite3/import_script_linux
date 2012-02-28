@@ -5,7 +5,7 @@ read -p "Enter the basepath to the import files, leave empty for [$PWD]: " impor
     importPath=$PWD;
   fi
 DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-importScript=`cat ${DIR}/sqlite3.sql`
+importScript=`cat "${DIR}/sqlite3.sql"`
 
 # get the basepath
 basepath=$PWD
