@@ -10,9 +10,9 @@
 
 function usage {
 	echo "USAGE:"
-	echo "${0} -u <user> -d <db> [-h <host>] [-p <password>] [-x <prefix>] [-e <export_dir>] [-n]"
+	echo "${0} -u user -d database [-h host] [-p password] [-x prefix] [-e exportdir] [-n]"
 	echo "OR:"
-	echo "${0} -user <user> -database <db> [-host <host>] [-password <password>] [-prefix <prefix>] [-exportdir <export_dir>] [-nocreate]"
+	echo "${0} -user user -database database [-host host] [-password password] [-prefix prefix] [-exportdir exportdir] [-nocreate]"
 }
 
 
