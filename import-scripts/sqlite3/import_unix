@@ -21,7 +21,7 @@ sed -e "s/@TABLEPREFIX@/${tblPrefix}/g" "${DIR}/sqlite3.sql" > /tmp/sqlite3.sql
 
 echo
 echo Creating temporary files:
- echo ".read /tmp/sqlite3.sql" > /tmp/sqlite3init.cat
+ echo ".read /tmp/create.sql" > /tmp/sqlite3init.cat
  echo ".mode tabs" >> /tmp/sqlite3init.cat
  echo ".import \"${importPath}/distribution.txt\" ${tblPrefix}Distribution" >> /tmp/sqlite3init.cat
  echo ".import \"${importPath}/reference.txt\" ${tblPrefix}Reference" >> /tmp/sqlite3init.cat
