@@ -1,8 +1,8 @@
 [db]
-dbname = base_scheme_2011_dvd
-host = localhost
-username = root
-password = root
+dbname = @DBNAME@
+host = @DBHOST@
+username = @DBUSER@
+password = @DBPASS@
 port =  ; Can be empty
 driver = mysql
 ; separate options by comma
@@ -14,12 +14,12 @@ separator =                         ; leave empty for default double quote; if t
 
 [credits]
 ; Credits string appears for each record in each individual text file
-string = "Species 2000 & ITIS Catalogue of Life: 2011 Annual Checklist"
+string = "@CREDITSSTRING@"
 ; Release date used in GSD EML files; format as YYYY-MM-DD
-release_date = "2011-01-01"
+release_date = "@RELEASEDATE@"
 
 [webservice]
-url = "/DS1.2"
+url = "@WEBSERVICEURL@"
 
 [settings]
 version = @APP.VERSION@
