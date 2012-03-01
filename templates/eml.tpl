@@ -6,7 +6,7 @@
 	packageId="http://ipt.gbif.org/resource.do?id=col_gsd_metadata/v1"
 	system="http://gbif.org" scope="system" xml:lang="eng">
 	<dataset>
-		<alternateIdentifier></alternateIdentifier>
+		<alternateIdentifier>ISSN 1473-009X</alternateIdentifier>
 		<title xml:lang="eng">[title]</title>
 		<creator>
 			<organizationName>Species 2000 &amp; ITIS Catalogue of Life</organizationName>
