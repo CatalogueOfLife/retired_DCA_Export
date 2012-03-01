@@ -1,5 +1,6 @@
 <p>This page offers an interface on the application that exports data from the [colEdition] in the 
-<a href="http://code.google.com/p/gbif-ecat/wiki/DwCArchive">Darwin Core Archive format</a>.</p>
+<a href="http://code.google.com/p/gbif-ecat/wiki/DwCArchive">Darwin Core Archive format</a>. Data can also
+be exported using <a href="[webserviceUrl]">a webservice</a>.</p>
 
 <p>The export can be narrowed down to a specific taxon by selecting it from the menus. E.g. if you want
 to limit your export to a specific order, you can select that order from the menu by typing its name

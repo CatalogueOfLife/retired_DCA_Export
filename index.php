@@ -32,8 +32,8 @@ Darwin Core Archive Export</h3>
         $intro = file_get_contents('templates/intro.tpl');
         echo Template::decorateString($intro, 
             array(
-                'action' => $_SERVER['PHP_SELF'], 
                 'colEdition' => htmlspecialchars(DCAExporter::getEdition()),
+                'webserviceUrl' => DCAExporter::getWebserviceUrl(),
                 'downloadComplete' => downloadComplete()
             ));
         include 'includes/form.php';

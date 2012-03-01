@@ -120,6 +120,12 @@ class DCAExporter
         return $ini['credits']['string'] . ' (' . $ini['credits']['release_date'] . ')';
     }
 
+    public static function getWebserviceUrl ()
+    {
+        $ini = parse_ini_file('config/settings.ini', true);
+        return $ini['webservice']['url'];
+    }
+
     public static function filterSc ($sc)
     {
         $filteredSc = array();
