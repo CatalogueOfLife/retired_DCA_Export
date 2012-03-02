@@ -626,6 +626,15 @@ class DCAExporter
         unset($zip);
     }
 
+    public function zipScripts ()
+    {
+        $zip = new Zip();
+        $dest = self::basePath() . '/' .self::$zip . 'import-scripts.zip';
+        $zip->createArchive(self::basePath() . '/import-scripts', $dest);
+        unset($zip);
+        return $dest;
+    }
+
     public function archiveExists ()
     {
         if (file_exists(self::getZipArchivePath())) {

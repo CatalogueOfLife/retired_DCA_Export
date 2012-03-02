@@ -34,6 +34,7 @@ Darwin Core Archive Export</h3>
             array(
                 'colEdition' => htmlspecialchars(DCAExporter::getEdition()),
                 'webserviceUrl' => DCAExporter::getWebserviceUrl(),
+                'zipScripts' => DCAExporter::zipScripts(),
                 'downloadComplete' => downloadComplete()
             ));
         include 'includes/form.php';
