@@ -6,7 +6,7 @@
 
 Author: Ayco Holleman
 Copyright: ETI BioInformatics
-Developed in: OpenUp! project Work Package 4 for Task 4.1
+Developed in: i4Life project Work Package 4
 Version 1.0, 2012
 
 
