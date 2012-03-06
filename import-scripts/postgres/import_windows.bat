@@ -1,3 +1,10 @@
+REM #################################################################
+REM ##  Author: Ayco Holleman                                      ##
+REM ##  Copyright: ETI BioInformatics                              ##
+REM ##  Developed in: i4Life project Work Package 4                ##
+REM ##  Version 1.0, 2012                                          ##
+REM #################################################################
+
 @ECHO off
 TITLE DWC-A Import
 CLS

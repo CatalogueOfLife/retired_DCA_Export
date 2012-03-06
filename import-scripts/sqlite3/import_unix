@@ -1,4 +1,12 @@
 #! /bin/bash
+
+#################################################################
+##  Author: Dennis Seijts                                      ##
+##  Copyright: ETI BioInformatics                              ##
+##  Developed in: i4Life project Work Package 4                ##
+##  Version 1.0, 2012                                          ##
+#################################################################
+
 read -p "Enter the name of the database: " dbName
 read -p "Enter a prefix for table names, leave empty if you don't want a prefix: " tblPrefix
 read -p "Enter the basepath to the import files, leave empty for [$PWD]: " importPath

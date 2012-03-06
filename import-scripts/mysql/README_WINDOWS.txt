@@ -6,7 +6,7 @@
 
 Author: Ayco Holleman
 Copyright: ETI BioInformatics
-Developed in: OpenUp! project Work Package 4 for Task 4.1
+Developed in: i4Life project Work Package 4
 Version 1.0, 2012
 
 
@@ -26,17 +26,17 @@ CMD> import_windows -u user -d database [-h host] [-p password] [-e exportdir] [
 
 Command line arguments:
 
-	-u | -user		The MySQL database user
-	-d | -database	The MySQL database into which to import the data
-	-h | -host		The MySQL server host (default: localhost)
-	-p | -password	The MySQL password (default: none)
-	-e | -exportdir	The directory containing the DCA export files (default: present
-					working directory)
-	-x | -prefix	The table prefix to be used when creating and loading the
-					tables (default: none). If you want to import the DCA data
-					into a pre-existent database, you might want to specify a 
-					table prefix
-	-n | -nocreate	Skip table creation (only load data)
+	-u	The MySQL database user
+	-d	The MySQL database into which to import the data
+	-h	The MySQL server host (default: localhost)
+	-p	The MySQL password (default: none)
+	-e	The directory containing the DCA export files (default: present
+				working directory)
+	-x 	The table prefix to be used when creating and loading the
+				tables (default: none). If you want to import the DCA data
+				into a pre-existent database, you might want to specify a 
+				table prefix
+	-n 	Skip table creation (only load data)
 					
 
 
