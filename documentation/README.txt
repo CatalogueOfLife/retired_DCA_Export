@@ -1,5 +1,5 @@
 i4Life WP4 ENHANCED DOWNLOAD SERVICE OF THE CATALOGUE OF LIFE: DARWIN CORE ARCHIVE EXPORT
-v1.2, 07-03-12
+v1.2, 23-03-12
 
 
 INTRODUCTION
@@ -25,11 +25,11 @@ Make sure that 'export' and 'zip', the directories used to store the xml and tex
 The application automatically creates the 'dataset' directory within the 'export' directory.
 
 
-INTERFACE
+USER INTERFACE
 
-v1.1 features an interface similar to the taxonomic browser in the Catalogue of Life Annual Checklist. 
-The user can further restrict the amount of data returned by selecting a Block level: the lower the Block level, 
-the fewer data is created. After entering the rank and taxon name, the application...
+The interface is comparable to the taxonomic browser in the Catalogue of Life Annual Checklist. By default, a complete data
+set is returned, but the user can restrict this to a 'limited data' set or 'classification only'. The options are explained 
+in the interface. After selecting a taxon...
 
 1. creates the meta.xml document from a template,
 2. writes the data for each taxon to the appropriate Darwin Core Archive text files in the directory 'export',
@@ -43,6 +43,17 @@ After the export has completedly, move the zip file to the zip-fixed directory.
 
 If an archive for this configuration is already present on the server, the export is skipped. Instead, the user 
 is offered the option to directly download the existing archive.
+
+
+ADMINISTRATOR OPTIONS
+
+1. The administrator can offer an archive of the complete database by placing this as 'archive-complete.zip' 
+   in the directory 'zip-fixed'. If a file with that name exists in 'zip-fixed', a 'download the complete Catalogue of Life'
+   link will automatically appear on the index page.
+2. Previous editions of complete archives can be offered as well. The naming convention of such files should be
+   'yyyy-mm-dd-archive-complete.zip' and these files too should be stored in 'zip-fixed'. If one or more files following the
+   convention exist in 'zip-fixed', a 'download a previous edition' link will automatically appear on the index page.
+
 
 
 Please submit bugs and suggestions to:
