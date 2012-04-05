@@ -317,7 +317,7 @@ class DCAExporter
         if (!empty($this->_sc)) {
             $query .= 'WHERE ';
             foreach ($this->_sc as $field => $value) {
-                $query .= "`$field` LIKE :$field AND ";
+                $query .= "`$field` = :$field AND ";
             }
             // Omit (infra)species for level 1
             if ($this->_bl == 1) {
@@ -329,12 +329,47 @@ class DCAExporter
         $stmt = $this->_dbh->prepare($query);
         if (!empty($this->_sc)) {
             foreach ($this->_sc as $field => $value) {
-                $stmt->bindValue(':' . $field, $value . '%');
+                $stmt->bindValue(':' . $field, $value);
             }
         }
         $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
         $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
         $stmt->execute();
+        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $res ? $res : array();
+    }
+    
+    private function _getSynonyms ($taxon_id)
+    {
+        $query = 'SELECT `id` AS taxonID,
+                      IF (`source_database_id` > 0,
+                      `source_database_id`,
+                      "Species 2000") AS datasetID,
+                      IF (`source_database_name` != "",
+                      `source_database_name`,
+                      "Catalogue of Life") AS datasetName,
+                      `kingdom`,
+                      `phylum`,
+                      `class`,
+                      `order`,
+                      `superfamily`,
+                      `family`,
+                      `genus`,
+                      IF (`accepted_species_id` > 0,
+                      `accepted_species_id`,
+                      "") AS acceptedNameUsageID,
+                      `status`,
+                      "" AS subgenus,
+                      `species` AS specificEpithet,
+                      `infraspecies` AS infraspecificEpithet,
+                      `infraspecific_marker` AS verbatimTaxonRank,
+                      `author` AS scientificNameAuthorship 
+                  FROM `_search_scientific` 
+                  WHERE `accepted_species_id` = ?';
+        $stmt = $this->_dbh->prepare($query);
+        $stmt->execute(array(
+            $taxon_id
+        ));
         $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $res ? $res : array();
     }
@@ -480,8 +515,8 @@ class DCAExporter
         if (!empty($this->_sc)) {
             $query .= 'WHERE ';
             foreach ($this->_sc as $field => $value) {
-                $query .= "`$field` LIKE ? AND ";
-                $params[] = $value.'%';
+                $query .= "`$field` = ? AND ";
+                $params[] = $value;
             }
             if ($this->_bl == 1) {
                 $query .= ' `species` = "" AND `infraspecies` = "" AND ';
@@ -502,7 +537,7 @@ class DCAExporter
     public function writeData ()
     {
         $total = $this->getTotalNumberOfTaxa();
-        $this->_indicator ? $this->_indicator->init($total, 75, 50) : '';
+        $this->_indicator ? $this->_indicator->init($total, 75, 50) : null;
         $this->_initEml();
         
         for ($limit = 1000, $offset = 0; $offset < $total; $offset += $limit) {
@@ -533,6 +568,20 @@ class DCAExporter
                     $taxon->setScrutiny();
                     $taxon->setGsdNameGuid();
                     
+                    //Synonyms
+                    $synonyms = $this->_getSynonyms($taxon->taxonID);
+                    foreach ($synonyms as $iSn => $rowSn) {
+                        $synonym = $this->_initModel(
+                            'Taxon',
+                            $rowSn
+                        );
+                        $synonym->setRank();
+                        $synonym->setNameStatus();
+                        $synonym->setScientificName();
+                        $synonym->writeModel();
+                        unset($synonym);
+                    }
+                                        
                     // Vernaculars
                     $vernaculars = $this->_getVernaculars($taxon->taxonID);
                     foreach ($vernaculars as $iVn => $rowVn) {
