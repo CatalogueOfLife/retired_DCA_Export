@@ -1,6 +1,6 @@
 <?php
 require_once 'Interface.php';
-class Vernacular extends DCAExporterAbstract implements DCA_Interface
+class Vernacular extends DCAModuleAbstract implements DCAModuleInterface
 {
     public $taxonID;
     public $vernacularName;

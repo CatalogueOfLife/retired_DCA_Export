@@ -4,7 +4,7 @@
  * 
  * This is a model different from all others, as it does not write the source database metadata
  * to a single text file but to multiple EML files in the eml directory using the Template class. 
- * It does not implement the DCA_Interface.
+ * It does not implement the DCAModuleInterface.
  * 
  * @author Ruud Altenburg
  */

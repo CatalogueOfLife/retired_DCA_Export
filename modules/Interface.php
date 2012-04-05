@@ -1,5 +1,5 @@
 <?php
-interface DCA_Interface
+interface DCAModuleInterface
 {
     public function init();
     public function writeHeader();

@@ -1,6 +1,6 @@
 <?php
 require_once 'Interface.php';
-class Reference extends DCAExporterAbstract implements DCA_Interface
+class Reference extends DCAModuleAbstract implements DCAModuleInterface
 {
     public $taxonID;
     public $creator;

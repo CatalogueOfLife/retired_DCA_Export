@@ -1,6 +1,6 @@
 <?php
 require_once 'Interface.php';
-class Taxon extends DCAExporterAbstract implements DCA_Interface
+class Taxon extends DCAModuleAbstract implements DCAModuleInterface
 {
     public $taxonID;
     public $identifier; // LSID; separate

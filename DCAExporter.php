@@ -260,19 +260,19 @@ class DCAExporter
         }
     }
 
-    private function _initModel ($model, array $data, $taxonId = null)
+    private function _initModule ($module, array $data, $taxonId = null)
     {
         try {
-            $model = new $model($this->_dbh, $this->_dir, $this->_del, $this->_sep);
+            $module = new $module($this->_dbh, $this->_dir, $this->_del, $this->_sep);
             if ($taxonId) {
-                $model->taxonID = $taxonId;
+                $module->taxonID = $taxonId;
             }
-            $model->decorate($data);
+            $module->decorate($data);
         }
         catch (Exception $e) {
             return $e;
         }
-        return $model;
+        return $module;
     }
 
     private function _getTaxa ($limit, $offset)
@@ -544,7 +544,7 @@ class DCAExporter
             $taxa = $this->_getTaxa($limit, $offset);
             foreach ($taxa as $iTx => $rowTx) {
                 $this->_indicator ? $this->_indicator->iterate() : '';
-                $taxon = $this->_initModel('Taxon', $rowTx);
+                $taxon = $this->_initModule('Taxon', $rowTx);
                 $taxon->setRank();
                 $taxon->setNameStatus();
                 $taxon->setScientificName();
@@ -571,7 +571,7 @@ class DCAExporter
                     //Synonyms
                     $synonyms = $this->_getSynonyms($taxon->taxonID);
                     foreach ($synonyms as $iSn => $rowSn) {
-                        $synonym = $this->_initModel(
+                        $synonym = $this->_initModule(
                             'Taxon',
                             $rowSn
                         );
@@ -585,7 +585,7 @@ class DCAExporter
                     // Vernaculars
                     $vernaculars = $this->_getVernaculars($taxon->taxonID);
                     foreach ($vernaculars as $iVn => $rowVn) {
-                        $vernacular = $this->_initModel(
+                        $vernacular = $this->_initModule(
                             'Vernacular', 
                             $rowVn, 
                             $taxon->taxonID);
@@ -596,7 +596,7 @@ class DCAExporter
                             $vernacular->vernacularID, 
                             'common_name');
                         foreach ($references as $iRf => $rowRf) {
-                            $reference = $this->_initModel(
+                            $reference = $this->_initModule(
                                 'Reference', 
                                 $rowRf, 
                                 $taxon->taxonID);
@@ -612,7 +612,7 @@ class DCAExporter
                         $taxon->taxonID, 
                         $type);
                     foreach ($references as $iRf => $rowRf) {
-                        $reference = $this->_initModel(
+                        $reference = $this->_initModule(
                             'Reference', 
                             $rowRf, 
                             $taxon->taxonID);
@@ -633,7 +633,7 @@ class DCAExporter
                                 true);
                         }
                         foreach ($distributions as $iDs => $rowDs) {
-                            $distribution = $this->_initModel(
+                            $distribution = $this->_initModule(
                                 'Distribution', 
                                 $rowDs, 
                                 $taxon->taxonID);

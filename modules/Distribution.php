@@ -1,6 +1,6 @@
 <?php
 require_once 'Interface.php';
-class Distribution extends DCAExporterAbstract implements DCA_Interface
+class Distribution extends DCAModuleAbstract implements DCAModuleInterface
 {
     public $taxonID;
     public $locationID;

@@ -1,5 +1,5 @@
 <?php
-abstract class DCAExporterAbstract
+abstract class DCAModuleAbstract
 {
     protected $_dbh;
     protected $_dir;
