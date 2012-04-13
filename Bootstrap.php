@@ -110,6 +110,16 @@ class DCABootstrap
 
     private function _validateSc ($sc)
     {
+        // No search critera; return error
+        if (empty($sc)) {
+            $this->_errors[10] = 'No search criteria given.';
+            return array();
+        }
+        // Complete dump; return reprocessed array
+        if (in_array('[all]', $sc)) {
+            return array('kingdom' => '[all]');
+        }
+        // Regular search pattern
         $filteredSc = array();
         foreach ($sc as $rank => $taxon) {
             if (empty($taxon)) {

@@ -68,6 +68,8 @@ class DCAExporter
     private $_indicator;
     // ignore_user_abort() original setting (will be restored)
     private $_iuaSetting;
+    // Should all taxa be exported?
+    private $_completeDump;
     
     // Collects bootstrap errors
     public $startUpErrors;
@@ -86,6 +88,7 @@ class DCAExporter
         $this->_zip = self::basePath() . '/' . self::$zip;
         $this->_setDefaults();
         $this->_iuaSetting = ignore_user_abort(1);
+        $this->_completeDump = in_array('[all]', $this->_sc) ? true : false;
 
         $bootstrap = new DCABootstrap($this->_dbh, $this->_del, $this->_sep, $this->_sc, 
             $this->_bl, $this->_dir, $this->_zip);
@@ -228,6 +231,76 @@ class DCAExporter
         }
     }
 
+    private function _buildQuery ($t = null)
+    {
+        // Possible query types $t are null (taxa), 'sn' (synonyms) and 'tt' (count total)
+        $query = 'SELECT ';
+        // Count only if total has to be determined
+        if ($t == 'tt') {
+            $query .= 'COUNT(`id`) ';
+        // Complete query for taxa and synonyms
+        } else {
+            $query .= '`id` AS taxonID,
+                IF (`source_database_id` > 0,
+                    `source_database_id`,
+                    "Species 2000"
+                ) AS datasetID,
+                IF (`source_database_name` != "",
+                    `source_database_name`,
+                    "Catalogue of Life"
+                ) AS datasetName,
+                `kingdom`,
+                `phylum`,
+                `class`,
+                `order`,
+                `superfamily`,
+                `family`,
+                `genus`,
+                IF (`accepted_species_id` > 0,
+                    `accepted_species_id`,
+                    ""
+                ) AS acceptedNameUsageID, ';
+            // Split query based on block level; level 1 only exports classification up to genus
+            if ($this->_bl == 1 && !$this->_completeDump && $t != 'sn') {
+                $query .=
+                '"" AS status,
+                "" AS subgenus,
+                "" AS specificEpithet,
+                "" AS infraspecificEpithet,
+                "" AS verbatimTaxonRank,
+                "" AS scientificNameAuthorship ';
+            } else {
+                $query .=
+                '`status`,
+                "" AS subgenus,
+                `species` AS specificEpithet,
+                `infraspecies` AS infraspecificEpithet,
+                `infraspecific_marker` AS verbatimTaxonRank,
+                `author` AS scientificNameAuthorship ';
+            }
+        }
+        $query .= ' FROM `_search_scientific` WHERE ';
+        // Synonyms
+        if ($t == 'sn') {
+            return $query . '`accepted_species_id` = ?';
+        // Taxa
+        } else if (!$this->_completeDump) {
+            foreach ($this->_sc as $field => $value) {
+                $query .= "`$field` = :$field AND ";
+            }
+            // Omit (infra)species from level 1
+            if ($this->_bl == 1) {
+                $query .= '`species` = "" AND `infraspecies` = "" AND ';
+            }
+        }
+        $query .= '`accepted_species_id` = 0 ';
+        // Omit limit from total query
+        if ($t != 'tt') {
+            $query .= 'LIMIT :limit OFFSET :offset';
+        }
+        return $query;
+    }
+    
     private function _addSavedEml ($srcDbId)
     {
         $this->_savedEmls[] = $srcDbId;
@@ -252,12 +325,6 @@ class DCAExporter
             $this->_del = "\t";
             $this->_sep = "";
         }
-        // Change search all option [all] to MySQL wildcard
-        foreach ($this->_sc as $k => $v) {
-            if ($v == '[all]') {
-                $this->_sc[$k] = '%';
-            }
-        }
     }
 
     private function _initModule ($module, array $data, $taxonId = null)
@@ -277,57 +344,9 @@ class DCAExporter
 
     private function _getTaxa ($limit, $offset)
     {
-        $query = 'SELECT `id` AS taxonID,
-                          IF (`source_database_id` > 0,
-                              `source_database_id`,
-                              "Species 2000") AS datasetID,
-                          IF (`source_database_name` != "", 
-                              `source_database_name`, 
-                              "Catalogue of Life") AS datasetName,
-                         `kingdom`,
-                         `phylum`,
-                         `class`,
-                         `order`,
-                         `superfamily`,
-                         `family`,
-                         `genus`,';
-        // Split query based on block level; level 1 only exports classification up to genus
-        if ($this->_bl == 1) {
-            $query .= 
-                 '"" AS acceptedNameUsageID,
-                  "" AS status,
-                  "" AS subgenus,
-                  "" AS specificEpithet,
-                  "" AS infraspecificEpithet,
-                  "" AS verbatimTaxonRank,
-                  "" AS scientificNameAuthorship ';
-        } else {
-            $query .= 
-                 'IF (`accepted_species_id` > 0,
-                      `accepted_species_id`,
-                      "") AS acceptedNameUsageID,
-                 `status`,
-                  "" AS subgenus,
-                 `species` AS specificEpithet,
-                 `infraspecies` AS infraspecificEpithet,
-                 `infraspecific_marker` AS verbatimTaxonRank,
-                 `author` AS scientificNameAuthorship ';
-        }
-        $query .= ' FROM `_search_scientific` ';
-        if (!empty($this->_sc)) {
-            $query .= 'WHERE ';
-            foreach ($this->_sc as $field => $value) {
-                $query .= "`$field` = :$field AND ";
-            }
-            // Omit (infra)species for level 1
-            if ($this->_bl == 1) {
-                $query .= ' `species` = "" AND `infraspecies` = "" AND ';
-            }
-            $query = substr($query, 0, -4);
-        }
-        $query .= ' LIMIT :limit OFFSET :offset';
+        $query = $this->_buildQuery();
         $stmt = $this->_dbh->prepare($query);
-        if (!empty($this->_sc)) {
+        if (!$this->_completeDump) {
             foreach ($this->_sc as $field => $value) {
                 $stmt->bindValue(':' . $field, $value);
             }
@@ -341,31 +360,7 @@ class DCAExporter
     
     private function _getSynonyms ($taxon_id)
     {
-        $query = 'SELECT `id` AS taxonID,
-                      IF (`source_database_id` > 0,
-                      `source_database_id`,
-                      "Species 2000") AS datasetID,
-                      IF (`source_database_name` != "",
-                      `source_database_name`,
-                      "Catalogue of Life") AS datasetName,
-                      `kingdom`,
-                      `phylum`,
-                      `class`,
-                      `order`,
-                      `superfamily`,
-                      `family`,
-                      `genus`,
-                      IF (`accepted_species_id` > 0,
-                      `accepted_species_id`,
-                      "") AS acceptedNameUsageID,
-                      `status`,
-                      "" AS subgenus,
-                      `species` AS specificEpithet,
-                      `infraspecies` AS infraspecificEpithet,
-                      `infraspecific_marker` AS verbatimTaxonRank,
-                      `author` AS scientificNameAuthorship 
-                  FROM `_search_scientific` 
-                  WHERE `accepted_species_id` = ?';
+        $query = $this->_buildQuery('sn');
         $stmt = $this->_dbh->prepare($query);
         $stmt->execute(array(
             $taxon_id
@@ -509,22 +504,12 @@ class DCAExporter
 
     public function getTotalNumberOfTaxa ()
     {
-        $params = array();
-        $query = 'SELECT COUNT(`id`)
-                  FROM `_search_scientific` ';
-        if (!empty($this->_sc)) {
-            $query .= 'WHERE ';
-            foreach ($this->_sc as $field => $value) {
-                $query .= "`$field` = ? AND ";
-                $params[] = $value;
-            }
-            if ($this->_bl == 1) {
-                $query .= ' `species` = "" AND `infraspecies` = "" AND ';
-            }
-            $query = substr($query, 0, -4);
-        }
+        $query = $this->_buildQuery('tt');
         $stmt = $this->_dbh->prepare($query);
-        $stmt->execute($params);
+        foreach ($this->_sc as $field => $value) {
+            $stmt->bindValue(':' . $field, $value);
+        }
+        $stmt->execute();
         $res = $stmt->fetch(PDO::FETCH_NUM);
         return $res ? $res[0] : false;
     }
