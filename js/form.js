@@ -9,14 +9,19 @@ $(function() {
 				url += '&' + id + '=' + val;
 			});
 			$.getJSON(url, function(data) {
+				if (data == 'too_many') {
+					alert("Too many results to display. Please extend the search string or select a higher taxon first.");
+					data = null;
+				}
 				response(data, function() {
 				});
 			});
 		},
-		minLength : 0
+		minLength : 0,
+		delay: 1000
 	});
 	$('.showall').click(function() {
-		$(this).prev().focus().autocomplete("search", "");
+		$(this).prev().focus().autocomplete("search", "", { delay: 0 });
 	});
 	$('span, button', '#classification').button();
 	$('#radio').buttonset();

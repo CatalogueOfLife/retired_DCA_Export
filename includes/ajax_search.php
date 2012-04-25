@@ -29,13 +29,14 @@
 	$dbh = createDbInstance('db');
 	$stmt = $dbh->prepare($query);
 	$stmt->execute($parameters);
-	$result = $stmt->fetchAll(PDO::FETCH_COLUMN);
+	$total = $stmt->rowCount();
 	
-	if (count($result) < 10000) {
-		echo json_encode($result);
+	if ($total < 10000) {
+	    $result = $stmt->fetchAll(PDO::FETCH_COLUMN);
 	} else {
-		echo json_encode(array('Please first select a higher taxon'));
+	    $result = array('too_many');
 	}
+	echo json_encode($result);
 	
 
     function createDbInstance ($name)
