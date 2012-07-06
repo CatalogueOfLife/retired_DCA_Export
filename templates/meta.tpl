@@ -85,7 +85,7 @@
     
     <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Reference'>
         <files>
-            <location>references.txt</location>
+            <location>reference.txt</location>
         </files>
         <coreid index='0' />
         <!-- Author(s) -->
