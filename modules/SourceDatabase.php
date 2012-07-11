@@ -58,7 +58,7 @@ class SourceDatabase
     }
 
     private function _getReleaseDate() {
-        $ini = parse_ini_file('config/settings.ini', true);
+        $ini = parse_ini_file(DCAExporter::basePath() . '/config/settings.ini', true);
         if (isset($ini['credits']['release_date'])) {
             return $ini['credits']['release_date'];
         }
