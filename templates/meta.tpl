@@ -107,8 +107,7 @@
             <location>speciesprofile.txt</location>
          </files>
          <coreid index='0' />
-         <!-- Life zone (currently not yet implemented, reserved for future edition) 
-              These comprise: marine, terrestrial, brackish, freshwater, unknown -->
+         <!-- Life zone; these comprise: marine, terrestrial, brackish, freshwater, unknown -->
          <field index='1' term='http://rs.tdwg.org/dwc/terms/habitat' vocabulary='http://www.catalogueoflife.org/dwc/habitats-classification-scheme'/>
     </extension>  
     

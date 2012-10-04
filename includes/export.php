@@ -22,6 +22,7 @@ if (!$dcaExporter->archiveExists()) {
     $dcaExporter->createMetaXml();
     echo 'Writing data to text files...<br>';
     $dcaExporter->writeData();
+    $dcaExporter->copyScripts();
     echo '<br>Compressing to zip archive...<br>';
     $dcaExporter->zipArchive();
     echo "</p>\n";

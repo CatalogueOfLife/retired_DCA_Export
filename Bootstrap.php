@@ -30,10 +30,11 @@ class DCABootstrap
                 $this->_errors)) {
                 $this->_init(
                     array(
-                        'taxon', 
-                        'vernacular', 
-                        'reference', 
-                        'distribution'
+                        'Taxon', 
+                        'Vernacular', 
+                        'Reference', 
+                        'Distribution',
+                    	'SpeciesProfile'
                     ));
             }
         }

@@ -10,6 +10,7 @@ require_once 'modules/Vernacular.php';
 require_once 'modules/Distribution.php';
 require_once 'modules/Reference.php';
 require_once 'modules/SourceDatabase.php';
+require_once 'modules/SpeciesProfile.php';
 
 class DCAExporter
 {
@@ -158,6 +159,27 @@ class DCAExporter
         } 
     }
     
+	public static function copyDir ($source, $destination) {
+		if (file_exists($destination)) {
+			self::removeDir($destination);
+		}
+		if (is_dir($source)) {
+			// Skip directories starting with . (svn!)
+			if (substr(basename($source), 0, 1) != ".") {
+				mkdir($destination);
+				$files = scandir($source);
+				foreach ($files as $file) {
+					if ($file != "." && $file != "..") {
+						self::copyDir("$source/$file", "$destination/$file");
+					}
+				}
+			}
+		}
+		else if (file_exists($source)) {
+			copy($source, $destination);
+		}
+	}
+	  
     public static function getZipArchiveName ()
     {
         $sc = self::filterSc($_REQUEST);
@@ -216,6 +238,15 @@ class DCAExporter
         return $size;
     }
     
+    public static function zipScripts ()
+    {
+        $zip = new Zip();
+        $dest = self::basePath() . '/' .self::$zip . 'import-scripts.zip';
+        $zip->createArchive(self::basePath() . '/templates/import-scripts', $dest);
+        unset($zip);
+        return $dest;
+    }
+
     private function _createDbInstance ($name)
     {
         $ini = parse_ini_file('config/settings.ini', true);
@@ -264,7 +295,7 @@ class DCAExporter
             if ($this->_bl == 1 && !$this->_completeDump && $t != 'sn') {
                 $query .=
                 '"" AS status,
-                "" AS subgenus,
+                `subgenus`,
                 "" AS specificEpithet,
                 "" AS infraspecificEpithet,
                 "" AS verbatimTaxonRank,
@@ -272,7 +303,7 @@ class DCAExporter
             } else {
                 $query .=
                 '`status`,
-                "" AS subgenus,
+                `subgenus`,
                 `species` AS specificEpithet,
                 `infraspecies` AS infraspecificEpithet,
                 `infraspecific_marker` AS verbatimTaxonRank,
@@ -421,6 +452,19 @@ class DCAExporter
         ));
         $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $res ? $res : array();
+    }
+    
+    private function _getLifezones ($taxon_id)
+    {
+    	$query = 'SELECT t1.`lifezone` AS habitat FROM `lifezone` t1
+				  LEFT JOIN `lifezone_to_taxon_detail` AS t2 ON t2.`lifezone_id` = t1.`id`
+				  WHERE t2.`taxon_detail_id` = ?';
+    	$stmt = $this->_dbh->prepare($query);
+    	$stmt->execute(array(
+    			$taxon_id
+    	));
+    	$res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    	return $res ? $res : array();
     }
 
     private function _getDistributions ($taxon_id, $distributionFreeText = false)
@@ -604,13 +648,13 @@ class DCAExporter
                         $reference->writeModel();
                         unset($reference);
                     }
-                    // Distribution
-                    // Data can be stored in distribution or distribution_free_text tables
-                    // Try distribution first; if empty do second query on distribution_free_text
                     // Export only if Block level III has been selected
                     if ($this->_bl > 2) {
-                        $distributions = $this->_getDistributions(
-                            $taxon->taxonID);
+	                    // Distribution
+	                    // Data can be stored in distribution or distribution_free_text tables
+	                    // Try distribution first; if empty do second query on distribution_free_text
+                    	$distributions = $this->_getDistributions(
+                    			$taxon->taxonID);
                         if (empty(
                             $distributions)) {
                             $distributions = $this->_getDistributions(
@@ -623,18 +667,23 @@ class DCAExporter
                                 $rowDs, 
                                 $taxon->taxonID);
                             $distribution->writeModel();
-                            unset(
-                                $distribution);
+                            unset($distribution);
                         }
-                            $taxon->setDescription();
+                        // Lifezones
+                        $lifezones = $this->_getLifezones(
+                    			$taxon->taxonID);
+                        foreach ($lifezones as $iLz => $rowLz) {
+                        	$lifezone = $this->_initModule(
+                                'SpeciesProfile', 
+                                $rowLz, 
+                                $taxon->taxonID);
+                        	$lifezone->writeModel();
+                        	unset($lifezone);
+                        }
+                        // Additional data
+                        $taxon->setDescription();
                     }
-                    
-                    // Block IV only adds additional data to the taxon
-                    if ($this->_bl ==
-                         4) {
-                            $taxon->setDescription();
-                    }
-                }
+                 }
                 
                 $taxon->writeModel();
                 unset($taxon);
@@ -652,21 +701,17 @@ class DCAExporter
         $template->writeFile('meta.xml');
         unset($template);
     }
+    
+    public function copyScripts ()
+    {
+    	self::copyDir(self::basePath() . '/templates/import-scripts', $this->_dir . 'import-scripts');
+    }
 
     public function zipArchive ()
     {
         $zip = new Zip();
         $zip->createArchive($this->_dir, self::getZipArchivePath());
         unset($zip);
-    }
-
-    public function zipScripts ()
-    {
-        $zip = new Zip();
-        $dest = self::basePath() . '/' .self::$zip . 'import-scripts.zip';
-        $zip->createArchive(self::basePath() . '/import-scripts', $dest);
-        unset($zip);
-        return $dest;
     }
 
     public function archiveExists ()

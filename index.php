@@ -21,7 +21,6 @@ Darwin Core Archive Export</h3>
     // Test database handler first
     createDbInstance('db');
     if (!(DbHandler::getInstance('db') instanceof PDO)) {
-        var_dump($dbh);
         exit ('<br>Could not create database instance; 
             check settings in settings.ini!</body></html>');
     }
