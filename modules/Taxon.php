@@ -30,6 +30,7 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
     public $description; // additional data, separate
     public $taxonConceptID; // GSDTaxonGUID, separate
     public $scientificNameID; // GSDNameGUID, separate
+    public $references;
     
     public $fields = array(
         'taxonID', 
@@ -59,7 +60,8 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
         'modified',
         'description',
         'taxonConceptID',
-        'scientificNameID'
+        'scientificNameID',
+    	'references'
     );
     
     // Derived values
@@ -248,7 +250,19 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
         }
         return false;
     }
-
+    
+    public function setColUrl ()
+    {
+    	$baseUrl = 'http://www.catalogueoflife.org/annual-checklist/';
+    	// Valid taxon
+    	if (empty($this->acceptedNameUsageID)) {
+    		$this->references = $baseUrl . 'details/species/id/' . $this->taxonID;
+    	} else {
+    		$this->references = $baseUrl . 'details/species/id/' . $this->acceptedNameUsageID . 
+    			'/synonym/'. $this->taxonID;
+    	}
+    }
+    
     public function writeModel ()
     {
         $fields = array(
@@ -279,7 +293,8 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
             $this->modified,
             $this->description,
             $this->taxonConceptID,
-            $this->scientificNameID
+            $this->scientificNameID,
+            $this->references
         );
         $this->_writeLine($this->_fh, $fields);
     }

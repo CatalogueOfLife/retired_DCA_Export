@@ -529,7 +529,7 @@ class DCAExporter
         $sp2000->writeEml();
         unset($sp2000);
     }
-
+    
     public function getStartUpErrors ()
     {
         return $this->startUpErrors;
@@ -607,6 +607,8 @@ class DCAExporter
                         $synonym->setRank();
                         $synonym->setNameStatus();
                         $synonym->setScientificName();
+                        $synonym->setGsdNameGuid();
+                        $synonym->setColUrl();
                         $synonym->writeModel();
                         unset($synonym);
                     }
@@ -682,8 +684,9 @@ class DCAExporter
                         }
                         // Additional data
                         $taxon->setDescription();
+                        $taxon->setColUrl();
                     }
-                 }
+                }
                 
                 $taxon->writeModel();
                 unset($taxon);
