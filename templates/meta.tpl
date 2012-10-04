@@ -65,6 +65,8 @@
     <field index='26' term='http://rs.tdwg.org/dwc/terms/taxonConceptID'/>
     <!-- Name GUID provided by CoL provider (currently original CoL name code) -->
     <field index='27' term='http://rs.tdwg.org/dwc/terms/scientificNameID'/>
+    <!-- Url to the taxon in the current CoL -->
+    <field index='28' term='http://purl.org/dc/terms/references'/>
     </core>
     
     <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Distribution'>
@@ -95,7 +97,7 @@
         <!-- Title -->
         <field index='3' term='http://purl.org/dc/terms/title'/>
         <!-- Published in -->
-        <field index='4' term='http://purl.org/dc/terms/description'/>
+        <field index='4' term='http://purl.org/dc/terms/source'/>
         <!-- Uri -->
         <field index='5' term='http://purl.org/dc/terms/identifier'/>
         <!-- Type of reference; pertaining to taxon, synonym or vernacular name -->
