@@ -1,13 +1,13 @@
 <?php 
     $tip1 = 'Exports the higher classification exclusively, 
-        without species. Just from kingdom (or any selected taxa) down to 
+        without species. Just from kingdom (or any selected taxon) down to 
         genus.';
     $tip2 = 'Exports accepted scientific name linked to references, 
         synonym(s) linked to reference(s), latest taxonomic scrutiny, 
         source database and Catalogue of Life edition, 
         classification above genus and LSID.';
     $tip3 = 'Exports fields as defined under \'Limited data\', plus 
-        common name(s) linked to reference(s),  distribution, life zone 
+        common name(s) linked to reference(s),  distribution, lifezone 
         and additional data.';
 ?>
 

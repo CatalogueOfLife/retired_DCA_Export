@@ -1,5 +1,5 @@
 i4Life WP4 ENHANCED DOWNLOAD SERVICE OF THE CATALOGUE OF LIFE: DARWIN CORE ARCHIVE EXPORT
-v1.2, 23-03-12
+v1.3, 05-10-12
 
 
 INTRODUCTION
@@ -7,7 +7,8 @@ INTRODUCTION
 This application exports the contents of a Catalogue of Life Annual Checklist to Darwin Core Archive format. 
 The DCA_export class connects to a Base Scheme database and exports taxon data to text files, 'interconnected'
 by the meta.xml XML file. After export, the directory containing the export files is automatically zipped and 
-ready for download. See comments in the meta.xml file for the matching between CoL fields and DCA terms.
+ready for download. Each archive includes a set of scripts that can be used to import the data into various
+databases. See comments in the meta.xml file for the matching between CoL fields and DCA terms.
 
 
 REQUIREMENTS
@@ -22,7 +23,6 @@ Configure the application by modifying config/settings.ini. The database should 
 contains the '_search_scientific' and '_source_database_details' denormalized tables. 
 
 Make sure that 'export' and 'zip', the directories used to store the xml and text files, are writable by the web server.
-The application automatically creates the 'dataset' directory within the 'export' directory.
 
 
 USER INTERFACE
