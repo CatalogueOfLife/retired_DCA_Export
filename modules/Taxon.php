@@ -133,12 +133,18 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
             $this->scientificName = $this->{$this->taxonRank};
             return $this->scientificName;
         }
-        $this->scientificName = $this->genus . ' ' . $this->specificEpithet;
-        if (!empty($this->verbatimTaxonRank)) {
-            $this->scientificName .= ' ' . $this->verbatimTaxonRank;
+        $this->scientificName = $this->genus;
+        if (!empty($this->subgenus)) {
+        	$this->scientificName .= ' (' . $this->subgenus . ')';
         }
-        if (!empty($this->infraspecificEpithet)) {
-            $this->scientificName .= ' ' . $this->infraspecificEpithet;
+        foreach (
+        	array(
+        		$this->specificEpithet, 
+        		$this->verbatimTaxonRank, 
+        		$this->infraspecificEpithet, 
+        		$this->scientificNameAuthorship
+        	) as $p) {
+        	$this->scientificName .= (!empty($p) ? ' ' . $p : '');
         }
         return $this->scientificName;
     }
