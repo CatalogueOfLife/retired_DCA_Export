@@ -574,9 +574,7 @@ class DCAExporter
             foreach ($taxa as $iTx => $rowTx) {
                 $this->_indicator ? $this->_indicator->iterate() : '';
                 $taxon = $this->_initModule('Taxon', $rowTx);
-                $taxon->setRank();
-                $taxon->setNameStatus();
-                $taxon->setScientificName();
+                $taxon->setDefaultTaxonData();
                 $taxon->setLsid();
                 $taxon->setParentId();
                 
@@ -604,10 +602,10 @@ class DCAExporter
                             'Taxon',
                             $rowSn
                         );
-                        $synonym->setRank();
-                        $synonym->setNameStatus();
-                        $synonym->setScientificName();
+                        $synonym->setDefaultTaxonData();
                         $synonym->setGsdNameGuid();
+// Uncomment next line if genus should display genus of valid taxon (issue DS-63)
+                        // $synonym->setSynonymGenus($taxon);
                         $synonym->setColUrl();
                         $synonym->writeModel();
                         unset($synonym);

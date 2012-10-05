@@ -66,8 +66,8 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
     
     // Derived values
     public $status;
-    public $isHigherTaxon = false; // set in __construct
-    public $isSynonym = false; // set in __construct
+    public $isHigherTaxon = false; // set in _setRank in setDefaultTaxonData
+    public $isSynonym = false; // set in _setNameStatus in setDefaultTaxonData
     
     // Export settings
     const FILE = 'taxa.txt';
@@ -106,47 +106,12 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
     {
         $this->_createTextFile(self::FILE);
     }
-
-    public function setRank ()
-    {
-        if (!empty($this->infraspecificEpithet)) {
-            $this->taxonRank = 'infraspecies';
-            return;
-        }
-        if (!empty($this->specificEpithet)) {
-            $this->taxonRank = 'species';
-            return;
-        }
-        $ranks = array_reverse(self::$higherTaxa);
-        foreach ($ranks as $rank) {
-            if (!empty($this->$rank)) {
-                $this->taxonRank = $rank;
-                $this->isHigherTaxon = true;
-                return;
-            }
-        }
-    }
     
-    public function setScientificName ()
+    public function setDefaultTaxonData () 
     {
-        if ($this->isHigherTaxon) {
-            $this->scientificName = $this->{$this->taxonRank};
-            return $this->scientificName;
-        }
-        $this->scientificName = $this->genus;
-        if (!empty($this->subgenus)) {
-        	$this->scientificName .= ' (' . $this->subgenus . ')';
-        }
-        foreach (
-        	array(
-        		$this->specificEpithet, 
-        		$this->verbatimTaxonRank, 
-        		$this->infraspecificEpithet, 
-        		$this->scientificNameAuthorship
-        	) as $p) {
-        	$this->scientificName .= (!empty($p) ? ' ' . $p : '');
-        }
-        return $this->scientificName;
+    	$this->_setRank();
+    	$this->_setNameStatus();
+    	$this->_setScientificName();
     }
 
     public function setLsid ()
@@ -168,23 +133,6 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
         return false;
     }
 
-    public function setNameStatus ()
-    {
-        if (!array_key_exists($this->status, self::$scientificNameStatus)) {
-            // Return accepted name for higher taxa
-            $this->taxonomicStatus = self::$scientificNameStatus[1];
-            return $this->taxonomicStatus;
-        }
-        $this->taxonomicStatus = self::$scientificNameStatus[$this->status];
-        if (!in_array($this->status, array(
-            1, 
-            4
-        ))) {
-            $this->isSynonym = true;
-        }
-        return $this->taxonomicStatus;
-    }
-    
     public function setParentId ()
     {
         $query = 'SELECT `parent_id` 
@@ -269,6 +217,33 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
     	}
     }
     
+    public function setSynonymGenus ($taxon = false)
+    {
+        if ($taxon && (!is_object($taxon) || get_class($taxon) != 'Taxon')) {
+        	throw new Exception ('Taxon object passed to setSynonymGenus is invalid');
+        }
+    	// Valid taxon has been passed to object
+    	if (!empty($taxon->genus)) {
+    		$this->genus = $taxon->genus;
+    		return true;
+    	}
+    	// Has not been passed; query from database
+    	else if (!empty($this->acceptedNameUsageID)) {
+	    	$query = 'SELECT `genus`
+	                  FROM `_search_scientific`
+	                  WHERE `id` = ?';
+	    	$stmt = $this->_dbh->prepare($query);
+	    	$stmt->execute(array(
+	    			$this->acceptedNameUsageID
+	    	));
+	    	if ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
+	    		$this->decorate($res);
+	    		return true;
+	    	}
+    	}
+    	return false;
+    }
+    
     public function writeModel ()
     {
         $fields = array(
@@ -305,4 +280,67 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
         $this->_writeLine($this->_fh, $fields);
     }
 
+    private function _setRank ()
+    {
+    	if (!empty($this->infraspecificEpithet)) {
+    		$this->taxonRank = 'infraspecies';
+    		return true;
+    	}
+    	if (!empty($this->specificEpithet)) {
+    		$this->taxonRank = 'species';
+    		return true;
+    	}
+    	$ranks = array_reverse(self::$higherTaxa);
+    	foreach ($ranks as $rank) {
+    		if (!empty($this->$rank)) {
+    			$this->taxonRank = $rank;
+    			$this->isHigherTaxon = true;
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    private function _setNameStatus ()
+    {
+    	if (!isset($this->status) || empty($this->status)) {
+    		return false;
+    	}
+    	if (!array_key_exists($this->status, self::$scientificNameStatus)) {
+    		// Return accepted name for higher taxa
+    		$this->taxonomicStatus = self::$scientificNameStatus[1];
+    		return $this->taxonomicStatus;
+    	}
+    	$this->taxonomicStatus = self::$scientificNameStatus[$this->status];
+    	if (!in_array($this->status, array(
+    			1,
+    			4
+    	))) {
+    		$this->isSynonym = true;
+    	}
+    	return $this->taxonomicStatus;
+    }
+    
+    private function _setScientificName ()
+    {
+    	if ($this->isHigherTaxon) {
+    		$this->scientificName = $this->{$this->taxonRank};
+    		return true;
+    	}
+    	$this->scientificName = $this->genus;
+    	if (!empty($this->subgenus)) {
+    		$this->scientificName .= ' (' . $this->subgenus . ')';
+    	}
+    	foreach (
+    			array(
+    					$this->specificEpithet,
+    					$this->verbatimTaxonRank,
+    					$this->infraspecificEpithet,
+    					$this->scientificNameAuthorship
+    			) as $p) {
+    		$this->scientificName .= (!empty($p) ? ' ' . $p : '');
+    	}
+    	return !empty($this->scientificName) ? true : false;
+    }
+    
 }
