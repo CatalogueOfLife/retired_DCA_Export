@@ -52,12 +52,15 @@ function downloadComplete ()
         $output = '<p>Download a Darwin Core Archive for the 
             <a href="' . $downloadUrl . '">complete Catalogue of Life</a> 
             (' . DCAExporter::getDownloadSize($downloadUrl) . ')';
-        if (count(DCAExporter::getPreviousEditions()) > 0) {
-            $output .= ' or <a href="archive.php">download a previous edition</a>';
-        }
-        return $output . ".</p>\n";
     }
-    return;
+    if (count(DCAExporter::getPreviousEditions()) > 0) {
+    	if (!isset($output)) {
+    		$output = '<p><a href="archive.php">Download a previous edition</a>.';
+    	} else {
+    		$output .= ' or <a href="archive.php">download a previous edition</a>.';
+    	}
+    }
+    return isset($output) ? $output : false;
 }
 
 function printEditions ()
