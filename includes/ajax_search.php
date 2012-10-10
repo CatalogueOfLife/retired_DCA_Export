@@ -8,7 +8,7 @@
 		}
 	}
 	// Build query; decide which table to query
-	empty($genus) && $rank != 'genus' ? $table = '_search_family' : $table = '_search_scientific';
+	$table = (empty($genus) && $rank != 'genus' ? '_search_family' : '_search_scientific');
 	$query = 'SELECT `'.$rank.'` FROM '.$table.' WHERE ';
 	$parameters = array();
 	foreach ($fields as $field) {

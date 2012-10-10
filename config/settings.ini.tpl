@@ -24,3 +24,9 @@ url = "@WEBSERVICEURL@"
 [settings]
 version = @APP.VERSION@
 revision = @APP.REVISION@
+
+; Experimental option to exclude specific source databases from appearing in the results
+; Option is not set in name of resulting archive, so delete any existing archives before setting this option
+; Note that setting this option will have a negative impact on the speed of archive creation
+[excluded_source_dbs]
+ids =     					    	; source database to exclude from results, separated by comma

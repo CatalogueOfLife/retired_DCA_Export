@@ -10,7 +10,7 @@ class DCABootstrap
     
     private $_errors = array();
 
-    public function __construct ($dbh, $del, $sep, $sc, $bl, $dir, $zip)
+    public function __construct ($dbh, $del, $sep, $sc, $bl, $dir, $zip, $excluded)
     {
         $this->_dbh = $dbh;
         if (!($this->_dbh instanceof PDO)) {
@@ -23,6 +23,7 @@ class DCABootstrap
             $this->_sc = $this->_validateSc($sc);
             $this->_bl = $this->_validateBl($bl);
             $this->_validateDir($zip);
+            $this->_validateExcluded($excluded);
             $this->_setInternalCodingToUtf8();
             
             // Text files used to write to are created on the fly when the objects are created
@@ -35,7 +36,8 @@ class DCABootstrap
                         'Reference', 
                         'Distribution',
                     	'SpeciesProfile'
-                    ));
+                    )
+                );
             }
         }
     }
@@ -146,6 +148,28 @@ class DCABootstrap
             $this->_errors[9] = 'Incorrect block level "' . $bl . '".';
         }
         return $bl;
+    }
+    
+    private function _validateExcluded ($excluded)
+    {
+    	if ($excluded && is_array($excluded)) {
+    		foreach ($excluded as $id) {
+    			if (!$this->_sourceDatabaseExists($id)) {
+    				$this->_errors[] = 'Excluded source database id <b>' . $id . '</b> does not exist.';
+    			}
+    		}
+    	}
+    }
+    
+    private function _sourceDatabaseExists ($id)
+    {
+    	$query = 'SELECT `name` FROM `source_database` WHERE `id` = ?';
+    	$stmt = $this->_dbh->prepare($query);
+    	$stmt->execute(array(
+    		$id
+    	));
+    	$res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    	return $res ? true : false;
     }
 
     public function getErrors ()

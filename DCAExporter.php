@@ -62,6 +62,8 @@ class DCAExporter
     private $_meta;
     // Path to zip archive to
     private $_zip;
+    // Source databases excluded from results
+    private $_excluded;
     
     // Storage array to determine if an eml file has already been written 
     private $_savedEmls = array();
@@ -87,12 +89,13 @@ class DCAExporter
         $this->_dir = self::basePath() . '/' . self::$dir . md5(self::getZipArchiveName()) . '/';
         $this->_meta = self::basePath() . '/' . self::$meta;
         $this->_zip = self::basePath() . '/' . self::$zip;
+        $this->_excluded = $this->_setExcluded($ini);
         $this->_setDefaults();
         $this->_iuaSetting = ignore_user_abort(1);
         $this->_completeDump = in_array('[all]', $this->_sc) ? true : false;
 
         $bootstrap = new DCABootstrap($this->_dbh, $this->_del, $this->_sep, $this->_sc, 
-            $this->_bl, $this->_dir, $this->_zip);
+            $this->_bl, $this->_dir, $this->_zip, $this->_excluded);
         $this->startUpErrors = $bootstrap->getErrors();
         unset($bootstrap);
     }
@@ -313,7 +316,8 @@ class DCAExporter
         $query .= ' FROM `_search_scientific` WHERE ';
         // Synonyms
         if ($t == 'sn') {
-            return $query . '`accepted_species_id` = ?';
+            $query .= '`accepted_species_id` = ?';
+            return $this->_excludedToQuery($query);
         // Taxa
         } else if (!$this->_completeDump) {
             foreach ($this->_sc as $field => $value) {
@@ -324,7 +328,7 @@ class DCAExporter
                 $query .= '`species` = "" AND `infraspecies` = "" AND ';
             }
         }
-        $query .= '`accepted_species_id` = 0 ';
+   		$query = $this->_excludedToQuery($query . '`accepted_species_id` = 0 ');
         // Omit limit from total query
         if ($t != 'tt') {
             $query .= 'LIMIT :limit OFFSET :offset';
@@ -528,6 +532,23 @@ class DCAExporter
         $sp2000->resetEmlDir();
         $sp2000->writeEml();
         unset($sp2000);
+    }
+    
+    private function _setExcluded ($ini)
+    {
+    	if (isset($ini['excluded_source_dbs']['ids']) && !empty($ini['excluded_source_dbs']['ids'])) {
+    		$excluded = explode(',', $ini['excluded_source_dbs']['ids']);
+    		return !empty($excluded) ? $excluded : false;
+    	}
+    	return false;
+    }
+    
+    private function _excludedToQuery ($query)
+    {
+    	if ($this->_excluded) {
+    		return $query . ' AND `source_database_id` NOT IN (' . implode(',', $this->_excluded) . ') ';
+    	}
+    	return $query;
     }
     
     public function getStartUpErrors ()

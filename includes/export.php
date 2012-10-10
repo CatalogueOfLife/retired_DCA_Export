@@ -12,7 +12,7 @@ if (!$dcaExporter->archiveExists()) {
     // No errors, ready to go!
     $total = $dcaExporter->getTotalNumberOfTaxa();
     if ($total > 0) {
-        echo "<p>Creating export for $total taxa.</p>\n";
+        echo "<p>Creating export for $total ". ($total == 1 ? 'taxon' : 'taxa') . "</p>\n";
     }
     else {
         echo '<p>No results found, please <a href="index.php">adjust your search criteria</a></p>';
