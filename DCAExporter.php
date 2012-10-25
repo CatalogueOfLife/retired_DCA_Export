@@ -625,8 +625,7 @@ class DCAExporter
                         );
                         $synonym->setDefaultTaxonData();
                         $synonym->setGsdNameGuid();
-// Uncomment next line if genus should display genus of valid taxon (issue DS-63)
-                        // $synonym->setSynonymGenus($taxon);
+                        $synonym->setSynonymGenus($taxon);
                         $synonym->setColUrl();
                         $synonym->writeModel();
                         unset($synonym);
@@ -706,6 +705,13 @@ class DCAExporter
                         $taxon->setColUrl();
                     }
                 }
+                
+                // Ruud 25-10-12: a radical change occurred as $taxon->genus now should be
+                // $taxon->genericName and $taxon->genus should be empty for valid taxa.
+                // In order not to mess up dependencies on $taxon->genus, e.g. to set the 
+                // scientific name, this change is applied at the very end only.
+                // For synonyms it is handled through $synonym->setSynonymGenus() above.
+                $taxon->resetGenus();
                 
                 $taxon->writeModel();
                 unset($taxon);

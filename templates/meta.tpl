@@ -42,31 +42,33 @@
     <!-- Family in which the taxon has been classified -->
     <field index='15' term='http://rs.tdwg.org/dwc/terms/family'/>
     <!-- Genus in which the taxon has been classified -->
-    <field index='16' term='http://rs.tdwg.org/dwc/terms/genus'/>
-    <!-- Subgenus in which the taxon has been classified (currently not yet implemented, reserved for future edition) -->
-    <field index='17' term='http://rs.tdwg.org/dwc/terms/subgenus'/>
+    <field index='16' term='http://rs.tdwg.org/dwc/terms/genericName'/>
+    <!-- Different from the above for synonyms: genus stores the accepted genus name for a synonym -->
+    <field index='17' term='http://rs.tdwg.org/dwc/terms/genus'/>
+    <!-- Subgenus in which the taxon has been classified -->
+    <field index='18' term='http://rs.tdwg.org/dwc/terms/subgenus'/>
     <!-- Specific epithet; for hybrids, the multiplication symbol is included in the epithet -->
-    <field index='18' term='http://rs.tdwg.org/dwc/terms/specificEpithet'/>
+    <field index='19' term='http://rs.tdwg.org/dwc/terms/specificEpithet'/>
     <!-- Infraspecific epithet -->
-    <field index='19' term='http://rs.tdwg.org/dwc/terms/infraspecificEpithet'/>
+    <field index='20' term='http://rs.tdwg.org/dwc/terms/infraspecificEpithet'/>
     <!-- Authorship -->
-    <field index='20' term='http://rs.tdwg.org/dwc/terms/scientificNameAuthorship'/>
+    <field index='21' term='http://rs.tdwg.org/dwc/terms/scientificNameAuthorship'/>
     <!-- Acceptance status published in -->
-    <field index='21' term='http://purl.org/dc/terms/source'/>
+    <field index='22' term='http://purl.org/dc/terms/source'/>
     <!-- Reference in which the scientific name was first published -->
-    <field index='22' term='http://rs.tdwg.org/dwc/terms/namePublishedIn'/>
+    <field index='23' term='http://rs.tdwg.org/dwc/terms/namePublishedIn'/>
     <!-- Taxon scrutinized by -->
-    <field index='23' term='http://rs.tdwg.org/dwc/terms/nameAccordingTo'/>
+    <field index='24' term='http://rs.tdwg.org/dwc/terms/nameAccordingTo'/>
     <!-- Scrutiny date; may be text string -->
-    <field index='24' term='http://purl.org/dc/terms/modified'/>
+    <field index='25' term='http://purl.org/dc/terms/modified'/>
     <!-- Additional data for the taxon -->
-    <field index='25' term='http://purl.org/dc/terms/description'/>
+    <field index='26' term='http://purl.org/dc/terms/description'/>
     <!-- Taxonomic concept GUID provided by CoL provider (currently not yet implemented, reserved for future edition) -->
-    <field index='26' term='http://rs.tdwg.org/dwc/terms/taxonConceptID'/>
+    <field index='27' term='http://rs.tdwg.org/dwc/terms/taxonConceptID'/>
     <!-- Name GUID provided by CoL provider (currently original CoL name code) -->
-    <field index='27' term='http://rs.tdwg.org/dwc/terms/scientificNameID'/>
+    <field index='28' term='http://rs.tdwg.org/dwc/terms/scientificNameID'/>
     <!-- Url to the taxon in the current CoL -->
-    <field index='28' term='http://purl.org/dc/terms/references'/>
+    <field index='29' term='http://purl.org/dc/terms/references'/>
     </core>
     
     <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Distribution'>

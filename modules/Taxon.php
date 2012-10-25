@@ -18,7 +18,8 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
     public $order;
     public $superfamily;
     public $family;
-    public $genus;
+    public $genericName; // late addition, now is the main genus field!
+    public $genus; // original genus field; now should contain valid name for synonyms
     public $subgenus;
     public $specificEpithet;
     public $infraspecificEpithet;
@@ -49,8 +50,9 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
         'order', 
         'superfamily', 
         'family', 
+        'genericName', 
         'genus', 
-        'subgenus', 
+    	'subgenus', 
         'specificEpithet', 
         'infraspecificEpithet', 
         'scientificNameAuthorship', 
@@ -217,13 +219,21 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
     	}
     }
     
+    public function resetGenus ()
+    {
+    	$this->genericName = $this->genus;
+    	$this->genus = false;
+    }
+    
     public function setSynonymGenus ($taxon = false)
     {
-        if ($taxon && (!is_object($taxon) || get_class($taxon) != 'Taxon')) {
+    	// Ruud 25-10-12: $this->genericName now is the main field for genus name!
+        $this->genericName = $this->genus;
+    	if ($taxon && (!is_object($taxon) || get_class($taxon) != 'Taxon')) {
         	throw new Exception ('Taxon object passed to setSynonymGenus is invalid');
         }
     	// Valid taxon has been passed to object
-    	if (!empty($taxon->genus)) {
+        if (!empty($taxon->genus)) {
     		$this->genus = $taxon->genus;
     		return true;
     	}
@@ -263,8 +273,9 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
             $this->order, 
             $this->superfamily, 
             $this->family, 
+            $this->genericName, 
             $this->genus, 
-            $this->subgenus, 
+        	$this->subgenus, 
             $this->specificEpithet, 
             $this->infraspecificEpithet, 
             $this->scientificNameAuthorship, 
