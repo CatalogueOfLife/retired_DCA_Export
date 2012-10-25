@@ -43,7 +43,7 @@
     <field index='15' term='http://rs.tdwg.org/dwc/terms/family'/>
     <!-- Genus in which the taxon has been classified -->
     <field index='16' term='http://rs.tdwg.org/dwc/terms/genericName'/>
-    <!-- Different from the above for synonyms: genus stores the accepted genus name for a synonym -->
+    <!-- May be different from the above for synonyms only: this field stores the accepted genus name for a synonym -->
     <field index='17' term='http://rs.tdwg.org/dwc/terms/genus'/>
     <!-- Subgenus in which the taxon has been classified -->
     <field index='18' term='http://rs.tdwg.org/dwc/terms/subgenus'/>

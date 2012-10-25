@@ -290,7 +290,8 @@ class DCAExporter
                 `superfamily`,
                 `family`,
                 `genus`,
-                IF (`accepted_species_id` > 0,
+                `genus` AS genericName,
+            		IF (`accepted_species_id` > 0,
                     `accepted_species_id`,
                     ""
                 ) AS acceptedNameUsageID, ';
@@ -705,13 +706,6 @@ class DCAExporter
                         $taxon->setColUrl();
                     }
                 }
-                
-                // Ruud 25-10-12: a radical change occurred as $taxon->genus now should be
-                // $taxon->genericName and $taxon->genus should be empty for valid taxa.
-                // In order not to mess up dependencies on $taxon->genus, e.g. to set the 
-                // scientific name, this change is applied at the very end only.
-                // For synonyms it is handled through $synonym->setSynonymGenus() above.
-                $taxon->resetGenus();
                 
                 $taxon->writeModel();
                 unset($taxon);
