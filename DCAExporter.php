@@ -28,22 +28,17 @@ class DCAExporter
         'title' => 'Catalogue of Life', 
         'abbreviatedName' => 'Catalogue of Life', 
         'groupName' => '', 
-        'authorsEditors' => '', 
+        'authorsEditors' => 'Bisby F., Roskov Y., Culham A., Orrell T., Nicolson D., Paglinawan L., Bailly N., Appeltans W., Kirk P., Bourgoin T., Baillargeon G., Ouvrard D., eds', 
         'organizationName' => '', 
         'contact' => '', 
         'version' => '', 
         'pubDate' => '', 
         'abstract' => '', 
-        'sourceUrl' => '', 
+        'sourceUrl' => 'http://www.catalogueoflife.org', 
         'taxonomicCoverage' => '', 
         'contactCountry' => 'GB', 
         'contactCity' => 'Reading', 
-        'numberOfSpecies' => '', 
-        'numberOfInfraspecies' => '', 
-        'numberOfSynonyms' => '', 
-        'numberOfCommonNames' => '', 
-        'totalNumber' => '', 
-        'resourceLogoUrl' => ''
+        'resourceLogoUrl' => 'images/databases/Species_2000_Common_Names.gif'
     );
     
     // Database handler
@@ -125,6 +120,12 @@ class DCAExporter
     {
         $ini = parse_ini_file('config/settings.ini', true);
         return $ini['credits']['string'] . ' (' . $ini['credits']['release_date'] . ')';
+    }
+
+    public static function getCredits ()
+    {
+        $ini = parse_ini_file('config/settings.ini', true);
+        return $ini['credits']['string'];
     }
 
     public static function getWebserviceUrl ()
@@ -510,12 +511,16 @@ class DCAExporter
                     t1.`authors_and_editors` AS authorsEditors,
                     t1.`version` AS version,
                     t1.`release_date` AS pubDate,
+                    t1.`abstract` AS abstract,
                     t1.`contact_person` AS contact,
-                    "" AS sourceUrl,
+                    t3.resource_identifier AS sourceUrl,
                     "" AS contactCity,
                     "" AS contactCountry,
-                    "" AS resourceLogoUrl
+                    CONCAT("images/databases/", REPLACE(`abbreviated_name`, " ", "_"), 
+                        ".png") AS resourceLogoUrl
                   FROM `source_database` t1
+                  LEFT JOIN `uri_to_source_database` AS t2 ON t1.`id` = t2.`source_database_id`
+                  LEFT JOIN `uri` AS t3 ON t2.`uri_id` = t3.`id`
                   WHERE t1.`id` = ?';
         $stmt = $this->_dbh->prepare($query);
         $stmt->execute(array(
@@ -740,6 +745,27 @@ class DCAExporter
     {
         if (file_exists(self::getZipArchivePath())) {
             return true;
+        }
+        return false;
+    }
+    
+    public static function getWebsiteUrl ()
+    {
+        $ini = parse_ini_file('config/settings.ini', true);
+        if (isset($ini['website']['url'])) {
+            $url = $ini['website']['url'];
+            if (substr($url, - 1) != '/') {
+                return $url . '/';
+            }
+            return $url;
+        }
+        return false;
+    }
+    
+    public static function getReleaseDate() {
+        $ini = parse_ini_file(DCAExporter::basePath() . '/config/settings.ini', true);
+        if (isset($ini['credits']['release_date'])) {
+            return $ini['credits']['release_date'];
         }
         return false;
     }

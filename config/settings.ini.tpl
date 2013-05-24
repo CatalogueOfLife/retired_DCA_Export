@@ -18,6 +18,9 @@ string = "@CREDITSSTRING@"
 ; Release date used in GSD EML files; format as YYYY-MM-DD
 release_date = "@RELEASEDATE@"
 
+[website]
+url = "@WEBSITEURL@" ; base url to CoL, needed as different editions run simultaneously
+
 [webservice]
 url = "@WEBSERVICEURL@"
 
