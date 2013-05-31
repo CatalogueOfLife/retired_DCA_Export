@@ -28,6 +28,19 @@ url = "@WEBSERVICEURL@"
 version = @APP.VERSION@
 revision = @APP.REVISION@
 
+; Data used to decorate col.xml eml file that is part of every archive
+[col_eml]
+authorsEditors = "Bisby F., Roskov Y., Culham A., Orrell T., Nicolson D., Paglinawan L., Bailly N., Appeltans W., Kirk P., Bourgoin T., Baillargeon G., Ouvrard D., eds" 
+abstract = 
+version = 
+contact = "support@sp2000.org" 
+sourceUrl = "http://www.catalogueoflife.org/" 
+resourceLogoUrl = "images/databases/Species_2000_Common_Names.gif"
+
+; Additional data used to decorate eml.xml meta eml file that is part of every archive
+[col_meta_eml]
+issn="ISSN 1473-009X"
+
 ; Experimental option to exclude specific source databases from appearing in the results
 ; Option is not set in name of resulting archive, so delete any existing archives before setting this option
 ; Note that setting this option will have a negative impact on the speed of archive creation
