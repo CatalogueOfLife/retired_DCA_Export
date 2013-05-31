@@ -22,7 +22,7 @@ class DCAExporter
     public static $zip = 'zip/';
     // Metadata for Annual Checklist itself is not stored in the database
     // Set credits in this array
-    // TODO: get proper data for this!
+    /* TODO: get proper data for this!
     public static $species2000Metadata = array(
         'id' => 'col', 
         'title' => 'Catalogue of Life', 
@@ -37,6 +37,7 @@ class DCAExporter
         'contactCity' => 'Reading', 
         'resourceLogoUrl' => 'images/databases/Species_2000_Common_Names.gif'
     );
+    */
     
     // Database handler
     private $_dbh;
@@ -527,12 +528,52 @@ class DCAExporter
         return $res ? $res : array();
     }
 
+    private function _getTotals ()
+    {
+        $query = 'SELECT `description`, `total` FROM `_totals`';
+        $stmt = $this->_dbh->prepare($query);
+        $stmt->execute();
+        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (!empty($res)) {
+            $fields = array();
+            foreach ($res as $r) {
+                switch ($r['description']) {
+                    case 'species':
+                        $fields['nrSpecies'] = $r['total'];
+                        break;
+                    case 'source_databases':
+                        $fields['nrDatabases'] = $r['total'];
+                        break;
+                    case 'infraspecies':
+                        $fields['nrInfraspecies'] = $r['total'];
+                        break;
+                    case 'synonyms':
+                        $fields['nrSynonyms'] = $r['total'];
+                        break;
+                    case 'common_names':
+                        $fields['nrCommonNames'] = $r['total'];
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return $fields;
+        }
+        return false;
+    }
+    
     private function _initEml ()
     {
         // Initialize with CoL metadata, so archive always contains this EML file
         $sp2000 = new SourceDatabase($this->_dbh, $this->_dir);
         // Clear dir from previous export first
         $sp2000->resetEmlDir();
+        $sp2000->writeEml();
+        $this->_addSavedEml("Species 2000");
+       
+        // New per 31-05-13: Add second metadata eml for entire CoL
+        $sp2000 = new SourceDatabase($this->_dbh, $this->_dir, $this->_getTotals());
+//print_r($sp2000); die();
         $sp2000->writeEml();
         unset($sp2000);
     }
@@ -744,6 +785,18 @@ class DCAExporter
             return true;
         }
         return false;
+    }
+    
+    public static function getColEmlIni ()
+    {
+        $ini = parse_ini_file('config/settings.ini', true);
+        return $ini['col_eml']; 
+    }
+    
+    public static function getColMetaEmlIni ()
+    {
+        $ini = parse_ini_file('config/settings.ini', true);
+        return $ini['col_meta_eml']; 
     }
     
     public static function getWebsiteUrl ()

@@ -1,4 +1,5 @@
 <archive 
+ 	metadata="eml.xml" 
 	xmlns='http://rs.tdwg.org/dwc/text/'
     xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
     xsi:schemaLocation='http://rs.tdwg.org/dwc/text/ http://rs.tdwg.org/dwc/text/tdwg_dwc_text.xsd'>
