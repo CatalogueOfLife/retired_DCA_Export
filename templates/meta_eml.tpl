@@ -10,17 +10,14 @@
 	system="catalogueoflife.org" 
 	scope="system" 
 	xml:lang="eng">
-	<!--
-		Most information taken here from the description of the latest online edition:
-		http://www.catalogueoflife.org/col/info/ac		
-	-->
+
 	<dataset>
 		<alternateIdentifier>[issn]</alternateIdentifier>
 
 		<title xml:lang="eng">Catalogue of Life</title>
 		
 		<creator>
-			<organizationName>Species 2000 &amp; ITIS Catalogue of Life</organizationName>
+			<organizationName>The Catalogue of Life</organizationName>
 			<address>
 				<city>Reading</city>
 				<postalCode>RG6 6AS</postalCode>
@@ -30,18 +27,15 @@
 		</creator>
 		
 		<metadataProvider>
-			<organizationName>Species 2000 Secretariat</organizationName>
+			<organizationName>The Catalogue of Life</organizationName>
 			<address>
 				<city>Reading</city>
+      	<postalCode>RG6 6AS</postalCode>
 				<country>UK</country>
 			</address>
 			<onlineUrl>http://www.sp2000.org/</onlineUrl>
 		</metadataProvider>
 		
-		<!-- 
-			The Catalogue of Life Editors
-			For all available, known roles see http://rs.gbif.org/vocabulary/gbif/agent_role.xml
-		-->
 		<associatedParty>
 			<individualName>
 				<givenName>Yuri</givenName>
@@ -52,8 +46,9 @@
 				<city>Reading</city>
 				<country>UK</country>
 			</address>			
-			<role>editor</role>
+			<role>Catalogue of Life Executive Editor</role>
 		</associatedParty>
+		
 		<associatedParty>
 			<individualName>
 				<givenName>Thomas</givenName>
@@ -64,11 +59,139 @@
 				<city>Reading</city>
 				<country>UK</country>
 			</address>			
-			<role>editor</role>
+			<role>Catalogue of Life Editorial Assistant</role>
 		</associatedParty>
-		<!-- 
-			The Catalogue of Life Assembly Team			
-		-->
+		
+		<associatedParty>
+			<individualName>
+				<givenName>Luvie</givenName>
+				<surName>Paglinawan</surName>					
+			</individualName>
+			<organizationName>CoL Philippines Office</organizationName>
+			<address>
+				<city>Los Baños</city>
+				<country>Philippines</country>
+			</address>			
+			<role>Catalogue of Life Database Manager</role>
+		</associatedParty>		
+
+		<associatedParty>
+			<individualName>
+				<givenName>Thomas</givenName>
+				<surName>Orrell</surName>					
+			</individualName>
+			<organizationName>ITIS Secretariat, Smithsonian Institution</organizationName>
+			<address>
+				<city>Washington DC</city>
+				<country>USA</country>
+			</address>			
+			<role>ITIS Deputy Director</role>
+		</associatedParty>
+
+		<associatedParty>
+			<individualName>
+				<givenName>David</givenName>
+				<surName>Nicolson</surName>					
+			</individualName>
+			<organizationName>USGS/Smithsonian Institution</organizationName>
+			<address>
+				<city>Washington DC</city>
+				<country>USA</country>
+			</address>			
+			<role>ITIS Data Development Leader</role>
+		</associatedParty>
+    
+    	<associatedParty>
+			<individualName>
+				<givenName>Alastair</givenName>
+				<surName>Culham</surName>					
+			</individualName>
+			<organizationName>University of Reading</organizationName>
+			<address>
+				<city>Reading</city>
+				<country>UK</country>
+			</address>			
+			<role>PI for i4Life EC project at the CoL Secretariat</role>
+		</associatedParty>
+    
+    	<associatedParty>
+			<individualName>
+				<givenName>Nicolas</givenName>
+				<surName>Bailly</surName>					
+			</individualName>
+			<organizationName>CoL Philippines Office, FIN</organizationName>
+			<address>
+				<city>Los Baños</city>
+				<country>Philippines</country>
+			</address>			
+			<role>Taxonomic Editorial Advisor for Marine sectors</role>
+		</associatedParty> 
+		
+    	<associatedParty>
+			<individualName>
+				<givenName>Paul</givenName>
+				<surName>Kirk</surName>					
+			</individualName>
+			<organizationName>CABI</organizationName>
+			<address>
+				<city>Egham</city>
+				<country>UK</country>
+			</address>			
+			<role>Taxonomic Editorial Advisor for Fungi and Chromista sectors</role>
+		</associatedParty> 
+    
+    	<associatedParty>
+			<individualName>
+				<givenName>Thierry</givenName>
+				<surName>Bourgoin</surName>					
+			</individualName>
+			<organizationName>Museum National d'Histoire Naturelle</organizationName>
+			<address>
+				<city>Paris</city>
+				<country>France</country>
+			</address>			
+			<role>Taxonomic Editorial Advisor for Insects</role>
+		</associatedParty> 
+    
+    	<associatedParty>
+			<individualName>
+				<givenName>Guy</givenName>
+				<surName>Baillargeon</surName>					
+			</individualName>
+			<organizationName>Agriculture and Agri-Food Canada</organizationName>
+			<address>
+				<city>Ottawa</city>
+				<country>Canada</country>
+			</address>			
+			<role>Taxonomic Editorial Advisor for Plants</role>
+		</associatedParty>        		
+
+    	<associatedParty>
+			<individualName>
+				<givenName>Francisco</givenName>
+				<surName>Hernandez</surName>					
+			</individualName>
+			<organizationName>Flanders Marine Data Centre, VLIZ</organizationName>
+			<address>
+				<city>Oostende</city>
+				<country>Belgium</country>
+			</address>			
+			<role>Taxonomic Editorial Advisor for Marine sectors</role>
+		</associatedParty>
+
+    	<associatedParty>
+			<individualName>
+				<givenName>Aaike</givenName>
+				<surName>De Wever</surName>					
+			</individualName>
+			<organizationName>FADA, Royal Belgian Institute of Natural Sciences</organizationName>
+			<address>
+				<city>Brussels</city>
+				<country>Belgium</country>
+			</address>			
+			<role>Taxonomic Editorial Advisor for freshwater taxa</role>
+		</associatedParty>		
+		
 		<associatedParty>
 			<individualName>
 				<givenName>Luvie</givenName>
@@ -79,52 +202,180 @@
 				<city>Los Baños</city>
 				<country>Philippines</country>
 			</address>			
-			<role>processor</role>			
+			<role>Catalogue of Life Database Manager</role>			
 		</associatedParty>
-		<!--
-			Annual Checklist Software Development			
-		-->
+		
+		<associatedParty>
+			<individualName>
+				<givenName>Luisa</givenName>
+				<surName>Abucay</surName>					
+			</individualName>		
+			<organizationName>CoL Philippines Office, FIN</organizationName>
+			<address>
+				<city>Los Baños</city>
+				<country>Philippines</country>
+			</address>			
+			<role>Assistant to the CoL Database Manager</role>			
+		</associatedParty>
+		
+		<associatedParty>
+			<individualName>
+				<givenName>Viktoras</givenName>
+				<surName>Didžiulis</surName>					
+			</individualName>		
+			<organizationName>University of Reading</organizationName>
+			<address>
+				<city>Reading</city>
+				<country>UK</country>
+			</address>			
+			<role>Systems Manager &amp; Developer at the CoL Secretariat</role>			
+		</associatedParty>
+
 		<associatedParty>
 			<individualName>
 				<givenName>Wouter</givenName>
 				<surName>Addink</surName>					
 			</individualName>				
-			<organizationName>ETI Bioinformatics</organizationName>
+			<organizationName>Naturalis-ETI</organizationName>
 			<address>
 				<city>Leiden</city>
 				<country>Netherlands</country>
 			</address>			
-			<role>programmer</role>
+			<role>Leader of the Annual Checklist Software Development and Software Production</role>
 		</associatedParty>
+		
+		<associatedParty>
+			<individualName>
+				<givenName>Ruud</givenName>
+				<surName>Altenburg</surName>					
+			</individualName>				
+			<organizationName>Naturalis-ETI</organizationName>
+			<address>
+				<city>Leiden</city>
+				<country>Netherlands</country>
+			</address>			
+			<role>Author of Base Schema Conversion Software</role>
+		</associatedParty>
+		
+		<associatedParty>
+			<individualName>
+				<givenName>Ayco</givenName>
+				<surName>Holleman</surName>					
+			</individualName>				
+			<organizationName>Naturalis-ETI</organizationName>
+			<address>
+				<city>Leiden</city>
+				<country>Netherlands</country>
+			</address>			
+			<role>Annual Checklist Assembly ICT Infrastructure Development</role>
+		</associatedParty>
+    
+		<associatedParty>
+			<individualName>
+				<givenName>Gideon</givenName>
+				<surName>Gijswijt</surName>					
+			</individualName>				
+			<organizationName>Naturalis-ETI</organizationName>
+			<address>
+				<city>Leiden</city>
+				<country>Netherlands</country>
+			</address>			
+			<role>Annual Checklist DVD Master and Installation Development</role>
+		</associatedParty>		    		
+    
+		<associatedParty>
+			<individualName>
+				<givenName>Viktoras</givenName>
+				<surName>Didžiulis</surName>					
+			</individualName>				
+			<organizationName>University of Reading</organizationName>
+			<address>
+				<city>Reading</city>
+				<country>UK</country>
+			</address>			
+			<role>Design of the data assembly workflow, author of the CoL Workbench at Reading</role>
+		</associatedParty>	
+
 		<associatedParty>			
 			<individualName>
 				<givenName>Dennis</givenName>
 				<surName>Seijts</surName>					
 			</individualName>
-			<organizationName>ETI Bioinformatics</organizationName>
+			<organizationName>Former employee at ETI BioInformatics</organizationName>
 			<address>
 				<city>Leiden</city>
 				<country>Netherlands</country>
 			</address>			
-			<role>programmer</role>			
+			<role>Former Annual Checklist Interface Developer</role>			
+		</associatedParty>
+    
+		<associatedParty>
+			<individualName>
+				<givenName>Núria</givenName>
+				<surName>Torrescasana Aloy</surName>					
+			</individualName>				
+			<organizationName>Former employee at ETI BioInformatics</organizationName>
+			<address>
+				<city>Amsterdam</city>
+				<country>Netherlands</country>
+			</address>			
+			<role>Former author of the Annual Checklist Software</role>
+		</associatedParty>	        		
+		
+		<associatedParty>
+			<individualName>
+				<givenName>Jorrit</givenName>
+				<surName>van Hertum</surName>					
+			</individualName>				
+			<organizationName>Former employee at ETI BioInformatics</organizationName>
+			<address>
+				<city>Amsterdam</city>
+				<country>Netherlands</country>
+			</address>			
+			<role>Former author of the Annual Checklist Software</role>
+		</associatedParty>	
+		
+		<associatedParty>
+			<individualName>
+				<givenName>Richard</givenName>
+				<surName>White</surName>					
+			</individualName>				
+			<organizationName>Cardiff University</organizationName>
+			<address>
+				<city>Cardiff</city>
+				<country>UK</country>
+			</address>			
+			<role>Former author of the Taxon Matcher Software and LSID Resolver</role>
 		</associatedParty>
 		
-		
-		<!-- date the GSD data was last updated -->
+		<associatedParty>
+			<individualName>
+				<givenName>Paul</givenName>
+				<surName>Klinkenberg</surName>					
+			</individualName>				
+			<organizationName>Former employee at ETI Bioinformatics</organizationName>
+			<address>
+				<city>Amsterdam</city>
+				<country>Netherlands</country>
+			</address>			
+			<role>Annual Checklist booklet design and DVD production</role>
+		</associatedParty>		
+
 		<pubDate>[pubDate]</pubDate>
 		
 		<language>eng</language>
 		
-		<!-- 
-			wrap all text inside the <para> tag
-           	multiple paragraphs could be omitted and all content placed into a single <para> element 
-		-->
 		<abstract>
-			<para>This release of the Catalogue of Life contains contributions from [nrDatabases] databases with information on [nrSpecies] species, [nrInfraspecies] infraspecific taxa and also includes [nrSynonyms] synonyms and [nrCommonNames] common names.</para>
-			<para>The Catalogue of Life combines the outputs of the Species 2000 and the ITIS programmes. Assembly and publication of the Catalogue of Life is managed by Yuri Roskov in Reading, working with colleagues around the world.</para>
+			<para>This release of the Catalogue of Life contains contributions from [nrDatabases] databases with information on [nrSpecies] species, [nrInfraspecies] infraspecific taxa and also includes [nrSynonyms] synonyms and [nrCommonNames] common names covering the following groups:</para>
+			<para>Viruses * Viruses and Subviral agents from ICTV_MSL
+Bacteria and Archaea from BIOS
+Chromista * Chromistan fungi from Species Fungorum
+Protozoa * Major groups from ITIS Regional, * Ciliates from CilCat, * Polycystines from WoRMS Polycystina UPDATED!, * Protozoan fungi from Species Fungorum and Trichomycetes database * Slime moulds from Nomen.eumycetozoa.com
+Fungi * Various taxa in whole or in part from CABI Bioservices databases (Species Fungorum, Phyllachorales, Rhytismatales, Saccharomycetes and Zygomycetes databases) and from three other databases covering Xylariaceae, Glomeromycota, Trichomycetes, Dothideomycetes * Lichens from LIAS
+Plantae (Plants) * Mosses from MOST * Liverworts and hornworts from ELPT * Conifers from Conifer Database * Cycads and 6 flowering plant families from IOPI-GPC, and 99 families from WCSP * Plus individual flowering plants families from AnnonBase, Brassicaceae, ChenoBase, Droseraceae Database, EbenaBase, GCC, ILDIS, LecyPages, LHD, MELnet, RJB Geranium, Solanaceae Source, Umbellifers.
+Animalia (Animals) * Marine groups from URMO, ITIS Global, Hexacorals, ETI WBD (Euphausiacea), WoRMS: WoRMS Asteroidea UPDATED!, WoRMS Bochusacea UPDATED!, WoRMS Brachiopoda UPDATED!, WoRMS Brachypoda UPDATED!, WoRMS Brachyura UPDATED!, WoRMS Bryozoa UPDATED!, WoRMS Cestoda UPDATED!, WoRMS Chaetognatha UPDATED!, WoRMS Cumacea UPDATED!, WoRMS Echinoidea UPDATED!, WoRMS Gastrotricha UPDATED!, WoRMS Gnathostomulida UPDATED!, WoRMS Holothuroidea UPDATED!, WoRMS Hydrozoa UPDATED!, WoRMS Isopoda UPDATED!, WoRMS Leptostraca UPDATED!, WoRMS Monogenea UPDATED!, WoRMS Mystacocarida UPDATED!, WoRMS Myxozoa UPDATED!, WoRMS Nemertea UPDATED!, WoRMS Oligochaeta UPDATED!, WoRMS Ophiuroidea UPDATED!, WoRMS Phoronida UPDATED!, WoRMS Placozoa UPDATED!, WoRMS Polychaeta UPDATED!, WoRMS Polycystina UPDATED!, WoRMS Porifera UPDATED!, WoRMS Priapulida UPDATED!, WoRMS Proseriata-Kalyptorhynchia UPDATED!, WoRMS Remipedia UPDATED!, WoRMS Scaphopoda UPDATED!, WoRMS Tanaidacea UPDATED!, WoRMS Tantulocarida UPDATED!, WoRMS Thermosbaenacea UPDATED!, WoRMS Trematoda UPDATED!, WoRMS Xenoturbellida UPDATED! * Rotifers, mayflies, freshwater hairworms, planarians from FADA databases: FADA Rotifera, FADA Ephemeroptera, FADA Nematomorpha &amp; FADA Turbellaria * Entoprocts, water bears from ITIS Global * Spiders, scorpions, ticks &amp; mites from SpidCat via ITIS, SalticidDB , ITIS Global, TicksBase, SpmWeb BdelloideaBase UPDATED! &amp; Mites GSDs: OlogamasidBase, PhytoseiidBase, RhodacaridBase &amp; TenuipalpidBase * Diplopods, centipedes, pauropods and symphylans from SysMyr UPDATED! &amp; ChiloBase * Dragonflies and damselflies from Odonata database * Stoneflies from PlecopteraSF * Cockroaches from BlattodeaSF * Praying mantids from MantodeaSF * Stick and leaf insects from PhasmidaSF * Grasshoppers, locusts, katydids and crickets from OrthopteraSF * Webspinners from EmbiopteraSF * Bark &amp; parasitic lices from PsocodeaSF * Some groups of true bugs from ScaleNet, FLOW, COOL, Psyllist, AphidSF , MBB, 3i Cicadellinae, 3i Typhlocybinae, MOWD &amp; CoreoideaSF* Twisted-wing parasites from Strepsiptera Database * Lacewings, antlions, owlflies, fishflies, dobsonflies &amp; snakeflies from LDL Neuropterida * Some beetle groups from the Scarabs UPDATED!, TITAN, WTaxa &amp; ITIS Global * Fleas from Parhost * Flies, mosquitoes, bots, midges and gnats from Systema Dipterorum, CCW &amp; CIPA * Butterflies and moths from LepIndex, GloBIS (GART), Tineidae NHM, World Gracillariidae * Bees &amp; wasps from ITIS Bees, Taxapad Ichneumonoidea, UCD, ZOBODAT Vespoidea &amp; HymIS Rhopalosomatidae* Molluscs from WoRMS Mollusca UPDATED!, FADA Bivalvia, MolluscaFW &amp; AFD (Pulmonata) * Fishes from FishBase * Reptiles from ReptileDB UPDATED! * Amphibians, birds and mammals from ITIS Global PLUS additional species of many groups from ITIS Regional, NZIB and CoL China</para>
 		</abstract>
 		
-		<!-- multiple paragraphs could be omitted and all content placed into a single <para> element -->
 		<intellectualRights>
 			<para>© [year], Species 2000</para>
 			<para>This online database is copyrighted by Species 2000 on behalf of the Catalogue of Life partners.</para>
@@ -146,7 +397,6 @@
 			</para>
 		</intellectualRights>
 		
-		<!-- link to a GSD website -->
 		<distribution scope="document">
 			<online>
 				<url function="information">[website]</url>
@@ -160,10 +410,6 @@
 			
 			<taxonomicCoverage>
 				<generalTaxonomicCoverage>This release of the Catalogue of Life contains contributions from [nrDatabases] databases with information on [nrSpecies] species, [nrInfraspecies] infraspecific taxa and also includes [nrSynonyms] synonyms and [nrCommonNames] common names.</generalTaxonomicCoverage>
-				<!-- 
-					the following is fixed and simply lists all kingdoms covered. 
-					Listing of all included families or other ranks could also be done, but might be a bit too much (some EML publisher do this though) 
-				-->
 				<taxonomicClassification>
 					<taxonRankName>Kingdom</taxonRankName>
 					<taxonRankValue>Viruses</taxonRankValue>
@@ -199,7 +445,6 @@
 			</taxonomicCoverage>			
 		</coverage>
 		
-		<!-- whom to contact in case of questions or improvements to the actual data -->
 		<contact>
 			<organizationName>Species 2000 Secretariat</organizationName>
 			<address>
@@ -208,7 +453,6 @@
 				<country>UK</country>
 			</address>
 			<phone>+44(0)1183786466</phone>
-			<!-- vital, cause this will be used for feedback -->
 			<electronicMailAddress>support@sp2000.org</electronicMailAddress>
 		</contact>
 		
@@ -217,9 +461,7 @@
 	<additionalMetadata>
 		<metadata>
 			<gbif>
-				<!-- date this EML file was created -->
 				<dateStamp>[dateStamp]</dateStamp>
-				<!-- how to cite the entire catalogue of life -->
 				<citation identifier="[issn]">[citation]</citation>
 				<resourceLogoUrl>[resourceLogoUrl]</resourceLogoUrl>				
 			</gbif>
