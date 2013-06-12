@@ -20,24 +20,6 @@ class DCAExporter
     public static $meta = 'templates/meta.tpl';
     // Base name of zip archive
     public static $zip = 'zip/';
-    // Metadata for Annual Checklist itself is not stored in the database
-    // Set credits in this array
-    /* TODO: get proper data for this!
-    public static $species2000Metadata = array(
-        'id' => 'col', 
-        'title' => 'Catalogue of Life', 
-        'abbreviatedName' => 'Catalogue of Life', 
-        'groupName' => '', 
-        'authorsEditors' => 'Bisby F., Roskov Y., Culham A., Orrell T., Nicolson D., Paglinawan L., Bailly N., Appeltans W., Kirk P., Bourgoin T., Baillargeon G., Ouvrard D., eds', 
-        'organizationName' => 'Species 2000', 
-        'contact' => 'support@sp2000.org', 
-        'abstract' => '', 
-        'sourceUrl' => 'http://www.catalogueoflife.org', 
-        'contactCountry' => 'GB', 
-        'contactCity' => 'Reading', 
-        'resourceLogoUrl' => 'images/databases/Species_2000_Common_Names.gif'
-    );
-    */
     
     // Database handler
     private $_dbh;
@@ -539,19 +521,19 @@ class DCAExporter
             foreach ($res as $r) {
                 switch ($r['description']) {
                     case 'species':
-                        $fields['nrSpecies'] = $r['total'];
+                        $fields['nrSpecies'] = number_format($r['total']);
                         break;
                     case 'source_databases':
-                        $fields['nrDatabases'] = $r['total'];
+                        $fields['nrDatabases'] = number_format($r['total']);
                         break;
                     case 'infraspecies':
-                        $fields['nrInfraspecies'] = $r['total'];
+                        $fields['nrInfraspecies'] = number_format($r['total']);
                         break;
                     case 'synonyms':
-                        $fields['nrSynonyms'] = $r['total'];
+                        $fields['nrSynonyms'] = number_format($r['total']);
                         break;
                     case 'common_names':
-                        $fields['nrCommonNames'] = $r['total'];
+                        $fields['nrCommonNames'] = number_format($r['total']);
                         break;
                     default:
                         break;
@@ -573,7 +555,6 @@ class DCAExporter
        
         // New per 31-05-13: Add second metadata eml for entire CoL
         $sp2000 = new SourceDatabase($this->_dbh, $this->_dir, $this->_getTotals());
-//print_r($sp2000); die();
         $sp2000->writeEml();
         unset($sp2000);
     }

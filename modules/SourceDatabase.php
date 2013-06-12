@@ -62,8 +62,11 @@ class SourceDatabase
     
     private function _setColMetaFields (&$fields)
     {
+        $colEml = DCAExporter::getColEmlIni();
         $fields['year'] = date("Y");
         $fields['citation'] = DCAExporter::getCredits() . ', ' . 'Catalogue of Life';
+        $fields['resourceLogoUrl'] = DCAExporter::getWebsiteUrl() . $colEml['resourceLogoUrl'];
+        $fields['sourceUrl'] = $colEml['sourceUrl'];
         $fields = array_merge($fields, DCAExporter::getColMetaEmlIni());
         return $fields;
     }

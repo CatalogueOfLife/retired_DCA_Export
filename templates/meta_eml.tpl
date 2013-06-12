@@ -399,7 +399,7 @@ Animalia (Animals) * Marine groups from URMO, ITIS Global, Hexacorals, ETI WBD (
 		
 		<distribution scope="document">
 			<online>
-				<url function="information">[website]</url>
+				<url function="information">[sourceUrl]</url>
 			</online>
 		</distribution>
 		
