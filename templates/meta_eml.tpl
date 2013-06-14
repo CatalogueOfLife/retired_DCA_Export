@@ -377,7 +377,7 @@ Animalia (Animals) * Marine groups from URMO, ITIS Global, Hexacorals, ETI WBD (
 		</abstract>
 		
 		<intellectualRights>
-			<para>© [year], Species 2000</para>
+			<para>¬© [year], Species 2000</para>
 			<para>This online database is copyrighted by Species 2000 on behalf of the Catalogue of Life partners.</para>
 			<para>Use of the content (such as the classification, synonymic species checklist, and scientific names) for publications and databases by individuals and organizations for not-for-profit usage is encouraged, on condition that full and precise credit is given at three levels on all occasions that records are shown. The three-part credit includes the complete work, the contributing database of the record, and the expert who provides taxonomic scrutiny of the individual record. For example, these might be as follows:
 				
