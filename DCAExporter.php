@@ -42,6 +42,8 @@ class DCAExporter
     
     // Storage array to determine if an eml file has already been written 
     private $_savedEmls = array();
+    // Storage array to determine if specific references has already been written 
+    private $_savedReferences = array();
     // Indicator to show progress
     private $_indicator;
     // ignore_user_abort() original setting (will be restored)
@@ -388,6 +390,7 @@ class DCAExporter
     
     private function _getVernaculars ($taxon_id)
     {
+        /*
         $query = 'SELECT t3.`name` as vernacularName, 
                           t2.`name` as language, 
                           t1.`country_iso` as countryCode, 
@@ -402,6 +405,17 @@ class DCAExporter
                    LEFT JOIN `common_name_element` AS t3 ON t3.`id` = t1.`common_name_element_id` 
                    RIGHT JOIN `reference_to_common_name` AS t4 ON t4.`common_name_id` = t1.`id` 
                    RIGHT JOIN `reference` AS t5 ON t5.`id` = t4.`reference_id` 
+                   LEFT JOIN `country` AS t6 ON t1.`country_iso` = t6.`iso` 
+                   WHERE t1.`taxon_id` = ?';
+        */
+        $query = 'SELECT t3.`name` as vernacularName, 
+                          t2.`name` as language, 
+                          t1.`country_iso` as countryCode, 
+                          t6.`name` AS locality, 
+                          t1.`id` as vernacularID
+                   FROM `common_name` t1 
+                   LEFT JOIN `language` AS t2 ON t2.`iso` = t1.`language_iso` 
+                   LEFT JOIN `common_name_element` AS t3 ON t3.`id` = t1.`common_name_element_id` 
                    LEFT JOIN `country` AS t6 ON t1.`country_iso` = t6.`iso` 
                    WHERE t1.`taxon_id` = ?';
         $stmt = $this->_dbh->prepare($query);
@@ -618,6 +632,11 @@ class DCAExporter
         for ($limit = 1000, $offset = 0; $offset < $total; $offset += $limit) {
             $taxa = $this->_getTaxa($limit, $offset);
             foreach ($taxa as $iTx => $rowTx) {
+                // In DCA export, relation between reference and type is sometimes lost
+                // Check is needed to avoid duplicates; $savedReferences is used for this
+                // It stores serialized and subsequently hashed versions of the original arrays
+                $this->resetStoredReferences();
+        
                 $this->_indicator ? $this->_indicator->iterate() : '';
                 $taxon = $this->_initModule('Taxon', $rowTx);
                 $taxon->setDefaultTaxonData();
@@ -670,6 +689,7 @@ class DCAExporter
                             $vernacular->vernacularID, 
                             'common_name');
                         foreach ($references as $iRf => $rowRf) {
+                            if ($this->referenceExists($rowRf)) continue;
                             $reference = $this->_initModule(
                                 'Reference', 
                                 $rowRf, 
@@ -686,6 +706,7 @@ class DCAExporter
                         $taxon->taxonID, 
                         $type);
                     foreach ($references as $iRf => $rowRf) {
+                        if ($this->referenceExists($rowRf)) continue;
                         $reference = $this->_initModule(
                             'Reference', 
                             $rowRf, 
@@ -800,4 +821,20 @@ class DCAExporter
         }
         return false;
     }
+    
+    public function referenceExists ($reference)
+    {
+        $a = md5(serialize($reference));
+        if (in_array($a, $this->_savedReferences)) {
+            return true;
+        }
+        $this->_savedReferences[] = $a;
+        return false;
+    }
+    
+    public function resetStoredReferences ()
+    {
+        $this->_savedReferences = array();
+    }
+    
 }
