@@ -66,6 +66,7 @@ CREATE TABLE IF NOT EXISTS "@TABLEPREFIX@Taxon" (
   "order" varchar(255) default NULL,
   "superfamily" varchar(255) default NULL,
   "family" varchar(255) default NULL,
+  "genericName" varchar(255) default NULL,
   "genus" varchar(255) default NULL,
   "subgenus" varchar(255) default NULL,
   "specificEpithet" varchar(255) default NULL,
@@ -78,6 +79,7 @@ CREATE TABLE IF NOT EXISTS "@TABLEPREFIX@Taxon" (
   "description" text,
   "taxonConceptID" varchar(255) default NULL,
   "scientificNameID" varchar(255) default NULL
+  "references" varchar(255) default NULL
 )      ;
 
 -- --------------------------------------------------------
