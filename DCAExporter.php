@@ -203,7 +203,7 @@ class DCAExporter
         while (false !== ($file = $d->read())) {
             if (is_numeric(substr($file, 0, 4)) && !is_dir($file)) {
                 list($year, $month, $day) = explode('-', $file);
-                $files[] = array(
+                $files[$year.$month.$day] = array(
                     'edition' => date("j F Y", mktime(0, 0, 0, $month, $day, $year)),
                     'size' => self::getDownloadSize($dir .'/' . $file),
                     'url' => /*$http . substr($path, 0, -(strlen(basename($path)))).*/ 'zip-fixed/' . $file
@@ -211,6 +211,7 @@ class DCAExporter
             }
         }
         $d->close();
+        krsort($files);
         return $files;
     }
 
