@@ -16,15 +16,18 @@ abstract class DCAModuleAbstract
 
     private function _cleanString ($str)
     {
-        $delete = array(
-            "\r", 
-            "\n", 
-            "\r\n"
-        );
-        $space = array(
-            "\t"
-        );
-        return str_replace($space, ' ', str_replace($delete, '', $str));
+        // Characters to remove
+        $delete = array("\r", "\n", "\r\n");
+        // Characters to transfer to space
+        $space = array("\t" );
+        // Characters to find...
+        $find = array('""');
+        //... and replace with...
+        $replace = array('"');
+        return str_replace($find, $replace, 
+            str_replace($space, ' ', 
+            str_replace($delete, '', $str)
+        ));
     }
     
     protected function _getCredits() {
