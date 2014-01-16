@@ -90,11 +90,11 @@ CREATE TABLE IF NOT EXISTS "@TABLEPREFIX@Taxon" (
 
 CREATE TABLE IF NOT EXISTS "@TABLEPREFIX@VernacularName" (
   "taxonID" integer NOT NULL,
-  "vernacularName" varchar(255) NOT NULL,
-  "language" varchar(255) NOT NULL,
-  "countryCode" varchar(255) NOT NULL,
-  "locality" varchar(255) NOT NULL,
-  "transliteration" varchar(255) NOT NULL
+  "vernacularName" varchar(255) NULL,
+  "language" varchar(255) NULL,
+  "countryCode" varchar(255) NULL,
+  "locality" varchar(255) NULL,
+  "transliteration" varchar(255) NULL
 )      ;
 
 

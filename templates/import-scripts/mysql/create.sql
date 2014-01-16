@@ -59,9 +59,9 @@ CREATE TABLE `@TABLEPREFIX@reference` (
 
 CREATE TABLE `@TABLEPREFIX@vernacular` (
   `taxonID` int NOT NULL,
-  `vernacularName` varchar(255) NOT NULL,
-  `language` varchar(255) NOT NULL,
-  `countryCode` varchar(255) NOT NULL,
-  `locality` varchar(255) NOT NULL,
-  `transliteration` varchar(255) NOT NULL
+  `vernacularName` varchar(255) NULL,
+  `language` varchar(255) NULL,
+  `countryCode` varchar(255) NULL,
+  `locality` varchar(255) NULL,
+  `transliteration` varchar(255) NULL
 );
