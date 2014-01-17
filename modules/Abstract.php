@@ -17,7 +17,7 @@ abstract class DCAModuleAbstract
     private function _cleanString ($str)
     {
         // Characters to remove
-        $delete = array("\r", "\n", "\r\n");
+        $delete = array("\r", "\n", "\r\n", "\\");
         // Characters to transfer to space
         $space = array("\t" );
         // Characters to find...

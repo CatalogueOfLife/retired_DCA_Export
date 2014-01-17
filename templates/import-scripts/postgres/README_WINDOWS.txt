@@ -17,6 +17,14 @@ The import_windows.bat script will help you import files generated
 by the Darwin Core Archive (DWC-A) download service into PostgreSQL.
 create.sql and import.sql are helper scripts, used by import_windows.bat.
 
+IMPORTANT: these files will be imported using the COPY command. The
+import for Postgres is sensitive to incorrectly formatted csv files. 
+Files therefore will be imported using as text files. However, this does not
+offer the option to skip the first line of a file.
+
+*** Before starting the import, you therefore have to remove the first line of each
+.txt file manually. ***
+
 
 
 Usage
