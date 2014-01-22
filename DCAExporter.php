@@ -68,7 +68,8 @@ class DCAExporter
         $this->_zip = self::basePath() . '/' . self::$zip;
         $this->_excluded = $this->_setExcluded($ini);
         $this->_setDefaults();
-        $this->_iuaSetting = ignore_user_abort(1);
+        $this->_iuaSetting = ignore_user_abort(true);
+        set_time_limit(0);
         $this->_completeDump = in_array('[all]', $this->_sc) ? true : false;
 
         $bootstrap = new DCABootstrap($this->_dbh, $this->_del, $this->_sep, $this->_sc, 
@@ -81,8 +82,8 @@ class DCAExporter
     {
         $this->deleteTempDir();
         // Reset ignore_user_abort back to 0 if this was set as such in php.ini
-        if (!$this->_iuaSetting) {
-            ignore_user_abort(0);
+        if ($this->_iuaSetting == 0) {
+            ignore_user_abort(false);
         }
     }
     
