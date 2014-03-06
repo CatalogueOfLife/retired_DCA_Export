@@ -1,8 +1,9 @@
 <?php
 session_start();
-require_once 'includes/library.php';
 require_once 'DCAExporter.php';
+require_once 'includes/library.php';
 alwaysFlush();
+setDynamicVersion();
 
 $vars = Taxon::$higherTaxa;
 $vars[] = 'block';

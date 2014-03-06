@@ -49,8 +49,8 @@ function downloadComplete ()
 {
     $downloadUrl = 'zip-fixed/archive-complete.zip';
     if (file_exists(DCAExporter::basePath() . '/' . $downloadUrl)) {
-        $output = '<p>Download a Darwin Core Archive for the 
-            <a href="' . $downloadUrl . '">complete Catalogue of Life</a> 
+        $output = '<p>Download a Darwin Core Archive for the
+            <a href="' . $downloadUrl . '">complete Catalogue of Life</a>
             (' . DCAExporter::getDownloadSize($downloadUrl) . ')';
     }
     if (count(DCAExporter::getPreviousEditions()) > 0) {
@@ -69,11 +69,24 @@ function printEditions ()
     if (count($editions) > 0) {
         $output = "<ul>\n";
         foreach ($editions as $ed) {
-            $output .= '<li><a href="' . $ed['url'] . '">Catalogue of Life, ' . 
+            $output .= '<li><a href="' . $ed['url'] . '">Catalogue of Life, ' .
             $ed['edition'] . '</a> ('.$ed['size'].')</li>' . "\n";
         }
         return $output . "</ul>\n";
     }
     return;
 }
+
+function setDynamicVersion ()
+{
+    $d = key(DCAExporter::getPreviousEditions());
+    if (!empty($d)) {
+        $f = substr($d, 0, 4) . '-' . substr($d, 4, 2) . '-' . substr($d, 6, 2);
+        $_SESSION['monthly']['ini']['credits']['string'] =
+            'Species 2000 & ITIS Catalogue of Life: ' . date('jS F Y', strtotime($f));;
+        $_SESSION['monthly']['ini']['credits']['release_date'] = $f;
+    }
+}
+
+
 ?>
