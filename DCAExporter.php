@@ -99,9 +99,6 @@ class DCAExporter
 
     public static function getVersion ()
     {
-        if (isset($_SESSION['monthly'])) {
-            return $_SESSION['monthly']['ini']['credits']['string'];
-        }
         $ini = parse_ini_file('config/settings.ini', true);
         return $ini['settings']['version'] . ' [r' . $ini['settings']['revision'] . ']';
     }
