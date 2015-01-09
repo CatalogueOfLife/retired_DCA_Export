@@ -24,12 +24,12 @@ abstract class DCAModuleAbstract
         $find = array('""');
         //... and replace with...
         $replace = array('"');
-        return str_replace($find, $replace, 
-            str_replace($space, ' ', 
+        return str_replace($find, $replace,
+            str_replace($space, ' ',
             str_replace($delete, '', $str)
         ));
     }
-    
+
     protected function _getCredits() {
         $ini = parse_ini_file(DCAExporter::basePath() . '/config/settings.ini', true);
         return $ini['credits']['string'];
@@ -91,7 +91,7 @@ abstract class DCAModuleAbstract
     {
         $del_esc = preg_quote($del, '/');
         $sep_esc = preg_quote($sep, '/');
-        
+
         $output = array();
         foreach ($fields as $field) {
             if ($field === null && $mysql_null) {
@@ -102,7 +102,7 @@ abstract class DCAModuleAbstract
             $output[] = preg_match("/(?:${del_esc}|${sep_esc}|\s)/", $field) ? ($sep . str_replace(
                 $sep, $sep . $sep, $field) . $sep) : $field;
         }
-        
+
         fwrite($fh, join($del, $output) . "\n");
     }
 }
