@@ -32,64 +32,64 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
     public $taxonConceptID; // GSDTaxonGUID, separate
     public $scientificNameID; // GSDNameGUID, separate
     public $references;
-    
+
     public $fields = array(
-        'taxonID', 
-        'identifier', 
-        'datasetID', 
-        'datasetName', 
-        'acceptedNameUsageID', 
-        'parentNameUsageID', 
-        'taxonomicStatus', 
-        'taxonRank', 
+        'taxonID',
+        'identifier',
+        'datasetID',
+        'datasetName',
+        'acceptedNameUsageID',
+        'parentNameUsageID',
+        'taxonomicStatus',
+        'taxonRank',
         'verbatimTaxonRank',
-        'scientificName', 
-        'kingdom', 
-        'phylum', 
-        'class', 
-        'order', 
-        'superfamily', 
-        'family', 
-        'genericName', 
-        'genus', 
-    	'subgenus', 
-        'specificEpithet', 
-        'infraspecificEpithet', 
-        'scientificNameAuthorship', 
+        'scientificName',
+        'kingdom',
+        'phylum',
+        'class',
+        'order',
+        'superfamily',
+        'family',
+        'genericName',
+        'genus',
+    	'subgenus',
+        'specificEpithet',
+        'infraspecificEpithet',
+        'scientificNameAuthorship',
         'source',
         'namePublishedIn',
-        'nameAccordingTo', 
+        'nameAccordingTo',
         'modified',
         'description',
         'taxonConceptID',
         'scientificNameID',
     	'references'
     );
-    
+
     // Derived values
     public $status;
     public $isHigherTaxon = false; // set in _setRank in setDefaultTaxonData
     public $isSynonym = false; // set in _setNameStatus in setDefaultTaxonData
-    
+
     // Export settings
     const FILE = 'taxa.txt';
-    
+
     // Lookup tables
     public static $higherTaxa = array(
-        'kingdom', 
-        'phylum', 
-        'class', 
+        'kingdom',
+        'phylum',
+        'class',
         'order',
         'superfamily',
-        'family', 
+        'family',
         'genus'
     );
-    
+
     public static $scientificNameStatus = array(
-        1 => 'accepted name', 
-        2 => 'ambiguous synonym', 
-        3 => 'misapplied name', 
-        4 => 'provisionally accepted name', 
+        1 => 'accepted name',
+        2 => 'ambiguous synonym',
+        3 => 'misapplied name',
+        4 => 'provisionally accepted name',
         5 => 'synonym'
     );
 
@@ -108,8 +108,8 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
     {
         $this->_createTextFile(self::FILE);
     }
-    
-    public function setDefaultTaxonData () 
+
+    public function setDefaultTaxonData ()
     {
     	$this->_setRank();
     	$this->_setNameStatus();
@@ -118,11 +118,11 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
 
     public function setLsid ()
     {
-        $query = 'SELECT t1.`resource_identifier` AS LSID 
-                  FROM `uri` AS t1  
-                  LEFT JOIN `uri_to_taxon` AS t2 ON t1.`id` = t2.`uri_id` 
-                  LEFT JOIN `uri_scheme` AS t3 ON t1.`uri_scheme_id` = t3.`id` 
-                  WHERE t2.`taxon_id` = ? AND 
+        $query = 'SELECT t1.`resource_identifier` AS LSID
+                  FROM `uri` AS t1
+                  LEFT JOIN `uri_to_taxon` AS t2 ON t1.`id` = t2.`uri_id`
+                  LEFT JOIN `uri_scheme` AS t3 ON t1.`uri_scheme_id` = t3.`id`
+                  WHERE t2.`taxon_id` = ? AND
                         t3.`scheme` = "lsid"';
         $stmt = $this->_dbh->prepare($query);
         $stmt->execute(array(
@@ -137,8 +137,8 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
 
     public function setParentId ()
     {
-        $query = 'SELECT `parent_id` 
-                  FROM `taxon_name_element` 
+        $query = 'SELECT `parent_id`
+                  FROM `taxon_name_element`
                   WHERE `taxon_id` = ?';
         $stmt = $this->_dbh->prepare($query);
         $stmt->execute(array(
@@ -154,11 +154,11 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
     public function setScrutiny ()
     {
         if (!$this->isHigherTaxon) {
-            $query = 'SELECT t3.`name` AS nameAccordingTo, 
+            $query = 'SELECT t3.`name` AS nameAccordingTo,
                              t2.`original_scrutiny_date` AS modified
-                      FROM `taxon_detail` AS t1 
-                      LEFT JOIN `scrutiny` AS t2 ON t1.`scrutiny_id` = t2.`id` 
-                      LEFT JOIN `specialist` AS t3 ON t2.`specialist_id` = t3.`id` 
+                      FROM `taxon_detail` AS t1
+                      LEFT JOIN `scrutiny` AS t2 ON t1.`scrutiny_id` = t2.`id`
+                      LEFT JOIN `specialist` AS t3 ON t2.`specialist_id` = t3.`id`
                       WHERE t1.`taxon_id` = ?';
             $stmt = $this->_dbh->prepare($query);
             $stmt->execute(array(
@@ -171,12 +171,12 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
             return false;
         }
     }
-    
-    public function setDescription () 
+
+    public function setDescription ()
     {
         if (!$this->isHigherTaxon) {
             $query = 'SELECT `additional_data` AS description
-                      FROM `taxon_detail` 
+                      FROM `taxon_detail`
                       WHERE `taxon_id` = ?';
             $stmt = $this->_dbh->prepare($query);
             $stmt->execute(array(
@@ -189,12 +189,12 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
             return false;
         }
     }
-    
+
     public function setGsdNameGuid ()
     {
         $this->isSynonym ? $table = 'synonym' : $table = 'taxon';
         $query = 'SELECT `original_id` AS scientificNameID
-                  FROM `' . $table . '` 
+                  FROM `' . $table . '`
                   WHERE `id` = ?';
         $stmt = $this->_dbh->prepare($query);
         $stmt->execute(array(
@@ -206,19 +206,25 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
         }
         return false;
     }
-    
+
     public function setColUrl ()
     {
+    	$ini = parse_ini_file(DCAExporter::basePath() . '/config/settings.ini', true);
+    	$nK = $ini['export']['natural_keys'];
+
     	$baseUrl = 'http://www.catalogueoflife.org/annual-checklist/';
     	// Valid taxon
     	if (empty($this->acceptedNameUsageID)) {
-    		$this->references = $baseUrl . 'details/species/id/' . $this->taxonID;
+    		$this->references = $baseUrl . 'details/species/id/' .
+    		   ($nK == 1 ? $this->_getNaturalKey($this->taxonID) : $this->taxonID);
     	} else {
-    		$this->references = $baseUrl . 'details/species/id/' . $this->acceptedNameUsageID . 
-    			'/synonym/'. $this->taxonID;
+    		$this->references = $baseUrl . 'details/species/id/' .
+    		    ($nK == 1 ? $this->_getNaturalKey($this->acceptedNameUsageID) : $this->acceptedNameUsageID) .
+    			'/synonym/'.
+    		    ($nK == 1 ? $this->_getNaturalKey($this->taxonID) : $this->taxonID);
     	}
     }
-    
+
     public function setSynonymGenus ($taxon = false)
     {
     	// Ruud 25-10-12: $this->genericName now is the main field for genus name!
@@ -246,35 +252,35 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
     	}
     	return false;
     }
-    
+
     public function writeModel ()
     {
         $fields = array(
-            $this->taxonID, 
-            $this->identifier, 
-            $this->datasetID, 
-            $this->datasetName . ' in ' . $this->_getCredits(), 
-            $this->acceptedNameUsageID, 
-            $this->parentNameUsageID, 
-            $this->taxonomicStatus, 
-            $this->taxonRank, 
-            $this->verbatimTaxonRank, 
-            $this->scientificName, 
-            $this->kingdom, 
-            $this->phylum, 
-            $this->class, 
-            $this->order, 
-            $this->superfamily, 
-            $this->family, 
-            $this->genericName, 
-            $this->genus, 
-        	$this->subgenus, 
-            $this->specificEpithet, 
-            $this->infraspecificEpithet, 
-            $this->scientificNameAuthorship, 
+            $this->taxonID,
+            $this->identifier,
+            $this->datasetID,
+            $this->datasetName . ' in ' . $this->_getCredits(),
+            $this->acceptedNameUsageID,
+            $this->parentNameUsageID,
+            $this->taxonomicStatus,
+            $this->taxonRank,
+            $this->verbatimTaxonRank,
+            $this->scientificName,
+            $this->kingdom,
+            $this->phylum,
+            $this->class,
+            $this->order,
+            $this->superfamily,
+            $this->family,
+            $this->genericName,
+            $this->genus,
+        	$this->subgenus,
+            $this->specificEpithet,
+            $this->infraspecificEpithet,
+            $this->scientificNameAuthorship,
             $this->source,
             $this->namePublishedIn,
-            $this->nameAccordingTo, 
+            $this->nameAccordingTo,
             $this->modified,
             $this->description,
             $this->taxonConceptID,
@@ -304,7 +310,7 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
     	}
     	return false;
     }
-    
+
     private function _setNameStatus ()
     {
     	if (!isset($this->status) || empty($this->status)) {
@@ -324,7 +330,7 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
     	}
     	return $this->taxonomicStatus;
     }
-    
+
     private function _setScientificName ()
     {
     	if ($this->isHigherTaxon) {
@@ -346,5 +352,5 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
     	}
     	return !empty($this->scientificName) ? true : false;
     }
-    
+
 }

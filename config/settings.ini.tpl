@@ -11,6 +11,7 @@ options = "PDO::MYSQL_ATTR_INIT_COMMAND=set names utf8"
 [export]
 delimiter = "\t"                    ; leave empty for default comma, use "\t" for tab
 separator =                         ; leave empty for default double quote; if tab is used as delimiter, no separator will be used
+natural_keys = 1				    ; export using natural keys (1) or ids (0) in CoL urls
 
 [credits]
 ; Credits string appears for each record in each individual text file
@@ -30,11 +31,11 @@ revision = @APP.REVISION@
 
 ; Data used to decorate col.xml eml file that is part of every archive
 [col_eml]
-authorsEditors = "Bisby F., Roskov Y., Culham A., Orrell T., Nicolson D., Paglinawan L., Bailly N., Appeltans W., Kirk P., Bourgoin T., Baillargeon G., Ouvrard D., eds" 
-abstract = 
-version = 
-contact = "support@sp2000.org" 
-sourceUrl = "http://www.catalogueoflife.org/" 
+authorsEditors = "Bisby F., Roskov Y., Culham A., Orrell T., Nicolson D., Paglinawan L., Bailly N., Appeltans W., Kirk P., Bourgoin T., Baillargeon G., Ouvrard D., eds"
+abstract =
+version =
+contact = "support@sp2000.org"
+sourceUrl = "http://www.catalogueoflife.org/"
 resourceLogoUrl = "images/databases/Species_2000_Common_Names.gif"
 
 ; Additional data used to decorate eml.xml meta eml file that is part of every archive

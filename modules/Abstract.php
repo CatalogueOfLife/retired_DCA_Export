@@ -70,6 +70,18 @@ abstract class DCAModuleAbstract
         $this->fputcsv2($fh, $fields, $this->_del, $this->_sep);
     }
 
+    protected function _getNaturalKey ($id)
+    {
+        $query = 'SELECT `hash`
+                  FROM `_natural_keys`
+                  WHERE `id` = ?';
+        $stmt = $this->_dbh->prepare($query);
+        $stmt->execute(array(
+            (int)$id
+        ));
+        return $stmt->fetchColumn();
+    }
+
     public function writeHeader ()
     {
         $this->_writeLine($this->_fh, $this->fields);
