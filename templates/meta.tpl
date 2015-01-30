@@ -1,10 +1,10 @@
-<archive 
- 	metadata="eml.xml" 
+<archive
+ 	metadata="eml.xml"
 	xmlns='http://rs.tdwg.org/dwc/text/'
     xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
     xsi:schemaLocation='http://rs.tdwg.org/dwc/text/ http://rs.tdwg.org/dwc/text/tdwg_dwc_text.xsd'>
-   
-    <core encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.tdwg.org/dwc/terms/Taxon'>    
+
+    <core encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.tdwg.org/dwc/terms/Taxon'>
     <files>
         <location>taxa.txt</location>
     </files>
@@ -22,7 +22,7 @@
     <!-- CoL taxon id of parent taxon (relevant for valid taxa only) -->
     <field index='5' term='http://rs.tdwg.org/dwc/terms/parentNameUsageID'/>
     <!-- Species 2000 status -->
-    <field index='6' term='http://rs.tdwg.org/dwc/terms/taxonomicStatus'/> 
+    <field index='6' term='http://rs.tdwg.org/dwc/terms/taxonomicStatus'/>
     <!-- Taxonomic rank -->
     <field index='7' term='http://rs.tdwg.org/dwc/terms/taxonRank'/>
     <!-- Infraspecific marker if displayed in complete scientific name -->
@@ -30,7 +30,7 @@
     <!-- Complete scientific name, including subspecific marker where appropriate -->
     <field index='9' term='http://rs.tdwg.org/dwc/terms/scientificName'/>
     <!-- Top level group; listed as kingdom but may be interpreted as domain or superkingdom
-         The following eight groups are recognized: Animalia, Archaea, Bacteria, Chromista, 
+         The following eight groups are recognized: Animalia, Archaea, Bacteria, Chromista,
          Fungi, Plantae, Protozoa, Viruses -->
     <field index='10' term='http://rs.tdwg.org/dwc/terms/kingdom'/>
     <!-- Phylum in which the taxon has been classified -->
@@ -71,8 +71,10 @@
     <field index='28' term='http://rs.tdwg.org/dwc/terms/scientificNameID'/>
     <!-- Url to the taxon in the current CoL -->
     <field index='29' term='http://purl.org/dc/terms/references'/>
+    <!-- Flag to indicate if taxon is extinct -->
+    <field index='30' term='http://rs.gbif.org/terms/1.0/isExtinct'/>
     </core>
-    
+
     <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Distribution'>
         <files>
             <location>distribution.txt</location>
@@ -88,7 +90,7 @@
         <!-- The process by which the taxon became established (currently not yet implemented, reserved for future edition) -->
         <field index='4' term='http://rs.tdwg.org/dwc/terms/establishmentMeans'/>
     </extension>
-    
+
     <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Reference'>
         <files>
             <location>reference.txt</location>
@@ -107,7 +109,7 @@
         <!-- Type of reference; pertaining to taxon, synonym or vernacular name -->
         <field index='6' term='http://purl.org/dc/terms/type'/>
     </extension>
-  
+
     <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/SpeciesProfile'>
          <files>
             <location>speciesprofile.txt</location>
@@ -115,8 +117,8 @@
          <coreid index='0' />
          <!-- Life zone; these comprise: marine, terrestrial, brackish, freshwater, unknown -->
          <field index='1' term='http://rs.tdwg.org/dwc/terms/habitat' vocabulary='http://www.catalogueoflife.org/dwc/habitats-classification-scheme'/>
-    </extension>  
-    
+    </extension>
+
     <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/VernacularName'>
         <files>
             <location>vernacular.txt</location>

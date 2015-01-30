@@ -32,6 +32,7 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
     public $taxonConceptID; // GSDTaxonGUID, separate
     public $scientificNameID; // GSDNameGUID, separate
     public $references;
+    public $isExtinct;
 
     public $fields = array(
         'taxonID',
@@ -63,7 +64,8 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
         'description',
         'taxonConceptID',
         'scientificNameID',
-    	'references'
+    	'references',
+        'isExtinct'
     );
 
     // Derived values
@@ -285,7 +287,8 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
             $this->description,
             $this->taxonConceptID,
             $this->scientificNameID,
-            $this->references
+            $this->references,
+            $this->isExtinct
         );
         $this->_writeLine($this->_fh, $fields);
     }

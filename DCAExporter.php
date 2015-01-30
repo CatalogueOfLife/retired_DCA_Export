@@ -290,10 +290,17 @@ class DCAExporter
                 `family`,
                 `genus`,
                 `genus` AS genericName,
-            		IF (`accepted_species_id` > 0,
+            	IF (`accepted_species_id` > 0,
                     `accepted_species_id`,
                     ""
-                ) AS acceptedNameUsageID, ';
+                ) AS acceptedNameUsageID,
+                IF (`accepted_species_id` > 0,
+                    "",
+                    IF (`is_extinct` = 0,
+                        "false",
+                        "true"
+                    )
+                ) AS isExtinct, ';
             // Split query based on block level; level 1 only exports classification up to genus
             if ($this->_bl == 1 && !$this->_completeDump && $t != 'sn') {
                 $query .=
