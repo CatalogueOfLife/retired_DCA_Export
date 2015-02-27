@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS "@TABLEPREFIX@Taxon" (
   "taxonConceptID" varchar(255) default NULL,
   "scientificNameID" varchar(255) default NULL,
   "references" varchar(255) default NULL,
-  "isExtinct" int(1) NOT NULL
+  "isExtinct" varchar(10) default NULL
 )      ;
 
 -- --------------------------------------------------------

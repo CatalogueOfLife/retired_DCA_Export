@@ -34,7 +34,7 @@ EXEC('
 	  "taxonConceptID" varchar(255) default NULL,
 	  "scientificNameID" varchar(255) default NULL,
 	  "references" varchar(255) default NULL,
-	  "isExtinct" int(1) default NULL,
+	  "isExtinct" varchar(10) default NULL,
 	  PRIMARY KEY  ("taxonID")
 	);
 ');
