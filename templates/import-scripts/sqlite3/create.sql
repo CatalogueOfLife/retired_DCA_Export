@@ -78,8 +78,9 @@ CREATE TABLE IF NOT EXISTS "@TABLEPREFIX@Taxon" (
   "modified" varchar(255) default NULL,
   "description" text,
   "taxonConceptID" varchar(255) default NULL,
-  "scientificNameID" varchar(255) default NULL
-  "references" varchar(255) default NULL
+  "scientificNameID" varchar(255) default NULL,
+  "references" varchar(255) default NULL,
+  "isExtinct" int(1) NOT NULL
 )      ;
 
 -- --------------------------------------------------------
