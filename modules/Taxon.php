@@ -209,6 +209,22 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
         return false;
     }
 
+    public function setTaxonNameGuid ()
+    {
+        $query = 'SELECT `taxon_guid` AS taxonConceptID
+                  FROM `taxon_detail`
+                  WHERE `taxon_id` = ?';
+        $stmt = $this->_dbh->prepare($query);
+        $stmt->execute(array(
+            $this->taxonID
+        ));
+        if ($res = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $this->decorate($res);
+            return true;
+        }
+        return false;
+    }
+
     public function setColUrl ()
     {
     	$ini = parse_ini_file(DCAExporter::basePath() . '/config/settings.ini', true);

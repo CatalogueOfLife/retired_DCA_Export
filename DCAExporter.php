@@ -705,6 +705,7 @@ class DCAExporter
                 if (!$taxon->isHigherTaxon && $this->_bl > 1) {
                     $taxon->setScrutiny();
                     $taxon->setGsdNameGuid();
+                    $taxon->setTaxonNameGuid();
 
                     //Synonyms
                     $synonyms = $this->_getSynonyms($taxon->taxonID);

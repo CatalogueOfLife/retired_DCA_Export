@@ -65,7 +65,7 @@
     <field index='25' term='http://purl.org/dc/terms/modified'/>
     <!-- Additional data for the taxon -->
     <field index='26' term='http://purl.org/dc/terms/description'/>
-    <!-- Taxonomic concept GUID provided by CoL provider (currently not yet implemented, reserved for future edition) -->
+    <!-- Taxonomic concept GUID provided by CoL provider -->
     <field index='27' term='http://rs.tdwg.org/dwc/terms/taxonConceptID'/>
     <!-- Name GUID provided by CoL provider (currently original CoL name code) -->
     <field index='28' term='http://rs.tdwg.org/dwc/terms/scientificNameID'/>
