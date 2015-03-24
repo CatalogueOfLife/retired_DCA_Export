@@ -12,6 +12,7 @@ options = "PDO::MYSQL_ATTR_INIT_COMMAND=set names utf8"
 delimiter = "\t"                    ; leave empty for default comma, use "\t" for tab
 separator =                         ; leave empty for default double quote; if tab is used as delimiter, no separator will be used
 natural_keys = 1				    ; export using natural keys (1) or ids (0) in CoL urls
+fossils = 0							; export fossils (1) or exclude them (0)
 
 [credits]
 ; Credits string appears for each record in each individual text file

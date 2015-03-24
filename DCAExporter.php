@@ -39,6 +39,8 @@ class DCAExporter
     private $_zip;
     // Source databases excluded from results
     private $_excluded;
+    // Include fossils
+    private $_fossils;
 
     // Storage array to determine if an eml file has already been written
     private $_savedEmls = array();
@@ -65,6 +67,7 @@ class DCAExporter
         $ini = parse_ini_file('config/settings.ini', true);
         $this->_del = $ini['export']['delimiter'];
         $this->_sep = $ini['export']['separator'];
+        $this->_fossils = $ini['export']['fossils'];
         $this->_sc = self::filterSc($sc);
         $this->_bl = $bl;
         $this->_dir = self::basePath() . '/' . self::$dir . md5(self::getZipArchiveName()) . '/';
@@ -335,7 +338,11 @@ class DCAExporter
                 $query .= '`species` = "" AND `infraspecies` = "" AND ';
             }
         }
+        if ($this->_fossils == 0) {
+            $query .= '`is_extinct` = 0 AND ';
+        }
    		$query = $this->_excludedToQuery($query . '`accepted_species_id` = 0 ');
+
         // Omit limit from total query
         if ($t != 'tt') {
             $query .= 'LIMIT :limit OFFSET :offset';
