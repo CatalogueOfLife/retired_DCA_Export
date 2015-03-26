@@ -1,13 +1,3 @@
---
--- Database: "dwc_db"
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table "@TABLEPREFIX@Distribution"
---
-
 CREATE TABLE IF NOT EXISTS "@TABLEPREFIX@Distribution" (
   "taxonID" integer NOT NULL,
   "locationID" varchar(255) default NULL,
@@ -16,11 +6,10 @@ CREATE TABLE IF NOT EXISTS "@TABLEPREFIX@Distribution" (
   "establishmentMeans" varchar(255) default NULL
 )      ;
 
--- --------------------------------------------------------
-
---
--- Table structure for table "@TABLEPREFIX@Reference"
---
+CREATE TABLE IF NOT EXISTS "@TABLEPREFIX@Description" (
+  "taxonID" integer NOT NULL,
+  "description" text
+)      ;
 
 CREATE TABLE IF NOT EXISTS "@TABLEPREFIX@Reference" (
   "taxonID" integer NOT NULL,
@@ -32,22 +21,10 @@ CREATE TABLE IF NOT EXISTS "@TABLEPREFIX@Reference" (
   "type" varchar(255) default NULL
 )      ;
 
--- --------------------------------------------------------
-
---
--- Table structure for table "@TABLEPREFIX@SpeciesProfile"
---
-
 CREATE TABLE IF NOT EXISTS "@TABLEPREFIX@SpeciesProfile" (
   "taxonID" integer NOT NULL,
   "habitat" varchar(255) default NULL
 )      ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table "@TABLEPREFIX@Taxon"
---
 
 CREATE TABLE IF NOT EXISTS "@TABLEPREFIX@Taxon" (
   "taxonID" integer NOT NULL,
@@ -82,12 +59,6 @@ CREATE TABLE IF NOT EXISTS "@TABLEPREFIX@Taxon" (
   "references" varchar(255) default NULL,
   "isExtinct" varchar(10) default NULL
 )      ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table "@TABLEPREFIX@VernacularName"
---
 
 CREATE TABLE IF NOT EXISTS "@TABLEPREFIX@VernacularName" (
   "taxonID" integer NOT NULL,

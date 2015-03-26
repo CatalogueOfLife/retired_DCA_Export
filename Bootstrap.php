@@ -7,7 +7,7 @@ class DCABootstrap
     private $_sep;
     private $_sc;
     private $_bl;
-    
+
     private $_errors = array();
 
     public function __construct ($dbh, $del, $sep, $sc, $bl, $dir, $zip, $excluded)
@@ -25,16 +25,17 @@ class DCABootstrap
             $this->_validateDir($zip);
             $this->_validateExcluded($excluded);
             $this->_setInternalCodingToUtf8();
-            
+
             // Text files used to write to are created on the fly when the objects are created
             if (empty(
                 $this->_errors)) {
                 $this->_init(
                     array(
-                        'Taxon', 
-                        'Vernacular', 
-                        'Reference', 
+                        'Taxon',
+                        'Vernacular',
+                        'Reference',
                         'Distribution',
+                        'Description',
                     	'SpeciesProfile'
                     )
                 );
@@ -67,10 +68,10 @@ class DCABootstrap
         if (!is_writable(DCAExporter::basePath().'/'.DCAExporter::$dir)) {
             $this->_errors[2] = 'Directory "' . DCAExporter::basePath().'/'.DCAExporter::$dir . '" is not writable.';
         }
-        // Test if temporary directory is present; 
+        // Test if temporary directory is present;
         // if so, taxon is currently being exported by another user
         if (file_exists($dir)) {
-            $this->_errors[3] = 'Export already initiated by another user. 
+            $this->_errors[3] = 'Export already initiated by another user.
                 Please retry download later.';
         // ... else create temporary directory to write to
         } else {
@@ -90,8 +91,8 @@ class DCABootstrap
     private function _validateDel ($del)
     {
         if (!in_array($del, array(
-            ',', 
-            ';', 
+            ',',
+            ';',
             "\t"
         ))) {
             $this->_errors[5] = 'Delimiter "' . $del . '" is not a valid CSV delimiter.';
@@ -102,8 +103,8 @@ class DCABootstrap
     private function _validateSep ($sep)
     {
         if (!in_array($sep, array(
-            '"', 
-            '\'', 
+            '"',
+            '\'',
             ''
         ))) {
             $this->_errors[6] = 'Delimiter "' . $sep . '" is not a valid CSV separator.';
@@ -141,15 +142,15 @@ class DCABootstrap
     private function _validateBl ($bl)
     {
         if (!in_array($bl, array(
-            1, 
-            2, 
+            1,
+            2,
             3
         ))) {
             $this->_errors[9] = 'Incorrect block level "' . $bl . '".';
         }
         return $bl;
     }
-    
+
     private function _validateExcluded ($excluded)
     {
     	if ($excluded && is_array($excluded)) {
@@ -160,7 +161,7 @@ class DCABootstrap
     		}
     	}
     }
-    
+
     private function _sourceDatabaseExists ($id)
     {
     	$query = 'SELECT `name` FROM `source_database` WHERE `id` = ?';

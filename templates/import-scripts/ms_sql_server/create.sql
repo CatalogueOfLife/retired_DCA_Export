@@ -51,6 +51,13 @@ EXEC('
 	);
 ');
 
+-- Create table Description
+EXEC('
+	CREATE TABLE "' + @table_prefix + 'Description" (
+	  "taxonID" int NOT NULL,
+	  "description" text
+	);
+');
 
 -- Create table Reference
 EXEC('

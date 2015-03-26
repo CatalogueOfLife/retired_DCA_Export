@@ -32,13 +32,14 @@ echo Creating temporary files:
  echo ".read /tmp/create.sql" > /tmp/sqlite3init.cat
  echo ".mode tabs" >> /tmp/sqlite3init.cat
  echo ".import \"${importPath}/distribution.txt\" ${tblPrefix}Distribution" >> /tmp/sqlite3init.cat
+ echo ".import \"${importPath}/description.txt\" ${tblPrefix}Description" >> /tmp/sqlite3init.cat
  echo ".import \"${importPath}/reference.txt\" ${tblPrefix}Reference" >> /tmp/sqlite3init.cat
  echo ".import \"${importPath}/taxa.txt\" ${tblPrefix}Taxon" >> /tmp/sqlite3init.cat
  echo ".import \"${importPath}/vernacular.txt\" ${tblPrefix}VernacularName" >> /tmp/sqlite3init.cat
- 
+
 echo
 echo Creating database structure and importing the data:
-cat /tmp/sqlite3init.cat | sqlite3 $dbName 
+cat /tmp/sqlite3init.cat | sqlite3 $dbName
 
 echo
 echo Removing temporary files:

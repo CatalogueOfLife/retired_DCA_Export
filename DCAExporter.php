@@ -8,6 +8,7 @@ require_once 'modules/Abstract.php';
 require_once 'modules/Taxon.php';
 require_once 'modules/Vernacular.php';
 require_once 'modules/Distribution.php';
+require_once 'modules/Description.php';
 require_once 'modules/Reference.php';
 require_once 'modules/SourceDatabase.php';
 require_once 'modules/SpeciesProfile.php';
@@ -41,6 +42,8 @@ class DCAExporter
     private $_excluded;
     // Include fossils
     private $_fossils;
+    // Taxon object to be written
+    private $_taxon;
 
     // Storage array to determine if an eml file has already been written
     private $_savedEmls = array();
@@ -376,6 +379,19 @@ class DCAExporter
         }
     }
 
+    private function _writeDistributions ($distributions, $module) {
+        if (!empty($distributions)) {
+            foreach ($distributions as $iDs => $rowDs) {
+                $distribution = $this->_initModule(
+                    $module,
+                    $rowDs,
+                    $this->_taxon->taxonID);
+                $distribution->writeModel();
+                unset($distribution);
+            }
+        }
+    }
+
     private function _initModule ($module, array $data, $taxonId = null)
     {
         try {
@@ -500,20 +516,24 @@ class DCAExporter
     private function _getDistributions ($taxon_id, $distributionFreeText = false)
     {
         if (!$distributionFreeText) {
-            $query = 'SELECT t2.`status` AS occurrenceStatus,
-                         t3.`original_code` AS locationID,
+            $query = 'SELECT
+                         t2.`status` AS establishmentMeans,
+            			 CONCAT(
+                             IF(t3.`region_standard_id` = 1 OR t3.`region_standard_id` = 4, "TDWG:",
+                			 IF(t3.`region_standard_id` = 2, "IHO:",
+                			 IF(t3.`region_standard_id` = 3, "EEZ-VLIZ:", ""
+                			 ))),
+                             t3.`original_code`
+                         ) AS locationID,
                          t3.`name` AS locality,
-                         "" AS establishmentMeans
+                         "" AS occurrenceStatus
                       FROM `distribution` AS t1
                       LEFT JOIN `distribution_status` AS t2 ON t1.`distribution_status_id` = t2.`id`
                       LEFT JOIN `region` AS t3 ON t1.`region_id` = t3.`id`
                       WHERE t1.`taxon_detail_id` = ?';
         }
         else {
-            $query = 'SELECT "" AS occurrenceStatus,
-                         "" AS locationID,
-                         t2.`free_text` AS locality,
-                         "" AS establishmentMeans
+            $query = 'SELECT t2.`free_text` AS description
                       FROM `distribution_free_text` AS t1
                       LEFT JOIN `region_free_text` AS t2 ON t1.`region_free_text_id` = t2.`id`
                       WHERE t1.`taxon_detail_id` = ?';
@@ -684,31 +704,31 @@ class DCAExporter
                 $this->resetStoredReferences();
 
                 $this->_indicator ? $this->_indicator->iterate() : '';
-                $taxon = $this->_initModule('Taxon', $rowTx);
-                $taxon->setDefaultTaxonData();
-                $taxon->setLsid();
-                $taxon->setParentId();
+                $this->_taxon = $this->_initModule('Taxon', $rowTx);
+                $this->_taxon->setDefaultTaxonData();
+                $this->_taxon->setLsid();
+                $this->_taxon->setParentId();
 
-                if (!$this->_emlExists($taxon->datasetID)) {
+                if (!$this->_emlExists($this->_taxon->datasetID)) {
                     $sourceDatabase = new SourceDatabase(
                         $this->_dbh,
                         $this->_dir,
                         $this->_getSourceDatabaseMetadata(
-                            $taxon->datasetID));
+                            $this->_taxon->datasetID));
                     $sourceDatabase->writeEml();
                     unset($sourceDatabase);
-                    $this->_addSavedEml($taxon->datasetID);
+                    $this->_addSavedEml($this->_taxon->datasetID);
                 }
 
                 // Remaining data is exported only for (infra)species
                 // and for Block levels II to IV
-                if (!$taxon->isHigherTaxon && $this->_bl > 1) {
-                    $taxon->setScrutiny();
-                    $taxon->setGsdNameGuid();
-                    $taxon->setTaxonNameGuid();
+                if (!$this->_taxon->isHigherTaxon && $this->_bl > 1) {
+                    $this->_taxon->setScrutiny();
+                    $this->_taxon->setGsdNameGuid();
+                    $this->_taxon->setTaxonNameGuid();
 
                     //Synonyms
-                    $synonyms = $this->_getSynonyms($taxon->taxonID);
+                    $synonyms = $this->_getSynonyms($this->_taxon->taxonID);
                     foreach ($synonyms as $iSn => $rowSn) {
                         $synonym = $this->_initModule(
                             'Taxon',
@@ -716,19 +736,19 @@ class DCAExporter
                         );
                         $synonym->setDefaultTaxonData();
                         $synonym->setGsdNameGuid();
-                        $synonym->setSynonymGenus($taxon);
+                        $synonym->setSynonymGenus($this->_taxon);
                         $synonym->setColUrl();
                         $synonym->writeModel();
                         unset($synonym);
                     }
 
                     // Vernaculars
-                    $vernaculars = $this->_getVernaculars($taxon->taxonID);
+                    $vernaculars = $this->_getVernaculars($this->_taxon->taxonID);
                     foreach ($vernaculars as $iVn => $rowVn) {
                         $vernacular = $this->_initModule(
                             'Vernacular',
                             $rowVn,
-                            $taxon->taxonID);
+                            $this->_taxon->taxonID);
                         $vernacular->setSource();
                         $vernacular->writeModel();
                         // Vernacular references
@@ -740,7 +760,7 @@ class DCAExporter
                             $reference = $this->_initModule(
                                 'Reference',
                                 $rowRf,
-                                $taxon->taxonID);
+                                $this->_taxon->taxonID);
                             $reference->writeModel();
                             unset($reference);
                         }
@@ -748,16 +768,16 @@ class DCAExporter
                     }
 
                     // Taxon/ synonym references
-                    !$taxon->isSynonym ? $type = 'taxon' : $type = 'synonym';
+                    !$this->_taxon->isSynonym ? $type = 'taxon' : $type = 'synonym';
                     $references = $this->_getReferences(
-                        $taxon->taxonID,
+                        $this->_taxon->taxonID,
                         $type);
                     foreach ($references as $iRf => $rowRf) {
                         if ($this->referenceExists($rowRf)) continue;
                         $reference = $this->_initModule(
                             'Reference',
                             $rowRf,
-                            $taxon->taxonID);
+                            $this->_taxon->taxonID);
                         $reference->writeModel();
                         unset($reference);
                     }
@@ -765,42 +785,35 @@ class DCAExporter
                     if ($this->_bl > 2) {
 	                    // Distribution
 	                    // Data can be stored in distribution or distribution_free_text tables
-	                    // Try distribution first; if empty do second query on distribution_free_text
-                    	$distributions = $this->_getDistributions(
-                    			$taxon->taxonID);
-                        if (empty(
-                            $distributions)) {
-                            $distributions = $this->_getDistributions(
-                                $taxon->taxonID,
-                                true);
-                        }
-                        foreach ($distributions as $iDs => $rowDs) {
-                            $distribution = $this->_initModule(
-                                'Distribution',
-                                $rowDs,
-                                $taxon->taxonID);
-                            $distribution->writeModel();
-                            unset($distribution);
-                        }
+	                    // Data should be written to different files: Distribution for normalised data,
+	                    // Description for free text
+                    	$this->_writeDistributions(
+                    	   $this->_getDistributions($this->_taxon->taxonID),
+                    	   'Distribution'
+                    	);
+                    	$this->_writeDistributions(
+                    	   $this->_getDistributions($this->_taxon->taxonID, true),
+                    	   'Description'
+                    	);
                         // Lifezones
                         $lifezones = $this->_getLifezones(
-                    			$taxon->taxonID);
+                    			$this->_taxon->taxonID);
                         foreach ($lifezones as $iLz => $rowLz) {
                         	$lifezone = $this->_initModule(
                                 'SpeciesProfile',
                                 $rowLz,
-                                $taxon->taxonID);
+                                $this->_taxon->taxonID);
                         	$lifezone->writeModel();
                         	unset($lifezone);
                         }
                         // Additional data
-                        $taxon->setDescription();
-                        $taxon->setColUrl();
+                        $this->_taxon->setDescription();
+                        $this->_taxon->setColUrl();
                     }
                 }
 
-                $taxon->writeModel();
-                unset($taxon);
+                $this->_taxon->writeModel();
+                unset($this->_taxon);
             }
         }
     }

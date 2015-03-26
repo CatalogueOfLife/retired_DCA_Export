@@ -75,6 +75,7 @@
     <field index='30' term='http://rs.gbif.org/terms/1.0/isExtinct'/>
     </core>
 
+    <!-- Structured distributions: http://rs.gbif.org/extension/gbif/1.0/distribution.xml -->
     <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Distribution'>
         <files>
             <location>distribution.txt</location>
@@ -87,9 +88,23 @@
         <field index='2' term='http://rs.tdwg.org/dwc/terms/locality'/>
         <!-- Distribution status (currently not yet implemented, reserved for future edition) -->
         <field index='3' term='http://rs.tdwg.org/dwc/terms/occurrenceStatus'/>
-        <!-- The process by which the taxon became established (currently not yet implemented, reserved for future edition) -->
+        <!-- The process by which the taxon became established -->
         <field index='4' term='http://rs.tdwg.org/dwc/terms/establishmentMeans'/>
     </extension>
+
+	<!-- Unstructured distributions: http://rs.gbif.org/extension/gbif/1.0/description.xml -->
+    <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Description'>
+		<files>
+			<location>description.txt</location>
+		</files>
+		<coreid index="0" />
+		<!-- Fixed to distribution text only -->
+		<field default="Distribution" term="http://purl.org/dc/terms/type"/>
+		<!-- Full, unstructured text -->
+		<field index="1" term="http://purl.org/dc/terms/description"/>
+ 		<!-- All distributions are in English -->
+		<field default="en" term="http://purl.org/dc/terms/language"/>
+	</extension>
 
     <extension encoding='UTF-8' fieldsEnclosedBy='[sep]' fieldsTerminatedBy='[del]' linesTerminatedBy='\n' ignoreHeaderLines='1' rowType='http://rs.gbif.org/terms/1.0/Reference'>
         <files>

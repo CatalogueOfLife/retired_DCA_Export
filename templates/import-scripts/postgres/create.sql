@@ -46,6 +46,10 @@ CREATE TABLE "@TABLEPREFIX@distribution" (
   "establishmentMeans" varchar(255) default NULL
 );
 
+CREATE TABLE "@TABLEPREFIX@description" (
+  "taxonID" int NOT NULL,
+  "locality" description
+);
 
 CREATE TABLE "@TABLEPREFIX@reference" (
   "taxonID" int NOT NULL,
@@ -56,7 +60,6 @@ CREATE TABLE "@TABLEPREFIX@reference" (
   "identifier" varchar(255) default NULL,
   "type" varchar(255) default NULL
 );
-
 
 CREATE TABLE "@TABLEPREFIX@vernacular" (
   "taxonID" int NOT NULL,
