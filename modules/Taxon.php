@@ -192,9 +192,9 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
         }
     }
 
-    public function setGsdNameGuid ()
+    public function setScientificNameId ()
     {
-        $this->isSynonym ? $table = 'synonym' : $table = 'taxon';
+        $table = $this->isSynonym ? 'synonym' : 'taxon';
         $query = 'SELECT `original_id` AS scientificNameID
                   FROM `' . $table . '`
                   WHERE `id` = ?';
@@ -209,11 +209,13 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
         return false;
     }
 
-    public function setTaxonNameGuid ()
+    public function setTaxonConceptId ()
     {
-        $query = 'SELECT `taxon_guid` AS taxonConceptID
-                  FROM `taxon_detail`
-                  WHERE `taxon_id` = ?';
+        $query = $this->isSynonym ?
+            'SELECT `taxon_guid` AS taxonConceptID FROM `synonym`
+             WHERE `id` = ?' :
+            'SELECT `taxon_guid` AS taxonConceptID FROM `taxon_detail`
+             WHERE `taxon_id` = ?';
         $stmt = $this->_dbh->prepare($query);
         $stmt->execute(array(
             $this->taxonID
