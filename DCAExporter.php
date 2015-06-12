@@ -310,20 +310,20 @@ class DCAExporter
             // Split query based on block level; level 1 only exports classification up to genus
             if ($this->_bl == 1 && !$this->_completeDump && $t != 'sn') {
                 $query .=
-                '"" AS status,
-                `subgenus`,
-                "" AS specificEpithet,
-                "" AS infraspecificEpithet,
-                "" AS verbatimTaxonRank,
-                "" AS scientificNameAuthorship ';
+                    '"" AS status,
+                    `subgenus`,
+                    "" AS specificEpithet,
+                    "" AS infraspecificEpithet,
+                    "" AS verbatimTaxonRank,
+                    "" AS scientificNameAuthorship ';
             } else {
                 $query .=
-                '`status`,
-                `subgenus`,
-                `species` AS specificEpithet,
-                `infraspecies` AS infraspecificEpithet,
-                `infraspecific_marker` AS verbatimTaxonRank,
-                `author` AS scientificNameAuthorship ';
+                    '`status`,
+                    `subgenus`,
+                    `species` AS specificEpithet,
+                    `infraspecies` AS infraspecificEpithet,
+                    `infraspecific_marker` AS verbatimTaxonRank,
+                    `author` AS scientificNameAuthorship ';
             }
         }
         $query .= ' FROM `_search_scientific` WHERE ';
@@ -724,8 +724,8 @@ class DCAExporter
                 // and for Block levels II to IV
                 if (!$this->_taxon->isHigherTaxon && $this->_bl > 1) {
                     $this->_taxon->setScrutiny();
-                    $this->_taxon->setGsdNameGuid();
-                    $this->_taxon->setTaxonNameGuid();
+                    $this->_taxon->setScientificNameId();
+                    $this->_taxon->setTaxonConceptId();
 
                     //Synonyms
                     $synonyms = $this->_getSynonyms($this->_taxon->taxonID);
@@ -735,7 +735,8 @@ class DCAExporter
                             $rowSn
                         );
                         $synonym->setDefaultTaxonData();
-                        $synonym->setGsdNameGuid();
+                        $synonym->setScientificNameId();
+                        $synonym->setTaxonConceptId();
                         $synonym->setSynonymGenus($this->_taxon);
                         $synonym->setColUrl();
                         $synonym->writeModel();
