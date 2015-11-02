@@ -3,14 +3,14 @@
  * This script can be used to create a complete download from the command line.
  * It replicates the manual steps required to create the export and replace the previous archive.
  * A password (for basic security) and release date should be given as parameters.
- * 
+ *
  * Usage:
  * php path_to/monthly.php -w "password" -d "YYYY-MM-DD"
  * "/Applications/MAMP/bin/php/php5.4.4/bin/php" "/Users/ruud/ETI/Zend workbenches/Current/AC DCA export/monthly.php" -w "^Guu&*^f___\\" -d "2013-12-09"
  *
  *
 * Viktor's original instructions
-* 
+*
 1) edit [credits] portion of the settings.ini in DCA_Export_v1.3/config/ change dates in 'string' and 'release_date' variables to 17th October 2013 and 2013-10-17;
 2) delete all archives in /var/www/DCA_Export_v1.3/zip/ folder;
 3) delete old archive-complete.zip in /var/www/DCA_Export_v1.3/zip-fixed/ folder;
@@ -24,7 +24,7 @@
 
 // Password required when calling the service
 $password = '^Guu&*^f___\\';
-
+$configPath = 'config/settings.ini';
 
 require_once 'DCAExporter.php';
 require_once 'includes/library.php';
@@ -65,6 +65,25 @@ $_SESSION['monthly']['ini']['credits']['string'] = 'Species 2000 & ITIS Catalogu
 $_SESSION['monthly']['ini']['credits']['release_date'] = $d;
 
 
+// Write new credits to ini file
+if (!is_writable($configPath)) {
+	exit($configPath . ' is not writable, required to update release date\n\n');
+}
+$config = file($configPath);
+for ($i = 0; $i < count($config); $i++) {
+	if (strpos($config[$i], 'string') === 0) {
+		$config[$i] =
+            'string = "' . $_SESSION['monthly']['ini']['credits']['string'] . '"' . "\n";
+	}
+	if (strpos($config[$i], 'release_date') === 0) {
+		$config[$i] =
+            'release_date = "' . $_SESSION['monthly']['ini']['credits']['release_date'] . '"' . "\n";
+	}
+}
+unlink($configPath);
+file_put_contents($configPath, implode('', $config));
+
+
 // Initialize DCAExporter
 echo "\n\n\nThis script creates a complete DarwinCore Archive of the\n";
 echo $_SESSION['monthly']['ini']['credits']['string'] . "\n\n";
@@ -92,7 +111,7 @@ mkdir($baseDir . '/zip');
 // Delete previous complete archive
 echo "Deleting zip-fixed/archive-complete.zip...\n";
 if (file_exists($baseDir . '/zip-fixed/archive-complete.zip')) {
-    unlink($baseDir . '/zip-fixed/archive-complete.zip');    
+    unlink($baseDir . '/zip-fixed/archive-complete.zip');
 }
 
 
@@ -112,9 +131,9 @@ echo "Archive succesfully created!\nCopying to zip-fixed...\n";
 
 
 // Copy archive twice to zip-fixed
-$dcaExporter::copyDir($baseDir . '/zip/archive-complete.zip', 
+$dcaExporter::copyDir($baseDir . '/zip/archive-complete.zip',
     $baseDir . '/zip-fixed/archive-complete.zip');
-$dcaExporter::copyDir($baseDir . '/zip/archive-complete.zip', 
+$dcaExporter::copyDir($baseDir . '/zip/archive-complete.zip',
     $baseDir . '/zip-fixed/' . $d . '-archive-complete.zip');
 echo "Ready!\n\n";
 
