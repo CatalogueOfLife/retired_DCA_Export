@@ -8,7 +8,7 @@
 		}
 	}
 	// Build query; decide which table to query
-	$table = (empty($genus) && $rank != 'genus' ? '_search_family' : '_search_scientific');
+	$table = empty($genus) && $rank != 'genus' ? '_search_family' : '_search_scientific';
 	$query = 'SELECT `'.$rank.'` FROM '.$table.' WHERE ';
 	$parameters = array();
 	foreach ($fields as $field) {
@@ -25,19 +25,24 @@
 	if (empty($parameters)) {
 		$query .= '`'.$rank.'` != "" AND ';
 	}
-	$query = substr($query, 0, -4).' GROUP BY `'.$rank.'`';
+	// If _search_scientific is used, make sure only accepted taxa are returned!
+    $query = substr($query, 0, -4);
+    if ($table == '_search_scientific') {
+        $query .= ' AND `status` = 0 ';
+    }
+	$query .= ' GROUP BY `'.$rank.'` ORDER BY `'.$rank.'`';
 	$dbh = createDbInstance('db');
 	$stmt = $dbh->prepare($query);
 	$stmt->execute($parameters);
 	$total = $stmt->rowCount();
-	
+
 	if ($total < 10000) {
 	    $result = $stmt->fetchAll(PDO::FETCH_COLUMN);
 	} else {
 	    $result = array('too_many');
 	}
 	echo json_encode($result);
-	
+
 
     function createDbInstance ($name)
     {
