@@ -1,11 +1,11 @@
 <?php
 /**
  * Indicator
- * 
- * Class to display progress of running script by printing dots and percentage 
+ *
+ * Class to display progress of running script by printing dots and percentage
  * done. Optionally (by default) also displays current running time and estimated
  * remaining time.
- * 
+ *
  * @author Nuria Torrescasana Aloy, Ruud Altenburg
  */
 class Indicator
@@ -14,17 +14,20 @@ class Indicator
 	// settings
 	protected $_marker = '.';
     protected $_breakLine = "<br>";
-    protected $_iterationsPerMarker = 10; 
+    protected $_iterationsPerMarker = 10;
     protected $_markersPerLine = 75;
-    
+
     protected $_totalNumberOfIterations = 0;
-    
+
     protected $_iterationCounter = 0;
     protected $_markersPerCycleCounter = 0;
     protected $_cycleCounter = 0;
     protected $_summarizedDuration = 0;
     protected $_start = 0;
-    
+
+    protected $_fh;
+    protected $_dir;
+
     /**
      * Overwrite default breakline
      */
@@ -32,15 +35,15 @@ class Indicator
     {
     	$this->_breakLine = $breakLine;
     }
-    
+
     /**
      * Initialize indicator
-     * 
+     *
      * @param int $numberOfIterations total number of records
      * @param int $markersPerLine number of dots per line; if not set default is used
      * @param int $iterationsPerMarker number of request per dot; if not set default is used
      */
-    public function init($numberOfIterations, $markersPerLine = null, 
+    public function init($numberOfIterations, $markersPerLine = null,
         $iterationsPerMarker = null)
     {
     	if($markersPerLine !== null) {
@@ -53,13 +56,13 @@ class Indicator
         $this->_totalNumberOfIterations = (int)$numberOfIterations;
         $this->reset();
     }
-    
+
     /**
      * Main method displaying progress
-     * 
+     *
      * Currently flush() is used to flush the buffer but it's safer to set
      * alwaysFlush() (in library.php) at the top of the converter script document
-     * 
+     *
      * @param bool $displayRemaining optionally disable display of running/remaining time
      */
     public function iterate($displayRemaining = true)
@@ -75,24 +78,25 @@ class Indicator
             $this->_iterationCounter = 0;
             $this->_markersPerCycleCounter ++;
             if ($this->_markersPerCycleCounter >= $this->_markersPerLine) {
-                if ($this->_markersPerCycleCounter > 0 && 
+                if ($this->_markersPerCycleCounter > 0 &&
                         $this->_totalNumberOfIterations > 0) {
                     $currentPercentageDone = round(
-                        ($this->_cycleCounter / 
+                        ($this->_cycleCounter /
                         $this->_totalNumberOfIterations * 100), 1
                     );
-                    echo ' ' . $currentPercentageDone . '% done';
+                    $res = ' ' . $currentPercentageDone . '% done';
                 }
                 if ($displayRemaining) {
-                    $this->_printRemainingTime();
+                    $res .= '; ' . $this->_printRemainingTime();
                 }
-    		    echo $this->_breakLine;
+    		    echo $res . $this->_breakLine;
+    		    $this->_writeProgress($res);
     		    flush();
     		    $this->_markersPerCycleCounter = 0;
             }
      	}
     }
-    
+
     /**
      * Disable iterator
      */
@@ -100,10 +104,10 @@ class Indicator
     	$this->reset();
     	$this->_enabled = false;
     }
-    
+
     /**
      * Reset iterator
-     * 
+     *
      * Used when iterator is used for a different cycle
      */
     public function reset()
@@ -113,25 +117,25 @@ class Indicator
     	$this->_cycleCounter = 0;
     	$this->_start = microtime(true);
     }
-    
+
     /**
      * Format time in seconds to d:h:m:s format
-     * 
+     *
      * Typically takes the difference between two microtime(true) instances.
      * Displays days only if relevant.
-     * 
+     *
      * @param float $time time in seconds
      * @return string formatted time
-     */ 
+     */
     public function formatTime($time)
     {
         $remaining = '';
         $units = array();
         $days = floor($time / 86400);
         $hours = floor((($time / 86400) - $days) * 24);
-        $minutes = floor((((($time / 86400) - $days) * 24) - 
+        $minutes = floor((((($time / 86400) - $days) * 24) -
             $hours) * 60);
-        $seconds = floor((((((($time / 86400) - $days) * 24) - 
+        $seconds = floor((((((($time / 86400) - $days) * 24) -
             $hours) * 60) - $minutes) * 60);
         // Only print days if these are set
         $days > 0 ? $units[] = $days : false;
@@ -144,10 +148,10 @@ class Indicator
         }
         return substr($remaining, 0, -1);
     }
-    
+
     /**
      * Prints running and remaining time
-     * 
+     *
      * @return string running and remaining time
      */
     private function _printRemainingTime()
@@ -155,9 +159,24 @@ class Indicator
         $now = microtime(true) - $this->_start;
         $runningTime = $this->formatTime($now);
         $remainingTime = $this->formatTime(
-            ($this->_totalNumberOfIterations - $this->_cycleCounter) * 
+            ($this->_totalNumberOfIterations - $this->_cycleCounter) *
             $now / $this->_cycleCounter
         );
-        echo "; running $runningTime, remaining $remainingTime";
+        return "running $runningTime, remaining $remainingTime";
+    }
+
+    private function _writeProgress ($str)
+    {
+        $fh = fopen($this->_dir . 'monitor', 'w+');
+        if (!$fh) {
+            throw new Exception('Cannot write progress');
+        }
+        fwrite($fh, trim($str));
+        fclose($fh);
+    }
+
+    public function setDir ($dir)
+    {
+        $this->_dir = $dir;
     }
 }

@@ -71,8 +71,23 @@ class DCABootstrap
         // Test if temporary directory is present;
         // if so, taxon is currently being exported by another user
         if (file_exists($dir)) {
-            $this->_errors[3] = 'Export already initiated by another user.
-                Please retry download later.';
+
+            if (file_exists($dir . 'monitor')) {
+                // The monitor file should be rewritten at least every 30 minutes
+                // If it's older than that, apparently the export has died
+                // Recreate the temp folder if this is the case!
+                if (time() - filemtime($dir . 'monitor') > 30 * 60) {
+                    DCAExporter::removeDir($dir);
+                    mkdir($dir);
+                // Nothing wrong, issue notice and display ETA to the user
+                } else {
+                    $progress = '<br>Progress: ' . file_get_contents($dir . 'monitor') . '.<br>';
+                    $this->_errors[3] = 'Export already initiated on ' .
+                        date ("F d Y H:i:s", filemtime($dir)) . ' by a different user. ' .
+                        (isset($progress) ? $progress : '') . 'Please retry downloading later!';
+                }
+            }
+
         // ... else create temporary directory to write to
         } else {
             mkdir($dir);

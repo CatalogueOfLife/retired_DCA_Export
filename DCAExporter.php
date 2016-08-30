@@ -693,6 +693,7 @@ class DCAExporter
         $total = $this->getTotalNumberOfTaxa();
         $this->_indicator ? $this->_indicator->init($total, $this->_indicatorMarkersPerLine,
             $this->_indicatorIterationsPerMarker) : null;
+        $this->_indicator->setDir($this->_dir);
         $this->_initEml();
 
         for ($limit = 1000, $offset = 0; $offset < $total; $offset += $limit) {
