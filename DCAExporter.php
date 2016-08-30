@@ -209,7 +209,15 @@ class DCAExporter
     public static function basePath ()
     {
         return dirname(__FILE__);
+    }
 
+    public function getReleaseDateFromDatabase ()
+    {
+        $query = 'SELECT `edition` FROM `_credits` WHERE `current` = 1';
+        $stmt = $this->_dbh->prepare($query);
+        $stmt->execute();
+        $res = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $res ? $res['edition'] : false;
     }
 
     public static function getPreviousEditions ()
