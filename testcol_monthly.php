@@ -128,7 +128,8 @@ echo "Archive succesfully created!\nCopying to zip-fixed...\n";
 $dcaExporter::copyDir($baseDir . '/zip/archive-complete.zip',
     $baseDir . '/zip-fixed/archive-complete.zip');
 $dcaExporter::copyDir($baseDir . '/zip/archive-complete.zip',
-    $baseDir . '/zip-fixed/' . $d . '-archive-complete.zip');
+    $baseDir . '/zip-fixed/' . $_SESSION['monthly']['ini']['credits']['release_date'] .
+    '-archive-complete.zip');
 echo "Ready!\n\n";
 
 
