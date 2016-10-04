@@ -50,7 +50,6 @@ if (!$w || $w !== $password) {
 }
 
 
-
 // Initialize DCAExporter
 echo "\n\n\nInitialising...\n";
 $dcaExporter = new DCAExporter($_POST, $_POST['block']);
@@ -73,7 +72,6 @@ $_SESSION['monthly']['ini']['credits']['release_date'] = date('Y-m-d', strtotime
 
 echo "This script creates a complete DarwinCore Archive of the\n";
 echo $_SESSION['monthly']['ini']['credits']['string'] . "\n\n";
-
 
 // Write new credits to ini file
 echo "Updating release date in ini file...\n";
@@ -119,17 +117,11 @@ $dcaExporter->createMetaXml();
 echo "Writing data to text files...\n";
 $dcaExporter->writeData();
 $dcaExporter->copyScripts();
-echo "Compressing to zip archive...\n";
+echo "\nCompressing to zip archive...\n";
 $dcaExporter->zipArchive();
-echo "Archive succesfully created!\nCopying to zip-fixed...\n";
-
-
-// Copy archive twice to zip-fixed
-$dcaExporter::copyDir($baseDir . '/zip/archive-complete.zip',
-    $baseDir . '/zip-fixed/archive-complete.zip');
-$dcaExporter::copyDir($baseDir . '/zip/archive-complete.zip',
-    $baseDir . '/zip-fixed/' . $_SESSION['monthly']['ini']['credits']['release_date'] .
-    '-archive-complete.zip');
+echo "Archive succesfully created!\nRenaming archive...\n";
+rename($baseDir . '/zip/archive-complete.zip', $baseDir . '/zip/' .
+    $_SESSION['monthly']['ini']['credits']['release_date'] . '-archive-complete.zip');
 echo "Ready!\n\n";
 
 
