@@ -22,6 +22,9 @@
 
 */
 
+// Just in case... five hours timeout
+set_time_limit(18000);
+
 // Password required when calling the service
 $password = '^Guu&*^f___\\';
 $configPath =  dirname(__FILE__) . '/config/settings.ini';
