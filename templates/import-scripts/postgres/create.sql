@@ -48,7 +48,7 @@ CREATE TABLE "@TABLEPREFIX@distribution" (
 
 CREATE TABLE "@TABLEPREFIX@description" (
   "taxonID" int NOT NULL,
-  "locality" description
+  "locality" text
 );
 
 CREATE TABLE "@TABLEPREFIX@reference" (
