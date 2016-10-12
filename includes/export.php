@@ -1,6 +1,6 @@
 <?php
 // POST data is filtered/verified in class!
-$dcaExporter = new DCAExporter(DCAExporter::filterSc($_POST), $_POST['block']);
+$dcaExporter = new DCAExporter();
 // Check if archive already exists; if it does skip export
 if (!$dcaExporter->archiveExists()) {
     $dcaExporter->useIndicator();

@@ -1,8 +1,10 @@
 <?php
     // Sets form variables, session start and several includes
+    require_once 'DCAExporter.php';
+    $dca = new DCAExporter(true);
     require_once 'includes/init.php';
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 	"http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -17,11 +19,11 @@
 <h3>i4Life WP4 Download Service of the Catalogue of Life:<br>
 Darwin Core Archive Export</h3>
 <?php
-    echo '<p class="version">Version ' . DCAExporter::getVersion() . "</p>\n";
+    echo '<p class="version">Version ' . $dca::getVersion() . "</p>\n";
     // Test database handler first
     createDbInstance('db');
     if (!(DbHandler::getInstance('db') instanceof PDO)) {
-        exit ('<br>Could not create database instance; 
+        exit ('<br>Could not create database instance;
             check settings in settings.ini!</body></html>');
     }
     if (formSubmitted()) {
@@ -29,11 +31,12 @@ Darwin Core Archive Export</h3>
     }
     else {
         $intro = file_get_contents('templates/intro.tpl');
-        echo Template::decorateString($intro, 
+        echo Template::decorateString($intro,
             array(
-                'colEdition' => htmlspecialchars(DCAExporter::getEdition()),
-                'webserviceUrl' => DCAExporter::getWebserviceUrl(),
-                'zipScripts' => DCAExporter::zipScripts(),
+                'colEdition' => 'Species 2000 & ITIS Catalogue of Life, ' .
+                    $dca->getReleaseDateFromDatabase() . ' edition',
+                'webserviceUrl' => $dca::getWebserviceUrl(),
+                'zipScripts' => $dca::zipScripts(),
                 'downloadComplete' => downloadComplete()
             ));
         include 'includes/form.php';

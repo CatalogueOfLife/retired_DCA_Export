@@ -63,7 +63,7 @@ class DCAExporter
     // Collects bootstrap errors
     public $startUpErrors;
 
-    public function __construct ($sc, $bl)
+    public function __construct ($passBootstrap = false)
     {
         $this->_createDbInstance('db');
         $this->_dbh = DbHandler::getInstance('db');
@@ -71,8 +71,8 @@ class DCAExporter
         $this->_del = $ini['export']['delimiter'];
         $this->_sep = $ini['export']['separator'];
         $this->_fossils = $ini['export']['fossils'];
-        $this->_sc = self::filterSc($sc);
-        $this->_bl = $bl;
+        $this->_setSearchCriteria();
+        $this->_setBlockLevel();
         $this->_dir = self::basePath() . '/' . self::$dir . md5(self::getZipArchiveName()) . '/';
         $this->_meta = self::basePath() . '/' . self::$meta;
         $this->_zip = self::basePath() . '/' . self::$zip;
@@ -82,10 +82,12 @@ class DCAExporter
         set_time_limit(0);
         $this->_completeDump = in_array('[all]', $this->_sc) ? true : false;
 
-        $bootstrap = new DCABootstrap($this->_dbh, $this->_del, $this->_sep, $this->_sc,
-            $this->_bl, $this->_dir, $this->_zip, $this->_excluded);
-        $this->startUpErrors = $bootstrap->getErrors();
-        unset($bootstrap);
+        if ($passBootstrap == false) {
+            $bootstrap = new DCABootstrap($this->_dbh, $this->_del, $this->_sep, $this->_sc,
+                $this->_bl, $this->_dir, $this->_zip, $this->_excluded);
+            $this->startUpErrors = $bootstrap->getErrors();
+            unset($bootstrap);
+        }
     }
 
     public function __destruct ()
@@ -95,6 +97,16 @@ class DCAExporter
         if ($this->_iuaSetting == 0) {
             ignore_user_abort(false);
         }
+    }
+
+    private function _setSearchCriteria ()
+    {
+        $this->_sc = isset($_POST) ? self::filterSc($_POST) : false;
+    }
+
+    private function _setBlockLevel ()
+    {
+        $this->_bl = isset($_POST['block']) ? $_POST['block'] : false;
     }
 
     public static function getExportSettings ()
@@ -251,7 +263,7 @@ class DCAExporter
         }
         $d->close();
         krsort($files['monthly']);
-        ksort($files['annual']);
+        krsort($files['annual']);
         return $files;
     }
 

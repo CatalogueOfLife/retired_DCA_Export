@@ -88,7 +88,7 @@ file_put_contents($configPath, implode('', $config));
 echo "\n\n\nThis script creates a complete DarwinCore Archive of the\n";
 echo $_SESSION['monthly']['ini']['credits']['string'] . "\n\n";
 echo "Initialising...\n";
-$dcaExporter = new DCAExporter($_POST, $_POST['block']);
+$dcaExporter = new DCAExporter();
 $errors = $dcaExporter->getStartUpErrors();
 if (!empty($errors)) {
     foreach ($errors as $error) {

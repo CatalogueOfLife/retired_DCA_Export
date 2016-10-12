@@ -52,7 +52,7 @@ if (!$w || $w !== $password) {
 
 // Initialize DCAExporter
 echo "\n\n\nInitialising...\n";
-$dcaExporter = new DCAExporter($_POST, $_POST['block']);
+$dcaExporter = new DCAExporter();
 $errors = $dcaExporter->getStartUpErrors();
 if (!empty($errors)) {
     foreach ($errors as $error) {
