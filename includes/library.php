@@ -66,15 +66,24 @@ function downloadComplete ()
 function printEditions ()
 {
     $editions = DCAExporter::getPreviousEditions();
-    if (count($editions) > 0) {
-        $output = "<ul>\n";
-        foreach ($editions as $ed) {
-            $output .= '<li><a href="' . $ed['url'] . '">Catalogue of Life, ' .
-            $ed['edition'] . '</a> ('.$ed['size'].')</li>' . "\n";
+    $output = '';
+    if (count($editions['monthly']) > 0) {
+        $output .= "<p>Monthly editions:</p>\n<ul>\n";
+        foreach ($editions['monthly'] as $ed) {
+            $output .= '<li><a href="' . $ed['url'] . '">' . $ed['name'] .
+                '</a> ('.$ed['size'].')</li>' . "\n";
         }
-        return $output . "</ul>\n";
+        $output .= "</ul>\n";
     }
-    return;
+    if (count($editions['annual']) > 0) {
+        $output .= "<p>Annual editions:</p>\n<ul>\n";
+        foreach ($editions['annual'] as $ed) {
+            $output .= '<li><a href="' . $ed['url'] . '">' . $ed['name'] .
+                '</a> ('.$ed['size'].')</li>' . "\n";
+        }
+        $output .= "</ul>\n";
+    }
+    return $output;
 }
 
 function setDynamicVersion ()

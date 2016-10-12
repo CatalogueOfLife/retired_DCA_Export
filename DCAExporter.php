@@ -226,21 +226,32 @@ class DCAExporter
         // and stored in the 'zip-fixed' directory
         $files = array();
         $dir = self::basePath() . '/zip-fixed';
-        $path = $_SERVER['SERVER_NAME'] . $_SERVER['SCRIPT_NAME'];
-        isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] ? $http = 'https://' : $http = 'http://';
         $d = dir($dir);
         while (false !== ($file = $d->read())) {
             if (is_numeric(substr($file, 0, 4)) && !is_dir($file)) {
-                list($year, $month, $day) = explode('-', $file);
-                $files[$year.$month.$day] = array(
-                    'edition' => date("j F Y", mktime(0, 0, 0, $month, $day, $year)),
-                    'size' => self::getDownloadSize($dir .'/' . $file),
-                    'url' => /*$http . substr($path, 0, -(strlen(basename($path)))).*/ 'zip-fixed/' . $file
-                );
+                $parts = explode('-', $file);
+                // Annual
+                if (count($parts) < 4) {
+                    $files['annual'][$parts[0]] = array(
+                        'name' => $parts[0] . ' Annual Checklist',
+                        'size' => self::getDownloadSize($dir .'/' . $file),
+                        'url' => 'zip-fixed/' . $file
+                    );
+                // Monthly
+                } else {
+                    list($year, $month, $day) = $parts;
+                    $files['monthly'][$year . $month . $day] = array(
+                        'name' => 'Catalogue of Life, ' .
+                            date("j F Y", mktime(0, 0, 0, $month, $day, $year)),
+                        'size' => self::getDownloadSize($dir .'/' . $file),
+                        'url' => 'zip-fixed/' . $file
+                    );
+                }
             }
         }
         $d->close();
-        krsort($files);
+        krsort($files['monthly']);
+        ksort($files['annual']);
         return $files;
     }
 
