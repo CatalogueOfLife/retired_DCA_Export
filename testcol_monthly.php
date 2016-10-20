@@ -49,7 +49,6 @@ if (!$w || $w !== $password) {
     die("You did not say the magic word, bye bye\n\n");
 }
 
-
 // Initialize DCAExporter
 echo "\n\n\nInitialising...\n";
 $dcaExporter = new DCAExporter();
@@ -93,25 +92,12 @@ unlink($configPath);
 file_put_contents($configPath, implode('', $config));
 
 
-// Empty zip directory
-$baseDir = DCAExporter::basePath();
-echo "Emptying zip directory with saved archives...\n";
-DCAExporter::removeDir($baseDir . '/zip');
-mkdir($baseDir . '/zip');
-
-
-// Delete previous complete archive
-echo "Deleting zip-fixed/archive-complete.zip...\n";
-if (file_exists($baseDir . '/zip-fixed/archive-complete.zip')) {
-    unlink($baseDir . '/zip-fixed/archive-complete.zip');
-}
-
-
 // Create the archive.. sit back and relax...
 $total = $dcaExporter->getTotalNumberOfTaxa();
 if ($total > 0) {
     echo "Creating export for $total ". ($total == 1 ? 'taxon' : 'taxa') . ":\n";
 }
+
 echo "Creating meta.xml...\n";
 $dcaExporter->createMetaXml();
 echo "Writing data to text files...\n";
@@ -119,9 +105,14 @@ $dcaExporter->writeData();
 $dcaExporter->copyScripts();
 echo "\nCompressing to zip archive...\n";
 $dcaExporter->zipArchive();
-echo "Archive succesfully created!\nRenaming archive...\n";
-rename($baseDir . '/zip/archive-complete.zip', $baseDir . '/zip/' .
-    $_SESSION['monthly']['ini']['credits']['release_date'] . '-archive-complete.zip');
+echo "Archive succesfully created!\nMoving archive to zip-fixed...\n";
+$dcaExporter::copyDir($baseDir . '/zip/archive-complete.zip',
+    $baseDir . '/zip-fixed/' . $_SESSION['monthly']['ini']['credits']['release_date'] .
+    'archive-complete.zip');
+echo "Writing dca.txt file\n";
+file_put_contents($baseDir . '/zip-fixed/dca.txt',
+    $_SESSION['monthly']['ini']['credits']['release_date']);
+
 echo "Ready!\n\n";
 
 
