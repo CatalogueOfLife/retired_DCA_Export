@@ -5,8 +5,8 @@
  * A password (for basic security) and release date should be given as parameters.
  *
  * Usage:
- * php path_to/monthly.php -w "password" -d "YYYY-MM-DD"
- * "/Applications/MAMP/bin/php/php5.4.4/bin/php" "/Users/ruud/ETI/Zend workbenches/Current/AC DCA export/monthly.php" -w "^Guu&*^f___\\" -d "2013-12-09"
+ * php path_to/monthly.php -w "password"
+ * php "/path/to/monthly.php" -w "^Guu&*^f___\\"
  *
  *
 * Viktor's original instructions
@@ -22,8 +22,8 @@
 
 */
 
-// Just in case... five hours timeout
-set_time_limit(18000);
+// Just in case... six hour timeout
+set_time_limit(21600);
 
 // Password required when calling the service
 $password = '^Guu&*^f___\\';
