@@ -18,9 +18,9 @@
 		<creator>
 			<organizationName>Species 2000 &amp; ITIS Catalogue of Life</organizationName>
 			<address>
-				<city>Reading</city>
-				<postalCode>RG6 6AS</postalCode>
-				<country>UK</country>
+				<city>Leiden</city>
+				<postalCode>2332 AA</postalCode>
+				<country>NL</country>
 			</address>
 			<onlineUrl>http://www.catalogueoflife.org</onlineUrl>
 		</creator>
@@ -28,8 +28,9 @@
 		<metadataProvider>
 			<organizationName>Species 2000 Secretariat</organizationName>
 			<address>
-				<city>Reading</city>
-				<country>UK</country>
+				<city>Leiden</city>
+				<postalCode>2332 AA</postalCode>
+				<country>NL</country>
 			</address>
 			<onlineUrl>http://www.sp2000.org/</onlineUrl>
 		</metadataProvider>
@@ -57,13 +58,14 @@
 		</distribution>
 		
 		<contact>
-			<organizationName>Species 2000 Secretariat</organizationName>
+			<organizationName>Species 2000 Secretariat c/o Naturalis</organizationName>
 			<address>
-				<deliveryPoint>Harborne Building, The University of Reading</deliveryPoint>
-				<city>Reading RG6 6AS</city>
-				<country>UK</country>
+				<deliveryPoint>P.O. Box 9517</deliveryPoint>
+				<city>Leiden</city>
+				<postalCode>2332 AA</postalCode>
+				<country>NL</country>
 			</address>
-			<phone>+44(0)1183786466</phone>
+			<phone>+31 71 7519362</phone>
 			<electronicMailAddress>support@sp2000.org</electronicMailAddress>
 		</contact>		
 	</dataset>
@@ -72,7 +74,7 @@
 		<metadata>
 			<gbif>
 				<dateStamp>[dateStamp]</dateStamp>
-				<citation identifier="http://www.mapress.com/phytotaxa/content/2011/f/pt00019p054.pdf" >[citation]</citation>
+				<citation identifier="http://www.catalogueoflife.org/col/info/cite" >[citation]</citation>
 				<resourceLogoUrl>[resourceLogoUrl]</resourceLogoUrl>
 			</gbif>
 			
