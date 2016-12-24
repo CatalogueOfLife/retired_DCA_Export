@@ -17,348 +17,30 @@
 		<title xml:lang="eng">Catalogue of Life</title>
 		
 		<creator>
-			<organizationName>The Catalogue of Life</organizationName>
+			<organizationName>Species 2000 &amp; ITIS Catalogue of Life</organizationName>
 			<address>
-				<city>Reading</city>
-				<postalCode>RG6 6AS</postalCode>
-				<country>UK</country>
+				<city>Leiden</city>
+				<postalCode>2332 AA</postalCode>
+				<country>NL</country>
 			</address>
 			<onlineUrl>http://www.catalogueoflife.org</onlineUrl>
 		</creator>
 		
 		<metadataProvider>
-			<organizationName>The Catalogue of Life</organizationName>
+			<organizationName>Species 2000 Secretariat</organizationName>
 			<address>
-				<city>Reading</city>
-      	<postalCode>RG6 6AS</postalCode>
-				<country>UK</country>
+				<city>Leiden</city>
+      				<postalCode>2332 AA</postalCode>
+				<country>NL</country>
 			</address>
 			<onlineUrl>http://www.sp2000.org/</onlineUrl>
 		</metadataProvider>
 		
 		<associatedParty>
 			<individualName>
-				<givenName>Yuri</givenName>
-				<surName>Roskov</surName>					
+				<surName>[authorsEditors]</surName>					
 			</individualName>
-			<organizationName>CoL Secretariat, University of Reading</organizationName>
-			<address>
-				<city>Reading</city>
-				<country>UK</country>
-			</address>			
-			<role>Catalogue of Life Executive Editor</role>
-		</associatedParty>
-		
-		<associatedParty>
-			<individualName>
-				<givenName>Thomas</givenName>
-				<surName>Kunze</surName>					
-			</individualName>
-			<organizationName>CoL Secretariat, University of Reading</organizationName>
-			<address>
-				<city>Reading</city>
-				<country>UK</country>
-			</address>			
-			<role>Catalogue of Life Editorial Assistant</role>
-		</associatedParty>
-		
-		<associatedParty>
-			<individualName>
-				<givenName>Luvie</givenName>
-				<surName>Paglinawan</surName>					
-			</individualName>
-			<organizationName>CoL Philippines Office</organizationName>
-			<address>
-				<city>Los Baños</city>
-				<country>Philippines</country>
-			</address>			
-			<role>Catalogue of Life Database Manager</role>
-		</associatedParty>		
-
-		<associatedParty>
-			<individualName>
-				<givenName>Thomas</givenName>
-				<surName>Orrell</surName>					
-			</individualName>
-			<organizationName>ITIS Secretariat, Smithsonian Institution</organizationName>
-			<address>
-				<city>Washington DC</city>
-				<country>USA</country>
-			</address>			
-			<role>ITIS Deputy Director</role>
-		</associatedParty>
-
-		<associatedParty>
-			<individualName>
-				<givenName>David</givenName>
-				<surName>Nicolson</surName>					
-			</individualName>
-			<organizationName>USGS/Smithsonian Institution</organizationName>
-			<address>
-				<city>Washington DC</city>
-				<country>USA</country>
-			</address>			
-			<role>ITIS Data Development Leader</role>
-		</associatedParty>
-    
-    	<associatedParty>
-			<individualName>
-				<givenName>Alastair</givenName>
-				<surName>Culham</surName>					
-			</individualName>
-			<organizationName>University of Reading</organizationName>
-			<address>
-				<city>Reading</city>
-				<country>UK</country>
-			</address>			
-			<role>PI for i4Life EC project at the CoL Secretariat</role>
-		</associatedParty>
-    
-    	<associatedParty>
-			<individualName>
-				<givenName>Nicolas</givenName>
-				<surName>Bailly</surName>					
-			</individualName>
-			<organizationName>CoL Philippines Office, FIN</organizationName>
-			<address>
-				<city>Los Baños</city>
-				<country>Philippines</country>
-			</address>			
-			<role>Taxonomic Editorial Advisor for Marine sectors</role>
-		</associatedParty> 
-		
-    	<associatedParty>
-			<individualName>
-				<givenName>Paul</givenName>
-				<surName>Kirk</surName>					
-			</individualName>
-			<organizationName>CABI</organizationName>
-			<address>
-				<city>Egham</city>
-				<country>UK</country>
-			</address>			
-			<role>Taxonomic Editorial Advisor for Fungi and Chromista sectors</role>
-		</associatedParty> 
-    
-    	<associatedParty>
-			<individualName>
-				<givenName>Thierry</givenName>
-				<surName>Bourgoin</surName>					
-			</individualName>
-			<organizationName>Museum National d'Histoire Naturelle</organizationName>
-			<address>
-				<city>Paris</city>
-				<country>France</country>
-			</address>			
-			<role>Taxonomic Editorial Advisor for Insects</role>
-		</associatedParty> 
-    
-    	<associatedParty>
-			<individualName>
-				<givenName>Guy</givenName>
-				<surName>Baillargeon</surName>					
-			</individualName>
-			<organizationName>Agriculture and Agri-Food Canada</organizationName>
-			<address>
-				<city>Ottawa</city>
-				<country>Canada</country>
-			</address>			
-			<role>Taxonomic Editorial Advisor for Plants</role>
-		</associatedParty>        		
-
-    	<associatedParty>
-			<individualName>
-				<givenName>Francisco</givenName>
-				<surName>Hernandez</surName>					
-			</individualName>
-			<organizationName>Flanders Marine Data Centre, VLIZ</organizationName>
-			<address>
-				<city>Oostende</city>
-				<country>Belgium</country>
-			</address>			
-			<role>Taxonomic Editorial Advisor for Marine sectors</role>
-		</associatedParty>
-
-    	<associatedParty>
-			<individualName>
-				<givenName>Aaike</givenName>
-				<surName>De Wever</surName>					
-			</individualName>
-			<organizationName>FADA, Royal Belgian Institute of Natural Sciences</organizationName>
-			<address>
-				<city>Brussels</city>
-				<country>Belgium</country>
-			</address>			
-			<role>Taxonomic Editorial Advisor for freshwater taxa</role>
-		</associatedParty>		
-		
-		<associatedParty>
-			<individualName>
-				<givenName>Luvie</givenName>
-				<surName>Paglinawan</surName>					
-			</individualName>		
-			<organizationName>CoL Philippines Office, FIN</organizationName>
-			<address>
-				<city>Los Baños</city>
-				<country>Philippines</country>
-			</address>			
-			<role>Catalogue of Life Database Manager</role>			
-		</associatedParty>
-		
-		<associatedParty>
-			<individualName>
-				<givenName>Luisa</givenName>
-				<surName>Abucay</surName>					
-			</individualName>		
-			<organizationName>CoL Philippines Office, FIN</organizationName>
-			<address>
-				<city>Los Baños</city>
-				<country>Philippines</country>
-			</address>			
-			<role>Assistant to the CoL Database Manager</role>			
-		</associatedParty>
-		
-		<associatedParty>
-			<individualName>
-				<givenName>Viktoras</givenName>
-				<surName>Didžiulis</surName>					
-			</individualName>		
-			<organizationName>University of Reading</organizationName>
-			<address>
-				<city>Reading</city>
-				<country>UK</country>
-			</address>			
-			<role>Systems Manager &amp; Developer at the CoL Secretariat</role>			
-		</associatedParty>
-
-		<associatedParty>
-			<individualName>
-				<givenName>Wouter</givenName>
-				<surName>Addink</surName>					
-			</individualName>				
-			<organizationName>Naturalis-ETI</organizationName>
-			<address>
-				<city>Leiden</city>
-				<country>Netherlands</country>
-			</address>			
-			<role>Leader of the Annual Checklist Software Development and Software Production</role>
-		</associatedParty>
-		
-		<associatedParty>
-			<individualName>
-				<givenName>Ruud</givenName>
-				<surName>Altenburg</surName>					
-			</individualName>				
-			<organizationName>Naturalis-ETI</organizationName>
-			<address>
-				<city>Leiden</city>
-				<country>Netherlands</country>
-			</address>			
-			<role>Author of Base Schema Conversion Software</role>
-		</associatedParty>
-		
-		<associatedParty>
-			<individualName>
-				<givenName>Ayco</givenName>
-				<surName>Holleman</surName>					
-			</individualName>				
-			<organizationName>Naturalis-ETI</organizationName>
-			<address>
-				<city>Leiden</city>
-				<country>Netherlands</country>
-			</address>			
-			<role>Annual Checklist Assembly ICT Infrastructure Development</role>
-		</associatedParty>
-    
-		<associatedParty>
-			<individualName>
-				<givenName>Gideon</givenName>
-				<surName>Gijswijt</surName>					
-			</individualName>				
-			<organizationName>Naturalis-ETI</organizationName>
-			<address>
-				<city>Leiden</city>
-				<country>Netherlands</country>
-			</address>			
-			<role>Annual Checklist DVD Master and Installation Development</role>
-		</associatedParty>		    		
-    
-		<associatedParty>
-			<individualName>
-				<givenName>Viktoras</givenName>
-				<surName>Didžiulis</surName>					
-			</individualName>				
-			<organizationName>University of Reading</organizationName>
-			<address>
-				<city>Reading</city>
-				<country>UK</country>
-			</address>			
-			<role>Design of the data assembly workflow, author of the CoL Workbench at Reading</role>
-		</associatedParty>	
-
-		<associatedParty>			
-			<individualName>
-				<givenName>Dennis</givenName>
-				<surName>Seijts</surName>					
-			</individualName>
-			<organizationName>Former employee at ETI BioInformatics</organizationName>
-			<address>
-				<city>Leiden</city>
-				<country>Netherlands</country>
-			</address>			
-			<role>Former Annual Checklist Interface Developer</role>			
-		</associatedParty>
-    
-		<associatedParty>
-			<individualName>
-				<givenName>Núria</givenName>
-				<surName>Torrescasana Aloy</surName>					
-			</individualName>				
-			<organizationName>Former employee at ETI BioInformatics</organizationName>
-			<address>
-				<city>Amsterdam</city>
-				<country>Netherlands</country>
-			</address>			
-			<role>Former author of the Annual Checklist Software</role>
-		</associatedParty>	        		
-		
-		<associatedParty>
-			<individualName>
-				<givenName>Jorrit</givenName>
-				<surName>van Hertum</surName>					
-			</individualName>				
-			<organizationName>Former employee at ETI BioInformatics</organizationName>
-			<address>
-				<city>Amsterdam</city>
-				<country>Netherlands</country>
-			</address>			
-			<role>Former author of the Annual Checklist Software</role>
-		</associatedParty>	
-		
-		<associatedParty>
-			<individualName>
-				<givenName>Richard</givenName>
-				<surName>White</surName>					
-			</individualName>				
-			<organizationName>Cardiff University</organizationName>
-			<address>
-				<city>Cardiff</city>
-				<country>UK</country>
-			</address>			
-			<role>Former author of the Taxon Matcher Software and LSID Resolver</role>
-		</associatedParty>
-		
-		<associatedParty>
-			<individualName>
-				<givenName>Paul</givenName>
-				<surName>Klinkenberg</surName>					
-			</individualName>				
-			<organizationName>Former employee at ETI Bioinformatics</organizationName>
-			<address>
-				<city>Amsterdam</city>
-				<country>Netherlands</country>
-			</address>			
-			<role>Annual Checklist booklet design and DVD production</role>
+			<role>editor</role>
 		</associatedParty>		
 
 		<pubDate>[pubDate]</pubDate>
@@ -446,13 +128,14 @@ Animalia (Animals) * Marine groups from URMO, ITIS Global, Hexacorals, ETI WBD (
 		</coverage>
 		
 		<contact>
-			<organizationName>Species 2000 Secretariat</organizationName>
+			<organizationName>Species 2000 Secretariat c/o Naturalis</organizationName>
 			<address>
-				<deliveryPoint>Harborne Building, The University of Reading</deliveryPoint>
-				<city>Reading RG6 6AS</city>
-				<country>UK</country>
+				<deliveryPoint>P.O. Box 9517</deliveryPoint>
+				<city>Leiden</city>
+				<postalCode>2300 RA</postalCode>
+				<country>NL</country>
 			</address>
-			<phone>+44(0)1183786466</phone>
+			<phone>+31 71 7519362</phone>
 			<electronicMailAddress>support@sp2000.org</electronicMailAddress>
 		</contact>
 		
