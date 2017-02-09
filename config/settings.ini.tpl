@@ -14,12 +14,6 @@ separator =                         ; leave empty for default double quote; if t
 natural_keys = 1				    ; export using natural keys (1) or ids (0) in CoL urls
 fossils = 0							; export fossils (1) or exclude them (0)
 
-[credits]
-; Credits string appears for each record in each individual text file
-string = "@CREDITSSTRING@"
-; Release date used in GSD EML files; format as YYYY-MM-DD
-release_date = "@RELEASEDATE@"
-
 [website]
 url = "@WEBSITEURL@" ; base url to CoL, needed as different editions run simultaneously
 

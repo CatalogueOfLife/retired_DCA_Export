@@ -1,23 +1,25 @@
 <?php
 /**
  * SourceDatabase
- * 
+ *
  * This is a model different from all others, as it does not write the source database metadata
- * to a single text file but to multiple EML files in the eml directory using the Template class. 
+ * to a single text file but to multiple EML files in the eml directory using the Template class.
  * It does not implement the DCAModuleInterface.
- * 
+ *
  * @author Ruud Altenburg
  */
-class SourceDatabase
+class SourceDatabase extends DCAModuleAbstract
 {
     private $_fileName;
     private $_fields;
     private $_src;
     private $_dest;
-    private $_dir;
-    
+    protected $_dir;
+    protected $_dbh;
+
     public function __construct (PDO $dbh, $dir, $fields = array())
     {
+        $this->_dbh = $dbh;
         $this->_dir = $dir;
         $this->_fields = $this->_setFields($fields);
         $this->_fileName = $this->_setFileName();
@@ -36,9 +38,9 @@ class SourceDatabase
             $this->_setColMetaFields($fields);
         }
         // Calculated/shared fields
-        $fields['dateStamp'] = date("c"); 
-        $fields['pubDate'] = DCAExporter::getReleaseDate();
-        $fields['packageId'] = 
+        $fields['dateStamp'] = date("c");
+        $fields['pubDate'] = date("Y-m-d", strtotime($this->_getReleaseDate()));
+        $fields['packageId'] =
             (isset($fields['id']) ? $fields['id'] . ':' : '') . date("Y-m-d");
         // Needed to clean multiple addresses in the same field...
         if (isset($fields['sourceUrl'])) {
@@ -46,37 +48,37 @@ class SourceDatabase
         }
         return $fields;
     }
-    
+
     private function _setColFields ()
     {
         $fields = array(
-            'id' => 'col', 
-            'title' => 'Catalogue of Life', 
-            'abbreviatedName' => 'Catalogue of Life', 
-            'groupName' => '', 
+            'id' => 'col',
+            'title' => 'Catalogue of Life',
+            'abbreviatedName' => 'Catalogue of Life',
+            'groupName' => '',
             'organizationName' => 'Species 2000',
-            'citation' => DCAExporter::getCredits() . ', ' . 'Catalogue of Life'
+            'citation' => $this->_getCredits() . ', ' . 'Catalogue of Life'
         );
         return array_merge($fields, DCAExporter::getColEmlIni());
     }
-    
+
     private function _setColMetaFields (&$fields)
     {
         $colEml = DCAExporter::getColEmlIni();
         $fields['year'] = date("Y");
-        $fields['citation'] = DCAExporter::getCredits() . ', ' . 'Catalogue of Life';
+        $fields['citation'] = $this->_getCredits() . ', ' . 'Catalogue of Life';
         $fields['resourceLogoUrl'] = DCAExporter::getWebsiteUrl() . $colEml['resourceLogoUrl'];
         $fields['sourceUrl'] = $colEml['sourceUrl'];
         $fields = array_merge($fields, DCAExporter::getColMetaEmlIni());
         return $fields;
     }
-    
+
     private function _setSourceDbFields (&$fields)
     {
         $fields['abstract'] = htmlspecialchars($fields['abstract'], ENT_QUOTES, 'UTF-8');
         $fields['resourceLogoUrl'] = DCAExporter::getWebsiteUrl() . $fields['resourceLogoUrl'];
-        $fields['citation'] = DCAExporter::getCredits() . ', ' . $fields['abbreviatedName'];
-        return $fields;       
+        $fields['citation'] = $this->_getCredits() . ', ' . $fields['abbreviatedName'];
+        return $fields;
     }
 
     private function _setFileName ()
@@ -92,7 +94,7 @@ class SourceDatabase
             return 'col.xml';
         }
     }
-    
+
     private function _setSource ()
     {
         // Meta eml
@@ -120,7 +122,7 @@ class SourceDatabase
         DCAExporter::removeDir($this->_dest);
         mkdir($this->_dest);
     }
-    
+
     public function writeEml ()
     {
         $template = new Template($this->_src, $this->_dest);
@@ -128,7 +130,7 @@ class SourceDatabase
         $template->writeFile($this->_fileName, 'eml');
         unset($template);
     }
-    
+
     private function _cleanSourceUrl ($url)
     {
         if (strpos($url, ';') !== false) {

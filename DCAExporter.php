@@ -63,7 +63,7 @@ class DCAExporter
     // Collects bootstrap errors
     public $startUpErrors;
 
-    public function __construct ($passBootstrap = false)
+    public function __construct ($runBootstrap = true)
     {
         $this->_createDbInstance('db');
         $this->_dbh = DbHandler::getInstance('db');
@@ -82,12 +82,12 @@ class DCAExporter
         set_time_limit(0);
         $this->_completeDump = in_array('[all]', $this->_sc) ? true : false;
 
-        if ($passBootstrap == false) {
+       if ($runBootstrap) {
             $bootstrap = new DCABootstrap($this->_dbh, $this->_del, $this->_sep, $this->_sc,
                 $this->_bl, $this->_dir, $this->_zip, $this->_excluded);
             $this->startUpErrors = $bootstrap->getErrors();
             unset($bootstrap);
-        }
+       }
     }
 
     public function __destruct ()
@@ -121,23 +121,9 @@ class DCAExporter
         return $ini['settings']['version'] . ' [r' . $ini['settings']['revision'] . ']';
     }
 
-    public static function getEdition ()
+    public function getCredits ()
     {
-        if (isset($_SESSION['monthly'])) {
-            return $_SESSION['monthly']['ini']['credits']['string'] .
-                ' (' . $_SESSION['monthly']['ini']['credits']['release_date'] . ')';
-        }
-        $ini = parse_ini_file('config/settings.ini', true);
-        return $ini['credits']['string'] . ' (' . $ini['credits']['release_date'] . ')';
-    }
-
-    public static function getCredits ()
-    {
-        if (isset($_SESSION['monthly'])) {
-            return $_SESSION['monthly']['ini']['credits']['string'];
-        }
-        $ini = parse_ini_file('config/settings.ini', true);
-        return $ini['credits']['string'];
+        return 'Species 2000 & ITIS Catalogue of Life: ' . $this->getReleaseDate();
     }
 
     public static function getWebserviceUrl ()
@@ -223,7 +209,7 @@ class DCAExporter
         return dirname(__FILE__);
     }
 
-    public function getReleaseDateFromDatabase ()
+    public function getReleaseDate ()
     {
         $query = 'SELECT `edition` FROM `_credits` WHERE `current` = 1';
         $stmt = $this->_dbh->prepare($query);
@@ -262,8 +248,12 @@ class DCAExporter
             }
         }
         $d->close();
-        krsort($files['monthly']);
-        krsort($files['annual']);
+        if (isset($files['monthly'])) {
+            krsort($files['monthly']);
+        }
+        if (isset($files['annual'])) {
+            krsort($files['annual']);
+        }
         return $files;
     }
 
@@ -467,24 +457,6 @@ class DCAExporter
 
     private function _getVernaculars ($taxon_id)
     {
-        /*
-        $query = 'SELECT t3.`name` as vernacularName,
-                          t2.`name` as language,
-                          t1.`country_iso` as countryCode,
-                          t6.`name` AS locality,
-                          t5.`authors`,
-                          t5.`year`,
-                          t5.`title`,
-                          t5.`text`,
-                          t1.`id` as vernacularID
-                   FROM `common_name` t1
-                   LEFT JOIN `language` AS t2 ON t2.`iso` = t1.`language_iso`
-                   LEFT JOIN `common_name_element` AS t3 ON t3.`id` = t1.`common_name_element_id`
-                   RIGHT JOIN `reference_to_common_name` AS t4 ON t4.`common_name_id` = t1.`id`
-                   RIGHT JOIN `reference` AS t5 ON t5.`id` = t4.`reference_id`
-                   LEFT JOIN `country` AS t6 ON t1.`country_iso` = t6.`iso`
-                   WHERE t1.`taxon_id` = ?';
-        */
         $query = 'SELECT t3.`name` as vernacularName,
                           t2.`name` as language,
                           t1.`country_iso` as countryCode,
@@ -869,6 +841,10 @@ class DCAExporter
 
     public function zipArchive ()
     {
+        // Delete monitor file if present
+        if (file_exists($this->_dir . 'monitor')) {
+            unlink($this->_dir . 'monitor');
+        }
         $zip = new Zip();
         $zip->createArchive($this->_dir, self::getZipArchivePath());
         unset($zip);
@@ -903,17 +879,6 @@ class DCAExporter
                 return $url . '/';
             }
             return $url;
-        }
-        return false;
-    }
-
-    public static function getReleaseDate() {
-        if (isset($_SESSION['monthly'])) {
-            return $_SESSION['monthly']['ini']['credits']['release_date'];
-        }
-        $ini = parse_ini_file(DCAExporter::basePath() . '/config/settings.ini', true);
-        if (isset($ini['credits']['release_date'])) {
-            return $ini['credits']['release_date'];
         }
         return false;
     }

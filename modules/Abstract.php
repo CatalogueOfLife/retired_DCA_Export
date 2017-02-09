@@ -30,9 +30,17 @@ abstract class DCAModuleAbstract
         ));
     }
 
-    protected function _getCredits() {
-        $ini = parse_ini_file(DCAExporter::basePath() . '/config/settings.ini', true);
-        return $ini['credits']['string'];
+    protected function _getCredits () {
+        return 'Species 2000 & ITIS Catalogue of Life: ' . $this->_getReleaseDate();
+    }
+
+    protected function _getReleaseDate ()
+    {
+        $query = 'SELECT `edition` FROM `_credits` WHERE `current` = 1';
+        $stmt = $this->_dbh->prepare($query);
+        $stmt->execute();
+        $res = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $res ? $res['edition'] : false;
     }
 
     protected function _createTextFile ($fileName)

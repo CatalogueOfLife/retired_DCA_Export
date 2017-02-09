@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>AC DCA export</name>
+	<name>AC DCA Export</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -15,8 +15,14 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+		<buildCommand>
+			<name>org.zend.php.zendserver.deployment.core.DeploymentBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.php.core.PHPNature</nature>
+		<nature>org.zend.php.zendserver.deployment.core.DeploymentNature</nature>
 	</natures>
 </projectDescription>

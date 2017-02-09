@@ -59,38 +59,16 @@ if (!empty($errors)) {
     }
     die();
 }
+$baseDir = $dcaExporter::basePath();
 $dcaExporter->useIndicator();
 $dcaExporter->setIndicatorBreakLine("\n");
 $dcaExporter->setIndicatorMarkersPerLine(50);
 $dcaExporter->setIndicatorIterationsPerMarker(500);
 
-$d = $dcaExporter->getReleaseDateFromDatabase();
-$_SESSION['monthly']['ini']['credits']['string'] = 'Species 2000 & ITIS Catalogue of Life: ' .
-    date('jS F Y', strtotime($d));
-$_SESSION['monthly']['ini']['credits']['release_date'] = date('Y-m-d', strtotime($d));
+$dateYmd = date("Y-m-d", strtotime($dcaExporter->getReleaseDate()));
 
 echo "This script creates a complete DarwinCore Archive of the\n";
-echo $_SESSION['monthly']['ini']['credits']['string'] . "\n\n";
-
-// Write new credits to ini file
-echo "Updating release date in ini file...\n";
-if (!is_writable($configPath)) {
-	exit($configPath . " is not writable, required to update release date\n\n");
-}
-$config = file($configPath);
-for ($i = 0; $i < count($config); $i++) {
-	if (strpos($config[$i], 'string') === 0) {
-		$config[$i] =
-            'string = "' . $_SESSION['monthly']['ini']['credits']['string'] . '"' . "\n";
-	}
-	if (strpos($config[$i], 'release_date') === 0) {
-		$config[$i] =
-            'release_date = "' . $_SESSION['monthly']['ini']['credits']['release_date'] . '"' . "\n";
-	}
-}
-unlink($configPath);
-file_put_contents($configPath, implode('', $config));
-
+echo "Species 2000 & ITIS Catalogue of Life: " . $dcaExporter->getReleaseDate() . "\n\n";
 
 // Create the archive.. sit back and relax...
 $total = $dcaExporter->getTotalNumberOfTaxa();
@@ -106,12 +84,12 @@ $dcaExporter->copyScripts();
 echo "\nCompressing to zip archive...\n";
 $dcaExporter->zipArchive();
 echo "Archive succesfully created!\nMoving archive to zip-fixed...\n";
+$dcaExporter::removeDir($baseDir . '/zip-fixed');
+mkdir($baseDir . '/zip-fixed');
 $dcaExporter::copyDir($baseDir . '/zip/archive-complete.zip',
-    $baseDir . '/zip-fixed/' . $_SESSION['monthly']['ini']['credits']['release_date'] .
-    'archive-complete.zip');
+    $baseDir . '/zip-fixed/' . $dateYmd . '-archive-complete.zip');
 echo "Writing dca.txt file\n";
-file_put_contents($baseDir . '/zip-fixed/dca.txt',
-    $_SESSION['monthly']['ini']['credits']['release_date']);
+file_put_contents($baseDir . '/zip-fixed/dca.txt', $dateYmd);
 
 echo "Ready!\n\n";
 

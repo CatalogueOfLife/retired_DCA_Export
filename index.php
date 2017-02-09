@@ -1,7 +1,7 @@
 <?php
     // Sets form variables, session start and several includes
     require_once 'DCAExporter.php';
-    $dca = new DCAExporter(true);
+    $dca = new DCAExporter(false);
     require_once 'includes/init.php';
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -34,7 +34,7 @@ Darwin Core Archive Export</h3>
         echo Template::decorateString($intro,
             array(
                 'colEdition' => 'Species 2000 & ITIS Catalogue of Life, ' .
-                    $dca->getReleaseDateFromDatabase() . ' edition',
+                    $dca->getReleaseDate() . ' edition',
                 'webserviceUrl' => $dca::getWebserviceUrl(),
                 'zipScripts' => $dca::zipScripts(),
                 'downloadComplete' => downloadComplete()

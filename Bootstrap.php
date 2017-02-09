@@ -27,8 +27,7 @@ class DCABootstrap
             $this->_setInternalCodingToUtf8();
 
             // Text files used to write to are created on the fly when the objects are created
-            if (empty(
-                $this->_errors)) {
+            if (empty($this->_errors)) {
                 $this->_init(
                     array(
                         'Taxon',
@@ -81,7 +80,7 @@ class DCABootstrap
                     mkdir($dir);
                 // Nothing wrong, issue notice and display ETA to the user
                 } else {
-                    $progress = '<br>Progress: ' . file_get_contents($dir . 'monitor') . '.<br>';
+                    $progress = "\nProgress: " . file_get_contents($dir . 'monitor') . ".\n\n";
                     $this->_errors[3] = 'Export already initiated on ' .
                         date ("F d Y H:i:s", filemtime($dir)) . ' by a different user. ' .
                         (isset($progress) ? $progress : '') . 'Please retry downloading later!';
