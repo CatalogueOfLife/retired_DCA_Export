@@ -1,6 +1,6 @@
 <p>This page offers an interface on the application that exports data from the [colEdition] in the
-<a href="http://code.google.com/p/gbif-ecat/wiki/DwCArchive">Darwin Core Archive format</a>. Data can also
-be exported using <a href="[webserviceUrl]">a webservice</a>. The resulting archives can be imported into
+<a href="http://code.google.com/p/gbif-ecat/wiki/DwCArchive">Darwin Core Archive format</a>. 
+ The resulting archives can be imported into
 custom MySQL, PostgreSQL, SQLite and MS SQL Server databases using import scripts included in each archive.
 These scripts can also be <a href="includes/download.php?file=scripts">downloaded separately</a>.</p>
 
