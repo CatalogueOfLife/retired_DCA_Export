@@ -77,7 +77,7 @@ abstract class DCAModuleAbstract
         //fputcsv($fh, $fields, $this->_del, $this->_sep);
         $this->fputcsv2($fh, $fields, $this->_del, $this->_sep);
     }
-
+    
     protected function _getNaturalKey ($id)
     {
         $query = 'SELECT `hash`

@@ -710,7 +710,7 @@ class DCAExporter
                 $this->_indicator ? $this->_indicator->iterate() : '';
                 $this->_taxon = $this->_initModule('Taxon', $rowTx);
                 $this->_taxon->setDefaultTaxonData();
-                $this->_taxon->setLsid();
+                $this->_taxon->setNaturalKey();
                 $this->_taxon->setParentId();
 
                 if (!$this->_emlExists($this->_taxon->datasetID)) {

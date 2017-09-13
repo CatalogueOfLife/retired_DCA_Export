@@ -9,9 +9,9 @@
         <location>taxa.txt</location>
     </files>
     <id index='0' />
-    <!-- CoL taxon id -->
+    <!-- CoL internal id -->
     <field index="0" term="http://rs.tdwg.org/dwc/terms/taxonID"/>
-    <!-- LSID -->
+    <!-- CoL "natural key" -->
     <field index="1" term="http://purl.org/dc/terms/identifier"/>
     <!-- CoL source database id -->
     <field index="2" term="http://rs.tdwg.org/dwc/terms/datasetID"/>

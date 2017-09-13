@@ -3,3 +3,5 @@ config/settings.ini
 /export/
 /zip/
 /zip-fixed/
+/deployment.properties
+.*

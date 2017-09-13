@@ -3,7 +3,7 @@ require_once 'Interface.php';
 class Taxon extends DCAModuleAbstract implements DCAModuleInterface
 {
     public $taxonID;
-    public $identifier; // LSID; separate
+    public $identifier; // Natural key; separate
     public $datasetID;
     public $datasetName;
     public $acceptedNameUsageID;
@@ -136,6 +136,11 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
         }
         return false;
     }
+    
+    public function setNaturalKey ()
+    {
+    	$this->identifier = $this->_getNaturalKey($this->taxonID);
+    }
 
     public function setParentId ()
     {
@@ -231,8 +236,8 @@ class Taxon extends DCAModuleAbstract implements DCAModuleInterface
     {
     	$ini = parse_ini_file(DCAExporter::basePath() . '/config/settings.ini', true);
     	$nK = $ini['export']['natural_keys'];
-
-    	$baseUrl = 'http://www.catalogueoflife.org/annual-checklist/';
+    	$baseUrl = $ini['website']['url'];
+    	
     	// Valid taxon
     	if (empty($this->acceptedNameUsageID)) {
     		$this->references = $baseUrl . 'details/species/id/' .
