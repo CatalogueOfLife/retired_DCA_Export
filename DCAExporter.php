@@ -82,12 +82,12 @@ class DCAExporter
         set_time_limit(0);
         $this->_completeDump = in_array('[all]', $this->_sc) ? true : false;
 
-       if ($runBootstrap) {
+        if ($runBootstrap) {
             $bootstrap = new DCABootstrap($this->_dbh, $this->_del, $this->_sep, $this->_sc,
                 $this->_bl, $this->_dir, $this->_zip, $this->_excluded);
             $this->startUpErrors = $bootstrap->getErrors();
             unset($bootstrap);
-       }
+        }
     }
 
     public function __destruct ()
