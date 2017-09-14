@@ -1,25 +1,10 @@
 <?php
 /*
- * This script can be used to create a complete download from the command line.
- * It replicates the manual steps required to create the export and replace the previous archive.
- * A password (for basic security) and release date should be given as parameters.
+ * This script can be used to create a complete download by GSD.
  *
  * Usage:
- * php path_to/monthly.php -w "password"
- * php "/path/to/monthly.php" -w "^Guu&*^f___\\"
+  * php "/path/to/export-by-gsd.php" -w ")&^(D  UIYOY"
  *
- *
-* Viktor's original instructions
-*
-1) edit [credits] portion of the settings.ini in DCA_Export_v1.3/config/ change dates in 'string' and 'release_date' variables to 17th October 2013 and 2013-10-17;
-2) delete all archives in /var/www/DCA_Export_v1.3/zip/ folder;
-3) delete old archive-complete.zip in /var/www/DCA_Export_v1.3/zip-fixed/ folder;
-4) on the website http://www.catalogueoflife.com/DCA_Export/ type [All] with the square brackets into 'Top level group' field choose 'Complete data' and click 'Download' button to generate archive.
-5) it will take a while... Make sure not to close browser window while it is working;
-6) once complete new archive_complete.zip will appear in /var/www/DCA_Export_v1.3/zip/ folder;
-7) copy/paste it into /var/www/DCA_Export_v1.3/zip-fixed/ folder once with original name and then second time renaming it 2013-10-17-archive-complete.zip;
-8) send the notification e-mail to interested parties. I am ususlly posting the following message to i4Life-WP2 mailing list (I will post it later today):
-
 */
 
 // Just in case... six hour timeout
@@ -31,7 +16,7 @@ ini_set('display_errors', 1);
 
 
 // Password required when calling the service
-$password = '^Guu&*^f___\\';
+$password = ')&^(D  UIYOY';
 $configPath =  dirname(__FILE__) . '/config/settings.ini';
 
 require_once 'DCAExporter.php';
