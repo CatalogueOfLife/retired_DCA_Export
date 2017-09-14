@@ -1,0 +1,83 @@
+<?php
+/*
+ * This script can be used to create a complete download from the command line.
+ * It replicates the manual steps required to create the export and replace the previous archive.
+ * A password (for basic security) and release date should be given as parameters.
+ *
+ * Usage:
+ * php path_to/monthly.php -w "password"
+ * php "/path/to/monthly.php" -w "^Guu&*^f___\\"
+ *
+ *
+* Viktor's original instructions
+*
+1) edit [credits] portion of the settings.ini in DCA_Export_v1.3/config/ change dates in 'string' and 'release_date' variables to 17th October 2013 and 2013-10-17;
+2) delete all archives in /var/www/DCA_Export_v1.3/zip/ folder;
+3) delete old archive-complete.zip in /var/www/DCA_Export_v1.3/zip-fixed/ folder;
+4) on the website http://www.catalogueoflife.com/DCA_Export/ type [All] with the square brackets into 'Top level group' field choose 'Complete data' and click 'Download' button to generate archive.
+5) it will take a while... Make sure not to close browser window while it is working;
+6) once complete new archive_complete.zip will appear in /var/www/DCA_Export_v1.3/zip/ folder;
+7) copy/paste it into /var/www/DCA_Export_v1.3/zip-fixed/ folder once with original name and then second time renaming it 2013-10-17-archive-complete.zip;
+8) send the notification e-mail to interested parties. I am ususlly posting the following message to i4Life-WP2 mailing list (I will post it later today):
+
+*/
+
+// Just in case... six hour timeout
+set_time_limit(21600);
+
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+
+// Password required when calling the service
+$password = '^Guu&*^f___\\';
+$configPath =  dirname(__FILE__) . '/config/settings.ini';
+
+require_once 'DCAExporter.php';
+require_once 'includes/library.php';
+alwaysFlush();
+
+
+// Get command line parameters
+$options = getopt("w:");
+$w = isset($options['w']) ? $options['w'] : false;
+
+// Basic security
+if (!$w || $w !== $password) {
+    die("You did not say the magic word, bye bye\n\n");
+}
+
+// Initialize DCAExporter
+$dcaExporter = new DCAExporter();
+$dateYmd = date("Y-m-d", strtotime($dcaExporter->getReleaseDate()));
+
+echo "This script creates a DarwinCore Archives for each GSD in the\n";
+echo "Species 2000 & ITIS Catalogue of Life: " . $dcaExporter->getReleaseDate() . "\n\n";
+
+foreach ($dcaExporter->getGSDs() as $gsd) {
+
+	// Fake data submission
+	$_POST['gsd'] = $gsd;
+	$_POST['block'] = 3;
+
+	// Initialize DCAExporter
+	$dcaExporter = new DCAExporter();
+	$baseDir = $dcaExporter::basePath();
+	$dcaExporter->useIndicator();
+	$dcaExporter->setIndicatorBreakLine("\n");
+	$dcaExporter->setIndicatorMarkersPerLine(50);
+	$dcaExporter->setIndicatorIterationsPerMarker(500);
+	
+	echo "Writing $gsd data to text files...\n";
+	$dcaExporter->createMetaXml();
+	$dcaExporter->writeData();
+	echo "\nCompressing to zip archive...\n";
+	$dcaExporter->zipArchive();
+	echo "\n";
+}
+
+echo "Ready!\n\n";
+
+
+?>

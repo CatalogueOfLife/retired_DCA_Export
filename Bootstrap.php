@@ -137,6 +137,10 @@ class DCABootstrap
         if (in_array('[all]', $sc)) {
             return array('kingdom' => '[all]');
         }
+        // GSD export
+        if (in_array('[all]', $sc)) {
+            return array('gsd' => $sc['gsd']);
+        }
         // Regular search pattern
         $filteredSc = array();
         foreach ($sc as $rank => $taxon) {

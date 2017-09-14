@@ -59,7 +59,9 @@ class DCAExporter
     private $_iuaSetting;
     // Should all taxa be exported?
     private $_completeDump;
-
+    // Should all taxa for a specific GSD be exported?
+    private $_completeGSD;
+    
     // Collects bootstrap errors
     public $startUpErrors;
 
@@ -81,7 +83,9 @@ class DCAExporter
         $this->_iuaSetting = ignore_user_abort(true);
         set_time_limit(0);
         $this->_completeDump = in_array('[all]', $this->_sc) ? true : false;
-
+        // Bit hacked in...
+        $this->_completeGSD = isset($_POST['gsd']) ? $_POST['gsd'] : false;
+         
         if ($runBootstrap) {
             $bootstrap = new DCABootstrap($this->_dbh, $this->_del, $this->_sep, $this->_sc,
                 $this->_bl, $this->_dir, $this->_zip, $this->_excluded);
@@ -192,6 +196,9 @@ class DCAExporter
         if (in_array('[all]', $this->_sc)) {
             return $url . 'complete.zip';
         }
+        if (isset($_POST['gsd'])) {
+            return strtolower(str_replace(' ', '_', $_POST['gsd'])) . '.zip';
+        }
         foreach ($this->_sc as $rank => $taxon) {
             $url .= strtolower($rank) . '-' . strtolower($taxon) . '-';
         }
@@ -216,6 +223,16 @@ class DCAExporter
         $stmt->execute();
         $res = $stmt->fetch(PDO::FETCH_ASSOC);
         return $res ? $res['edition'] : false;
+    }
+    
+    public function getGSDs () 
+    {
+       	$query = 'SELECT `short_name` AS `gsd` FROM `_source_database_details` 
+			ORDER BY `short_name` ASC';
+    	$stmt = $this->_dbh->prepare($query);
+        $stmt->execute();
+        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $res ? array_column($res, 'gsd') : false;
     }
 
     public static function getPreviousEditions ()
@@ -354,13 +371,17 @@ class DCAExporter
             return $this->_excludedToQuery($query);
         // Taxa
         } else if (!$this->_completeDump) {
-            foreach ($this->_sc as $field => $value) {
-                $query .= "`$field` = :$field AND ";
-            }
-            // Omit (infra)species from level 1
-            if ($this->_bl == 1) {
-                $query .= '`species` = "" AND `infraspecies` = "" AND ';
-            }
+        	if ($this->_completeGSD) {
+        		$query .= "`source_database_name` = :gsd AND ";
+        	} else {
+	            foreach ($this->_sc as $field => $value) {
+	                $query .= "`$field` = :$field AND ";
+	            }
+	            // Omit (infra)species from level 1
+	            if ($this->_bl == 1) {
+	                $query .= '`species` = "" AND `infraspecies` = "" AND ';
+	            }
+        	}
         }
         if ($this->_fossils == 0) {
             $query .= '`is_extinct` = 0 AND ';
@@ -371,6 +392,7 @@ class DCAExporter
         if ($t != 'tt') {
             $query .= 'LIMIT :limit OFFSET :offset';
         }
+        
         return $query;
     }
 
@@ -433,9 +455,13 @@ class DCAExporter
         $query = $this->_buildQuery();
         $stmt = $this->_dbh->prepare($query);
         if (!$this->_completeDump) {
-            foreach ($this->_sc as $field => $value) {
-                $stmt->bindValue(':' . $field, $value);
-            }
+        	if ($this->_completeGSD) {
+        		$stmt->bindValue(':gsd', $this->_completeGSD);
+        	} else {            
+        		foreach ($this->_sc as $field => $value) {
+	                $stmt->bindValue(':' . $field, $value);
+	            }
+	       }
         }
         $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
         $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
@@ -663,9 +689,13 @@ class DCAExporter
     {
         $query = $this->_buildQuery('tt');
         $stmt = $this->_dbh->prepare($query);
-        foreach ($this->_sc as $field => $value) {
-            $stmt->bindValue(':' . $field, $value);
-        }
+        if ($this->_completeGSD) {
+        	$stmt->bindValue(':gsd', $this->_completeGSD);
+        } else {            
+        	foreach ($this->_sc as $field => $value) {
+	            $stmt->bindValue(':' . $field, $value);
+	        }
+	    }
         $stmt->execute();
         $res = $stmt->fetch(PDO::FETCH_NUM);
         return $res ? $res[0] : false;
