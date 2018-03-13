@@ -61,6 +61,11 @@ class DCAExporter
     private $_completeDump;
     // Should all taxa for a specific GSD be exported?
     private $_completeGSD;
+    // Keep track of parents
+    private $_parents = array();
+    // Keep track processed taxa
+    private $_children = array();
+    
     
     // Collects bootstrap errors
     public $startUpErrors;
@@ -310,7 +315,18 @@ class DCAExporter
 
     private function _buildQuery ($t = null)
     {
-        // Possible query types $t are null (taxa), 'sn' (synonyms) and 'tt' (count total)
+        /* 
+         Possible query types $t are 
+        	- null (taxa)
+        	- 'id=int' (single taxon)
+        	- 'sn' (synonyms)
+			- 'tt' (count total)
+        */
+    	if (strpos(trim($t), 'id') === 0) {
+    		$tmp = explode('=', $t);
+    		$id = trim($tmp[1]);
+    	}
+    	
         $query = 'SELECT ';
         // Count only if total has to be determined
         if ($t == 'tt') {
@@ -370,7 +386,7 @@ class DCAExporter
             $query .= '`accepted_species_id` = ?';
             return $this->_excludedToQuery($query);
         // Taxa
-        } else if (!$this->_completeDump) {
+        } else if (!$this->_completeDump && !isset($id)) {
         	if ($this->_completeGSD) {
         		$query .= "`source_database_name` = :gsd AND ";
         	} else {
@@ -389,8 +405,13 @@ class DCAExporter
    		$query = $this->_excludedToQuery($query . '`accepted_species_id` = 0 ');
 
         // Omit limit from total query
-        if ($t != 'tt') {
+        if ($t != 'tt' && !isset($id)) {
             $query .= 'LIMIT :limit OFFSET :offset';
+        }
+        
+        // Appended (bit ugly...): limit result to a single taxon
+        if (isset($id)) {
+        	$query .= ' AND `id` = ' . $id;
         }
         
         return $query;
@@ -469,7 +490,51 @@ class DCAExporter
         $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $res ? $res : array();
     }
-
+    
+    private function _getTaxonTree ($id, &$tree = array())
+    {
+    	if (!in_array($id, $this->_children)) {
+	    	$query = $this->_buildQuery('id=' . $id);
+	        $stmt = $this->_dbh->query($query);
+	        $res = $stmt->fetch(PDO::FETCH_ASSOC);
+	        
+	        if ($res) {
+	        	$res['parentNameUsageID'] = $this->_getParentId($res['taxonID']);
+	        	$tree[$res['taxonID']] = $res;
+	        	$this->_children[] = $res['taxonID'];
+	        	
+	        	if ($res['parentNameUsageID'] != 0) {
+	            	$this->_parents[] = $res['parentNameUsageID'];
+					$this->_getTaxonTree($res['parentNameUsageID'], $tree);
+				} else {
+					return $tree;
+				}
+	        	
+	        	
+	        	/*
+	        	
+		    	$taxon = $this->_initModule('Taxon', $res);
+				$taxon->setDefaultTaxonData();
+				$taxon->setNaturalKey();
+				$taxon->setParentId();
+				
+				$tree[$taxon->taxonID] = $taxon;
+				$this->_children[] = $taxon->taxonID;
+				
+				if ($taxon->parentNameUsageID != 0) {
+	            	$this->_parents[] = $taxon->parentNameUsageID;
+					$this->_getTaxonTree($taxon->parentNameUsageID, $tree);
+				} else {
+					return $tree;
+				}
+				
+				*/
+	        }
+    	}
+        
+        return $tree;
+    }
+    
     private function _getSynonyms ($taxon_id)
     {
         $query = $this->_buildQuery('sn');
@@ -602,6 +667,20 @@ class DCAExporter
         $res = $stmt->fetch(PDO::FETCH_ASSOC);
         return $res ? $res : array();
     }
+    
+    private function _getParentId ($id)
+    {
+        $query = 'SELECT `parent_id`
+                  FROM `taxon_name_element`
+                  WHERE `taxon_id` = ?';
+        $stmt = $this->_dbh->prepare($query);
+        $stmt->execute(array($id));
+        if ($res = $stmt->fetch(PDO::FETCH_NUM)) {
+            return $res[0];
+        }
+        return false;
+    }
+    
 
     private function _getTotals ()
     {
@@ -742,6 +821,9 @@ class DCAExporter
                 $this->_taxon->setDefaultTaxonData();
                 $this->_taxon->setNaturalKey();
                 $this->_taxon->setParentId();
+                
+                $this->_children[] = $this->_taxon->taxonID;
+                $this->_parents[] = $this->_taxon->parentNameUsageID;
 
                 if (!$this->_emlExists($this->_taxon->datasetID)) {
                     $sourceDatabase = new SourceDatabase(
@@ -852,6 +934,47 @@ class DCAExporter
             }
         }
     }
+    
+    public function hasMissingParents ()
+    {
+    	return !empty(array_diff($this->_parents, $this->_children));
+    }
+    
+	public function writeMissingParents () 
+	{
+		// Get missing parents
+		$missing = array_diff($this->_parents, $this->_children);
+		$tree = array();
+		
+		// Create complete tree up to top level for all missing parents
+		foreach ($missing as $id) {
+			$tree = array_merge($this->_getTaxonTree($id), $tree);
+		}
+		
+		if (!empty($tree)) {
+			// Create taxon object for each parent and write to csv
+			foreach ($tree as $res) {
+				$taxon = $this->_initModule('Taxon', $res);
+				$taxon->setDefaultTaxonData();
+				$taxon->setNaturalKey();
+				//$taxon->setParentId();
+				
+				if (!$this->_emlExists($taxon->datasetID)) {
+					$sourceDatabase = new SourceDatabase($this->_dbh, $this->_dir, 
+						$this->_getSourceDatabaseMetadata($taxon->datasetID));
+					$sourceDatabase->writeEml();
+					unset($sourceDatabase);
+					$this->_addSavedEml($taxon->datasetID);
+				}
+				$taxon->writeModel();
+				unset($taxon);
+			}
+			
+			unset($tree);
+			$this->_parents = array();
+			$this->_children = array();
+		}
+	}
 
     public function createMetaXml ()
     {

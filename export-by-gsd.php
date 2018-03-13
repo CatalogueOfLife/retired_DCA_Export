@@ -41,6 +41,8 @@ echo "This script creates a DarwinCore Archives for each GSD in the\n";
 echo "Species 2000 & ITIS Catalogue of Life: " . $dcaExporter->getReleaseDate() . "\n\n";
 
 foreach ($dcaExporter->getGSDs() as $gsd) {
+	
+//if ($gsd  != 'FishBase') continue;
 
 	// Fake data submission
 	$_POST['gsd'] = $gsd;
@@ -57,6 +59,10 @@ foreach ($dcaExporter->getGSDs() as $gsd) {
 	echo "Writing $gsd data to text files...\n";
 	$dcaExporter->createMetaXml();
 	$dcaExporter->writeData();
+	if ($dcaExporter->hasMissingParents()) {
+		echo "\nCompleting higher classification...\n";
+		$dcaExporter->writeMissingParents();
+	}
 	echo "\nCompressing to zip archive...\n";
 	$dcaExporter->zipArchive();
 	echo "\n";

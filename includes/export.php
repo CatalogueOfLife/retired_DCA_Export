@@ -22,8 +22,11 @@ if (!$dcaExporter->archiveExists()) {
     $dcaExporter->createMetaXml();
     echo 'Writing data to text files...<br>';
     $dcaExporter->writeData();
+    if ($dcaExporter->hasMissingParents()) {
+	    echo '<br>Completing higher classification...<br>';
+	    $dcaExporter->writeParents();
+    }
     $dcaExporter->copyScripts();
-    echo '<br>Compressing to zip archive...<br>';
     $dcaExporter->zipArchive();
     echo "</p>\n";
 }
