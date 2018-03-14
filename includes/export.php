@@ -24,7 +24,7 @@ if (!$dcaExporter->archiveExists()) {
     $dcaExporter->writeData();
     if ($dcaExporter->hasMissingParents()) {
 	    echo '<br>Completing higher classification...<br>';
-	    $dcaExporter->writeParents();
+	    $dcaExporter->writeMissingParents();
     }
     $dcaExporter->copyScripts();
     $dcaExporter->zipArchive();
