@@ -642,30 +642,52 @@ class DCAExporter
 
     private function _getSourceDatabaseMetadata ($source_database_id)
     {
-        $query = 'SELECT t1.`id`,
-                    CONCAT(t1.`name`, " in the Catalogue of Life") AS title,
-                    t1.`abbreviated_name` AS abbreviatedName,
-                    t1.`group_name_in_english` AS groupName,
-                    t1.`authors_and_editors` AS authorsEditors,
-                    t1.`version` AS version,
-                    t1.`release_date` AS pubDate,
-                    t1.`abstract` AS abstract,
-                    t1.`contact_person` AS contact,
-                    t3.resource_identifier AS sourceUrl,
-                    "" AS contactCity,
-                    "" AS contactCountry,
-                    CONCAT("images/databases/", REPLACE(`abbreviated_name`, " ", "_"),
-                        ".png") AS resourceLogoUrl
-                  FROM `source_database` t1
-                  LEFT JOIN `uri_to_source_database` AS t2 ON t1.`id` = t2.`source_database_id`
-                  LEFT JOIN `uri` AS t3 ON t2.`uri_id` = t3.`id`
-                  WHERE t1.`id` = ?';
+        $query = '
+            SELECT t1.`id`,
+            t1.`name` AS title,
+            t1.`abbreviated_name` AS abbreviatedName,
+            t1.`group_name_in_english` AS groupName,
+            t1.`authors_and_editors` AS authorsEditors,
+            t1.`version` AS version,
+            t1.`release_date` AS pubDate,
+            t1.`abstract` AS abstract,
+            t1.`contact_person` AS contact,
+            t1.`organisation` AS organization,
+            t3.resource_identifier AS sourceUrl,
+            "" AS contactCity,
+            "" AS contactCountry,
+            CONCAT("images/databases/", REPLACE(`abbreviated_name`, " ", "_"),
+                ".png") AS resourceLogoUrl
+          FROM `source_database` t1
+          LEFT JOIN `uri_to_source_database` AS t2 ON t1.`id` = t2.`source_database_id`
+          LEFT JOIN `uri` AS t3 ON t2.`uri_id` = t3.`id`
+          WHERE t1.`id` = ?';
         $stmt = $this->_dbh->prepare($query);
         $stmt->execute(array(
             $source_database_id
         ));
         $res = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $res ? $res : array();
+        if ($res) {
+            $res['citation'] = $this->_getCitation();
+            return $res;
+        }
+        return array();
+    }
+    
+    private function _getCitation ()
+    {
+        $query = 'SELECT `citation`, `edition` FROM `_credits` WHERE `current` = 1';
+        $stmt = $this->_dbh->prepare($query);
+        $stmt->execute();
+        $res = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($res) {
+            return str_replace(
+                ['[edition]', '[year]'], 
+                [$res['edition'], date('Y')], 
+                $res['citation']
+            );
+        }
+        return false;
     }
     
     private function _getParentId ($id)
@@ -829,8 +851,8 @@ class DCAExporter
                     $sourceDatabase = new SourceDatabase(
                         $this->_dbh,
                         $this->_dir,
-                        $this->_getSourceDatabaseMetadata(
-                            $this->_taxon->datasetID));
+                        $this->_getSourceDatabaseMetadata($this->_taxon->datasetID)
+                    );
                     $sourceDatabase->writeEml();
                     unset($sourceDatabase);
                     $this->_addSavedEml($this->_taxon->datasetID);

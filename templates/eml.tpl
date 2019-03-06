@@ -14,6 +14,7 @@
 		<alternateIdentifier system="catalogueoflife.org">[id]</alternateIdentifier>
 
 		<title xml:lang="eng">[title]</title>
+		<shortName>[abbreviatedName]</shortName>
 		
 		<creator>
 			<organizationName>Species 2000 &amp; ITIS Catalogue of Life</organizationName>
@@ -23,6 +24,14 @@
 				<country>NL</country>
 			</address>
 			<onlineUrl>http://www.catalogueoflife.org</onlineUrl>
+		</creator>
+		
+		<creator>
+			<individualName>
+   				<surName>[authorsEditors]</surName>
+ 			</individualName>
+ 			<organizationName>[organization]</organizationName>
+ 			<onlineUrl>[sourceUrl]</onlineUrl>
 		</creator>
 
 		<metadataProvider>
@@ -74,7 +83,7 @@
 		<metadata>
 			<gbif>
 				<dateStamp>[dateStamp]</dateStamp>
-				<citation identifier="http://www.catalogueoflife.org/col/info/cite" >[citation]</citation>
+				<citation identifier="http://www.catalogueoflife.org/col/info/cite">[citation]</citation>
 				<resourceLogoUrl>[resourceLogoUrl]</resourceLogoUrl>
 			</gbif>
 			

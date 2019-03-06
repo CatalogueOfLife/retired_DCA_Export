@@ -42,7 +42,7 @@ abstract class DCAModuleAbstract
         $res = $stmt->fetch(PDO::FETCH_ASSOC);
         return $res ? $res['edition'] : false;
     }
-
+    
     protected function _createTextFile ($fileName)
     {
         if (!$this->_dir) {

@@ -57,7 +57,8 @@ class SourceDatabase extends DCAModuleAbstract
             'abbreviatedName' => 'Catalogue of Life',
             'groupName' => '',
             'organizationName' => 'Species 2000',
-            'citation' => $this->_getCredits() . ', ' . 'Catalogue of Life'
+            'citation' => $this->_getCredits() . ', ' . 'Catalogue of Life',
+            'organization' => 'Catalogue of Life'
         );
         return array_merge($fields, DCAExporter::getColEmlIni());
     }
@@ -77,7 +78,9 @@ class SourceDatabase extends DCAModuleAbstract
     {
         $fields['abstract'] = htmlspecialchars($fields['abstract'], ENT_QUOTES, 'UTF-8');
         $fields['resourceLogoUrl'] = DCAExporter::getWebsiteUrl() . $fields['resourceLogoUrl'];
-        $fields['citation'] = $this->_getCredits() . ', ' . $fields['abbreviatedName'];
+        // $fields['citation'] = $this->_getCredits() . ', ' . $fields['abbreviatedName'];
+        $fields['title'] = str_replace($fields['abbreviatedName'] . ': ', '', $fields['title']) . 
+            " in the Catalogue of Life";
         return $fields;
     }
 
