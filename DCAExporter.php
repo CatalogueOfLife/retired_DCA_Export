@@ -668,7 +668,9 @@ class DCAExporter
         ));
         $res = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($res) {
-            $res['citation'] = $this->_getCitation();
+            $res['citation'] = $res['authorsEditors'] . ' (' . date("Y") . '). ' . $res['title'] .
+                (!empty($res['version']) ? ' (version ' . $res['version'] . ')' : '') . '. In: ' .
+                $this->_getCitation();
             return $res;
         }
         return array();

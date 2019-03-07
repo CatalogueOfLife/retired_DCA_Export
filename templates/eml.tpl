@@ -17,6 +17,14 @@
 		<shortName>[abbreviatedName]</shortName>
 		
 		<creator>
+			<individualName>
+   				<surName>[authorsEditors]</surName>
+ 			</individualName>
+ 			<organizationName>[organization]</organizationName>
+ 			<onlineUrl>[sourceUrl]</onlineUrl>
+		</creator>
+
+		<creator>
 			<organizationName>Species 2000 &amp; ITIS Catalogue of Life</organizationName>
 			<address>
 				<city>Leiden</city>
@@ -26,14 +34,6 @@
 			<onlineUrl>http://www.catalogueoflife.org</onlineUrl>
 		</creator>
 		
-		<creator>
-			<individualName>
-   				<surName>[authorsEditors]</surName>
- 			</individualName>
- 			<organizationName>[organization]</organizationName>
- 			<onlineUrl>[sourceUrl]</onlineUrl>
-		</creator>
-
 		<metadataProvider>
 			<organizationName>Species 2000 Secretariat</organizationName>
 			<address>
