@@ -772,6 +772,15 @@ class DCAExporter
     	return $query;
     }
 
+    private function _postToArgv ()
+    {
+        $args = '';
+        foreach ($_POST as $k => $v) {
+            $args .= " --$k=$v";
+        }
+        return trim($args);
+    }
+    
     public function getStartUpErrors ()
     {
         return $this->startUpErrors;
@@ -823,7 +832,12 @@ class DCAExporter
     {
         $this->_indicatorIterationsPerMarker = $v;
     }
-
+    
+    public function getCliCommand ()
+    {
+        return '/usr/bin/php "' . self::basePath() . '/includes/export_cli.php" ' . $this->_postToArgv();
+    }
+    
     public function writeData ()
     {
         $total = $this->getTotalNumberOfTaxa();
@@ -956,6 +970,9 @@ class DCAExporter
                 $this->_taxon->writeModel();
                 unset($this->_taxon);
             }
+        }
+        if ($this->hasMissingParents()) {
+             $this->writeMissingParents();
         }
     }
     

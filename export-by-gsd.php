@@ -58,7 +58,7 @@ foreach ($dcaExporter->getGSDs() as $gsd) {
 	
 	echo "Writing $gsd data to text files...\n";
 	$dcaExporter->createMetaXml();
-	$dcaExporter->writeData();
+	$dcaExporter->writeData(false);
 	if ($dcaExporter->hasMissingParents()) {
 		echo "\nCompleting higher classification...\n";
 		$dcaExporter->writeMissingParents();

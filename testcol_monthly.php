@@ -79,7 +79,7 @@ if ($total > 0) {
 echo "Creating meta.xml...\n";
 $dcaExporter->createMetaXml();
 echo "Writing data to text files...\n";
-$dcaExporter->writeData();
+$dcaExporter->writeData(false);
 $dcaExporter->copyScripts();
 echo "\nCompressing to zip archive...\n";
 $dcaExporter->zipArchive();
