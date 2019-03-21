@@ -835,7 +835,8 @@ class DCAExporter
     
     public function getCliCommand ()
     {
-        return '/usr/bin/php "' . self::basePath() . '/includes/export_cli.php" ' . $this->_postToArgv();
+        return '/usr/bin/php "' . self::basePath() . '/includes/export_cli.php" ' . 
+            $this->_postToArgv() . ' | at now';
     }
     
     public function writeData ()
