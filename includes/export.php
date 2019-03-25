@@ -22,7 +22,7 @@ if (!$dcaExporter->archiveExists()) {
     $dcaExporter->createMetaXml();
     echo 'Writing data to text files...<br>';
     // If the total exceeds 100.000 records, offload to cli
-    if ($total > 1) {
+    if ($total > 10000) {
         passthru($dcaExporter->getCliCommand());
     // Webserver should be able to handle smaller exports
     } else {
