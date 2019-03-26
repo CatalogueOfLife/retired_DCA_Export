@@ -28,7 +28,7 @@ if (!$dcaExporter->archiveExists()) {
     } else {
         $dcaExporter->writeData();
         $dcaExporter->copyScripts();
-        $dcaExporter->zipArchive();
+        //$dcaExporter->zipArchive();
     }
     echo "</p>\n<p>Ready! ";
 // That was easy
