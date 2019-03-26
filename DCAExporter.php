@@ -98,10 +98,12 @@ class DCAExporter
             unset($bootstrap);
         }
     }
+    
+    
 
     public function __destruct ()
     {
-        $this->deleteTempDir();
+        // $this->_deleteTempDir();
         // Reset ignore_user_abort back to 0 if this was set as such in php.ini
         if ($this->_iuaSetting == 0) {
             ignore_user_abort(false);
@@ -781,12 +783,7 @@ class DCAExporter
         return trim($args);
     }
     
-    public function getStartUpErrors ()
-    {
-        return $this->startUpErrors;
-    }
-
-    public function deleteTempDir ()
+    private function _deleteTempDir ()
     {
         // Do NOT remove temporary directory if another export process
         // is still running! Error code = 3
@@ -795,6 +792,11 @@ class DCAExporter
         if (!isset($this->startUpErrors[3])) {
             self::removeDir($this->_dir);
         }
+    }
+    
+    public function getStartUpErrors ()
+    {
+        return $this->startUpErrors;
     }
 
     public function getTotalNumberOfTaxa ()

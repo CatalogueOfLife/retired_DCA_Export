@@ -26,7 +26,7 @@
     $dcaExporter->setIndicatorMarkersPerLine(50);
     $dcaExporter->setIndicatorIterationsPerMarker(500);
     $dcaExporter->writeData('cli');
-    //$dcaExporter->copyScripts();
-    //$dcaExporter->zipArchive();
+    $dcaExporter->copyScripts();
+    $dcaExporter->zipArchive();
     
 ?>
