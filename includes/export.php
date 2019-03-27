@@ -23,7 +23,7 @@ if (!$dcaExporter->archiveExists()) {
     echo 'Writing data to text files...<br>';
     // If the total exceeds 100.000 records, offload to cli
     if ($total > 10) {
-        //passthru($dcaExporter->getExportCliCommand());
+        passthru($dcaExporter->getExportCliCommand());
         passthru($dcaExporter->getZipCliCommand());
     // Webserver should be able to handle smaller exports
     } else {
