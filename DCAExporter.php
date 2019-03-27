@@ -835,9 +835,14 @@ class DCAExporter
         $this->_indicatorIterationsPerMarker = $v;
     }
     
-    public function getCliCommand ()
+    public function getExportCliCommand ()
     {
         return '/usr/bin/php "' . self::basePath() . '/includes/export_cli.php" ' . $this->_postToArgv();
+    }
+    
+    public function getExportCliCommand ()
+    {
+        return '/usr/bin/php "' . self::basePath() . '/includes/zip_cli.php" ' . $this->_postToArgv();
     }
     
     public function writeData ()
