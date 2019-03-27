@@ -840,7 +840,7 @@ class DCAExporter
         return '/usr/bin/php "' . self::basePath() . '/includes/export_cli.php" ' . $this->_postToArgv();
     }
     
-    public function getExportCliCommand ()
+    public function getZipCliCommand ()
     {
         return '/usr/bin/php "' . self::basePath() . '/includes/zip_cli.php" ' . $this->_postToArgv();
     }
