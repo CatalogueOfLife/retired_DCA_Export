@@ -495,7 +495,10 @@ class DCAExporter
     
     private function _getTaxonTree ($id, &$tree = array())
     {
-    	if (!in_array($id, $this->_children)) {
+        if (empty($id)) {
+            return $tree;
+        }
+        if (!in_array($id, $this->_children)) {
 	    	$query = $this->_buildQuery('id=' . $id);
 	        $stmt = $this->_dbh->query($query);
 	        $res = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -511,26 +514,6 @@ class DCAExporter
 				} else {
 					return $tree;
 				}
-	        	
-	        	
-	        	/*
-	        	
-		    	$taxon = $this->_initModule('Taxon', $res);
-				$taxon->setDefaultTaxonData();
-				$taxon->setNaturalKey();
-				$taxon->setParentId();
-				
-				$tree[$taxon->taxonID] = $taxon;
-				$this->_children[] = $taxon->taxonID;
-				
-				if ($taxon->parentNameUsageID != 0) {
-	            	$this->_parents[] = $taxon->parentNameUsageID;
-					$this->_getTaxonTree($taxon->parentNameUsageID, $tree);
-				} else {
-					return $tree;
-				}
-				
-				*/
 	        }
     	}
         
@@ -867,8 +850,10 @@ class DCAExporter
                 $this->_taxon->setNaturalKey();
                 $this->_taxon->setParentId();
                 
-                $this->_children[] = $this->_taxon->taxonID;
-                $this->_parents[] = $this->_taxon->parentNameUsageID;
+                if (!$this->_completeDump) {
+                    $this->_children[] = $this->_taxon->taxonID;
+                    $this->_parents[] = $this->_taxon->parentNameUsageID;
+                }
 
                 if (!$this->_emlExists($this->_taxon->datasetID)) {
                     $sourceDatabase = new SourceDatabase(
